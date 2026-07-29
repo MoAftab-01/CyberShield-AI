@@ -1,0 +1,32 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Environment
+.env
+.env.*
+
+# Node
+node_modules/
+frontend/node_modules/
+
+# Build outputs
+dist/
+build/
+frontend/dist/
+backend/dist/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Python cache
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
