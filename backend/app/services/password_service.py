@@ -1,3 +1,7 @@
+from sqlalchemy.orm import Session
+
+from app.database.models import User
+from app.models.password_scan import PasswordScan
 from app.schemas.password_schema import PasswordResponse
 from app.utils.password_utils import (
     calculate_entropy,
@@ -17,7 +21,11 @@ from app.utils.risk_engine import PasswordRiskEngine
 class PasswordService:
 
     @staticmethod
-    def analyze(password: str) -> PasswordResponse:
+    def analyze(
+        db: Session,
+        current_user: User,
+        password: str,
+    ) -> PasswordResponse:
 
         score = calculate_score(password)
 
@@ -38,6 +46,22 @@ class PasswordService:
             patterns=patterns,
         )
 
+        # -----------------------------
+        # Save Scan to PostgreSQL
+        # -----------------------------
+        scan = PasswordScan(
+            user_id=current_user.id,
+            password_strength=password_strength(score),
+            entropy=int(entropy),
+            score=score,
+        )
+
+        db.add(scan)
+        db.commit()
+
+        # -----------------------------
+        # Return API Response
+        # -----------------------------
         return PasswordResponse(
             password=password,
             length=len(password),

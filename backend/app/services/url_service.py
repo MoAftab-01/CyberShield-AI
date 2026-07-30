@@ -1,3 +1,7 @@
+from sqlalchemy.orm import Session
+
+from app.database.models import User
+from app.models.url_scan import URLScan
 from app.integrations.virustotal import VirusTotalClient
 from app.intelligence.threat_aggregator import ThreatAggregator
 from app.schemas.url_schema import URLResponse
@@ -16,7 +20,11 @@ from app.utils.url_utils import (
 class URLService:
 
     @staticmethod
-    async def analyze(url: str) -> URLResponse:
+    async def analyze(
+        db: Session,
+        current_user: User,
+        url: str,
+    ) -> URLResponse:
 
         valid = is_valid_url(url)
 
@@ -47,6 +55,28 @@ class URLService:
             vt_result=vt,
         )
 
+        # -----------------------------
+        # Save Scan
+        # -----------------------------
+        scan = URLScan(
+            user_id=current_user.id,
+            url=url,
+            domain=domain,
+            uses_https=https,
+            risk_score=score,
+            risk_level=level,
+            final_risk_score=aggregation["final_score"],
+            final_risk_level=aggregation["final_level"],
+            confidence=aggregation["confidence"],
+            is_safe=aggregation["final_level"].lower() == "low",
+        )
+
+        db.add(scan)
+        db.commit()
+
+        # -----------------------------
+        # Return API Response
+        # -----------------------------
         return URLResponse(
             url=url,
             is_valid_url=valid,
@@ -59,12 +89,10 @@ class URLService:
             risk_score=score,
             risk_level=level,
             recommendations=recommendations,
-
             virustotal_found=vt["found"],
             virustotal_malicious=vt["malicious"],
             virustotal_suspicious=vt["suspicious"],
             virustotal_harmless=vt["harmless"],
-
             final_risk_score=aggregation["final_score"],
             final_risk_level=aggregation["final_level"],
             confidence=aggregation["confidence"],

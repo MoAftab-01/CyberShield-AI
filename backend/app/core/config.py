@@ -2,40 +2,43 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    # -----------------------------
-    # Application Settings
-    # -----------------------------
-    APP_NAME: str = "CyberShield AI"
-    APP_VERSION: str = "1.0.0"
-    ENVIRONMENT: str = "development"
+    # ==========================
+    # Application
+    # ==========================
+    APP_NAME: str
+    APP_VERSION: str
+    ENVIRONMENT: str
 
-    # -----------------------------
-    # Database Settings
-    # -----------------------------
+    # ==========================
+    # Database
+    # ==========================
     DATABASE_URL: str
 
-    # -----------------------------
+    # ==========================
     # JWT Authentication
-    # -----------------------------
+    # ==========================
     JWT_SECRET: str
-    JWT_ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    JWT_ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
 
-    # -----------------------------
-    # OpenAI
-    # -----------------------------
+    # ==========================
+    # AI APIs
+    # ==========================
     OPENAI_API_KEY: str = ""
 
-    # -----------------------------
-    # Logging
-    # -----------------------------
-    LOG_LEVEL: str = "INFO"
+    # ==========================
+    # VirusTotal
+    # ==========================
+    VT_API_KEY: str = ""
 
-    VT_API_KEY: str
+    # ==========================
+    # Logging
+    # ==========================
+    LOG_LEVEL: str = "INFO"
 
     model_config = SettingsConfigDict(
         env_file=".env",
-        extra="ignore"
+        extra="ignore",
     )
 
 
