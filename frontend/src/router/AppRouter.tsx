@@ -11,10 +11,12 @@ import UrlScanner from "../pages/UrlScanner";
 import ThreatIntel from "../pages/ThreatIntel";
 import Reports from "../pages/Reports";
 import Settings from "../pages/Settings";
+import Copilot from "../pages/Copilot";
 
 export default function AppRouter() {
   return (
     <Routes>
+      {/* Redirect Root */}
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
       {/* Public Routes */}
@@ -33,9 +35,18 @@ export default function AppRouter() {
         <Route path="/password" element={<PasswordAnalyzer />} />
         <Route path="/url-scanner" element={<UrlScanner />} />
         <Route path="/threat-intel" element={<ThreatIntel />} />
+
+        {/* ========================= */}
+        {/* AI Security Copilot */}
+        {/* ========================= */}
+        <Route path="/copilot" element={<Copilot />} />
+
         <Route path="/reports" element={<Reports />} />
         <Route path="/settings" element={<Settings />} />
       </Route>
+
+      {/* Fallback */}
+      <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
   );
 }

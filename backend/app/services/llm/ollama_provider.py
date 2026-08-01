@@ -1,17 +1,16 @@
 import requests
 
+from app.core.config import settings
 from app.services.llm.base import BaseLLMProvider
 
 
 class OllamaProvider(BaseLLMProvider):
 
-    def __init__(
-        self,
-        model: str = "llama3.2:3b",
-        base_url: str = "http://localhost:11434",
-    ):
-        self.model = model
-        self.base_url = base_url
+    def __init__(self):
+
+        self.model = settings.OLLAMA_MODEL
+
+        self.base_url = "http://localhost:11434"
 
     def chat(
         self,

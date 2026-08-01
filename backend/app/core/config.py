@@ -25,6 +25,15 @@ class Settings(BaseSettings):
     # AI APIs
     # ==========================
     OPENAI_API_KEY: str = ""
+    # ==========================
+# LLM Configuration
+# ==========================
+
+    LLM_PROVIDER: str = "ollama"
+
+    OLLAMA_MODEL: str = "llama3:latest"
+
+    OPENAI_MODEL: str = "gpt-4o-mini"
 
     # Ollama
     AI_PROVIDER: str = "ollama"
