@@ -1,32 +1,70 @@
+# ==========================
 # Python
+# ==========================
 .venv/
+venv/
 __pycache__/
 *.py[cod]
+*.pyo
+*.pyd
 *.egg-info/
+*.egg
 
+# ==========================
 # Environment
+# ==========================
 .env
 .env.*
+!.env.example
 
+# ==========================
 # Node
+# ==========================
 node_modules/
 frontend/node_modules/
 
-# Build outputs
+# ==========================
+# Build Outputs
+# ==========================
 dist/
 build/
 frontend/dist/
 backend/dist/
 
+# ==========================
+# Database
+# ==========================
+*.db
+*.sqlite
+*.sqlite3
+
+# ==========================
 # IDE
+# ==========================
 .vscode/
 .idea/
 
+# ==========================
 # Logs
+# ==========================
 *.log
 
-# Python cache
+# ==========================
+# Python Cache & Coverage
+# ==========================
 .pytest_cache/
 .mypy_cache/
 .coverage
 htmlcov/
+
+# ==========================
+# OS Files
+# ==========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==========================
+# TypeScript
+# ==========================
+*.tsbuildinfo

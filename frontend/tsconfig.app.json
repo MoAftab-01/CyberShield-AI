@@ -10,8 +10,11 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
 
-    "skipLibCheck": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    },
 
+    "skipLibCheck": true,
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
 
@@ -23,11 +26,7 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "noFallthroughCasesInSwitch": true
   },
 
   "include": ["src"]

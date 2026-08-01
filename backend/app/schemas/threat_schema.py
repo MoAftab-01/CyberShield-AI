@@ -3,6 +3,17 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 
+class MitreTechnique(BaseModel):
+
+    technique_id: Optional[str] = None
+
+    name: Optional[str] = None
+
+    description: Optional[str] = None
+
+    tactic: Optional[str] = None
+
+
 class ThreatResponse(BaseModel):
 
     cve: str
@@ -50,3 +61,17 @@ class ThreatResponse(BaseModel):
     epss_percentile: Optional[float] = None
 
     epss_date: Optional[str] = None
+
+    # ==========================
+    # Threat Correlation
+    # ==========================
+
+    priority: Optional[str] = None
+
+    threat_assessment: Optional[str] = None
+
+    # ==========================
+    # MITRE ATT&CK
+    # ==========================
+
+    mitre_attack: List[MitreTechnique] = []

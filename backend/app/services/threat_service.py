@@ -6,6 +6,7 @@ from app.clients.epss_client import EPSSClient
 
 from app.mappers.threat_mapper import ThreatMapper
 from app.mappers.epss_mapper import EPSSMapper
+from app.mappers.correlation_mapper import CorrelationMapper
 
 from app.services.ai_service import AIService
 
@@ -20,7 +21,9 @@ class ThreatService:
         db: Session,
     ):
 
-        # Collect data
+        # ==========================
+        # Collect Data
+        # ==========================
 
         nvd = NVDClient.get_cve(cve_id)
 
@@ -28,33 +31,47 @@ class ThreatService:
 
         epss = EPSSClient.get_epss(cve_id)
 
-        # Normalize NVD
+        # ==========================
+        # Normalize
+        # ==========================
 
         result = ThreatMapper.normalize_nvd(nvd)
 
-        # Merge CISA
-
         result.update(cisa)
-
-        # Merge EPSS
 
         result.update(
             EPSSMapper.normalize(epss)
         )
 
-        # AI Summary
+        # ==========================
+        # MITRE ATT&CK (Temporary)
+        # ==========================
+
+        result["mitre_attack"] = []
+
+        # ==========================
+        # Threat Correlation
+        # ==========================
+
+        result.update(
+            CorrelationMapper.correlate(result)
+        )
+
+        # ==========================
+        # AI
+        # ==========================
 
         result["ai_summary"] = (
             AIService.generate_summary(result)
         )
 
-        # AI Recommendations
-
         result["recommendations"] = (
             AIService.generate_recommendations(result)
         )
 
+        # ==========================
         # Save Search
+        # ==========================
 
         ThreatCRUD.save_search(
             db=db,

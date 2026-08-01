@@ -26,6 +26,11 @@ class Settings(BaseSettings):
     # ==========================
     OPENAI_API_KEY: str = ""
 
+    # Ollama
+    AI_PROVIDER: str = "ollama"
+    OLLAMA_MODEL: str = "llama3:latest"
+    OLLAMA_BASE_URL: str = "http://localhost:11434"
+
     # ==========================
     # VirusTotal
     # ==========================
