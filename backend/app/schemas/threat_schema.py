@@ -14,6 +14,21 @@ class MitreTechnique(BaseModel):
     tactic: Optional[str] = None
 
 
+class GitHubAdvisory(BaseModel):
+
+    ghsa_id: Optional[str] = None
+
+    summary: Optional[str] = None
+
+    severity: Optional[str] = None
+
+    published_at: Optional[str] = None
+
+    updated_at: Optional[str] = None
+
+    url: Optional[str] = None
+
+
 class ThreatResponse(BaseModel):
 
     cve: str
@@ -75,3 +90,9 @@ class ThreatResponse(BaseModel):
     # ==========================
 
     mitre_attack: List[MitreTechnique] = []
+
+    # ==========================
+    # GitHub Advisories
+    # ==========================
+
+    github_advisories: List[GitHubAdvisory] = []

@@ -369,6 +369,77 @@ export default function ThreatIntel() {
   )}
 
 </Card>
+{/* Vendor Advisories */}
+
+<Card>
+
+  <h2 className="text-xl font-bold mb-4">
+
+    Vendor Advisories
+
+  </h2>
+
+  {threat.github_advisories.length === 0 ? (
+
+    <p>No vendor advisories found.</p>
+
+  ) : (
+
+    <div className="space-y-4">
+
+      {threat.github_advisories.map((advisory, index) => (
+
+        <div
+          key={index}
+          className="rounded-lg border border-slate-200 p-4"
+        >
+
+          <p className="font-semibold text-blue-600">
+
+            {advisory.ghsa_id}
+
+          </p>
+
+          <p className="mt-2">
+
+            {advisory.summary}
+
+          </p>
+
+          <p className="mt-2">
+
+            <strong>Severity:</strong>{" "}
+
+            {advisory.severity}
+
+          </p>
+
+          <p>
+
+            <strong>Published:</strong>{" "}
+
+            {new Date(advisory.published_at!).toLocaleDateString()}
+
+          </p>
+
+          <a
+            href={advisory.url!}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline mt-3 inline-block"
+          >
+            View Advisory
+          </a>
+
+        </div>
+
+      ))}
+
+    </div>
+
+  )}
+
+</Card>
 
           {/* References */}
 

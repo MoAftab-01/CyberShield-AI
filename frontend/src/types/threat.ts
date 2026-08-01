@@ -9,6 +9,21 @@ export interface MitreTechnique {
     tactic: string | null;
 }
 
+export interface GitHubAdvisory {
+
+    ghsa_id: string | null;
+
+    summary: string | null;
+
+    severity: string | null;
+
+    published_at: string | null;
+
+    updated_at: string | null;
+
+    url: string | null;
+}
+
 export interface Threat {
 
     cve: string;
@@ -70,4 +85,10 @@ export interface Threat {
     // ==========================
 
     mitre_attack: MitreTechnique[];
+
+    // ==========================
+    // GitHub Advisories
+    // ==========================
+
+    github_advisories: GitHubAdvisory[];
 }

@@ -3,9 +3,11 @@ from sqlalchemy.orm import Session
 from app.clients.cisa_client import CISAClient
 from app.clients.nvd_client import NVDClient
 from app.clients.epss_client import EPSSClient
+from app.clients.github_client import GitHubClient
 
 from app.mappers.threat_mapper import ThreatMapper
 from app.mappers.epss_mapper import EPSSMapper
+from app.mappers.github_mapper import GitHubMapper
 from app.mappers.correlation_mapper import CorrelationMapper
 
 from app.services.ai_service import AIService
@@ -31,6 +33,8 @@ class ThreatService:
 
         epss = EPSSClient.get_epss(cve_id)
 
+        github = GitHubClient.get_advisory(cve_id)
+
         # ==========================
         # Normalize
         # ==========================
@@ -43,8 +47,12 @@ class ThreatService:
             EPSSMapper.normalize(epss)
         )
 
+        result["github_advisories"] = (
+            GitHubMapper.normalize(github)
+        )
+
         # ==========================
-        # MITRE ATT&CK (Temporary)
+        # MITRE (Temporary)
         # ==========================
 
         result["mitre_attack"] = []
