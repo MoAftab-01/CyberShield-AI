@@ -6,10 +6,19 @@ import { useReports } from "../hooks/useReports";
 import PasswordTable from "../components/reports/PasswordTable";
 import URLTable from "../components/reports/URLTable";
 
+import ExecutiveSummaryCard from "../components/reports/ExecutiveSummaryCard";
+import { useAISummary } from "../hooks/useAISummary";
+
 export default function Reports() {
   const { passwordReports, urlReports, loading } = useReports();
 
   const [tab, setTab] = useState<"passwords" | "urls">("passwords");
+  const {
+  summary,
+  loading: aiLoading,
+  refresh,
+} = useAISummary();
+  
 
   if (loading) {
     return (
@@ -36,6 +45,11 @@ export default function Reports() {
           Review historical password and URL scans.
         </p>
       </div>
+      <ExecutiveSummaryCard
+  summary={summary?.summary ?? ""}
+  loading={aiLoading}
+  onRefresh={refresh}
+/>
 
       {/* Tabs */}
 
