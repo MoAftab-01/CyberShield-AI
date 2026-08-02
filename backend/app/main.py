@@ -14,6 +14,10 @@ from app.api.dashboard_ai_routes import (
     router as dashboard_ai_router,
 )
 
+from app.api.upload_routes import (
+    router as upload_router,
+)
+
 from app.core.config import settings
 
 app = FastAPI(
@@ -49,6 +53,7 @@ app.include_router(report_router)
 app.include_router(threat_router)
 app.include_router(conversation_router)
 app.include_router(dashboard_ai_router)
+app.include_router(upload_router)
 
 from app.api.copilot_routes import (
     router as copilot_router,

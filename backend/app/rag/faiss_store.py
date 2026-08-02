@@ -57,6 +57,56 @@ class FAISSStore:
         print(f"Indexed {index.ntotal} chunks.")
 
     @classmethod
+    def add_documents(
+        cls,
+        embeddings,
+        documents,
+    ):
+
+        embeddings = np.asarray(
+            embeddings,
+            dtype="float32",
+        )
+
+        if (
+            cls.INDEX_PATH.exists()
+            and cls.META_PATH.exists()
+        ):
+
+            index, existing_documents = cls.load()
+
+            index.add(embeddings)
+
+            existing_documents.extend(
+                documents
+            )
+
+            faiss.write_index(
+                index,
+                str(cls.INDEX_PATH),
+            )
+
+            with open(
+                cls.META_PATH,
+                "wb",
+            ) as f:
+
+                pickle.dump(
+                    existing_documents,
+                    f,
+                )
+
+            cls._index = index
+            cls._documents = existing_documents
+
+        else:
+
+            cls.build_index(
+                embeddings,
+                documents,
+            )
+
+    @classmethod
     def load(cls):
 
         if cls._index is not None:

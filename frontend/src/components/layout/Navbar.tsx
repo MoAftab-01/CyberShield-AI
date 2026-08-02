@@ -4,18 +4,84 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
+import { useLocation } from "react-router-dom";
+
 export default function Navbar() {
+
+  const location = useLocation();
+
+  const getTitle = () => {
+
+    switch (location.pathname) {
+
+      case "/":
+      case "/dashboard":
+        return {
+          title: "Dashboard",
+          subtitle:
+            "AI Powered Cyber Threat Intelligence",
+        };
+
+      case "/copilot":
+        return {
+          title: "CyberGPT",
+          subtitle:
+            "Enterprise AI Security Assistant",
+        };
+
+      case "/password":
+        return {
+          title: "Password Analyzer",
+          subtitle:
+            "Analyze password strength and security",
+        };
+
+      case "/url-scanner":
+        return {
+          title: "URL Scanner",
+          subtitle:
+            "Detect phishing and malicious websites",
+        };
+
+      case "/threat-intel":
+        return {
+          title: "Threat Intelligence",
+          subtitle:
+            "Analyze CVEs and security threats",
+        };
+
+      case "/reports":
+        return {
+          title: "Reports",
+          subtitle:
+            "View reports and analytics",
+        };
+
+      default:
+        return {
+          title: "CyberShield AI",
+          subtitle:
+            "Enterprise Cybersecurity Platform",
+        };
+
+    }
+
+  };
+
+  const page = getTitle();
+
   return (
+
     <header className="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8">
 
       <div>
 
         <h1 className="text-2xl font-bold text-slate-800">
-          Dashboard
+          {page.title}
         </h1>
 
         <p className="text-slate-500">
-          AI Powered Cyber Threat Intelligence
+          {page.subtitle}
         </p>
 
       </div>
@@ -49,5 +115,7 @@ export default function Navbar() {
       </div>
 
     </header>
+
   );
+
 }

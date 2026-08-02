@@ -5,6 +5,8 @@ import ConversationSidebar from "@/components/copilot/ConversationSidebar";
 import MessageList from "@/components/copilot/MessageList";
 import TypingIndicator from "@/components/copilot/TypingIndicator";
 
+import { toast } from "sonner";
+
 import { askCopilot } from "@/services/copilotService";
 import {
   ConversationItem,
@@ -17,6 +19,15 @@ import { useEffect } from "react";
 
 
 import { Source } from "@/types/copilot";
+
+import UploadButton from "@/components/upload/UploadButton";
+
+import {
+  uploadDocument,
+  getUploadedDocuments,
+  deleteUploadedDocument,
+  UploadedDocument,
+} from "@/services/uploadService";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -32,12 +43,17 @@ export default function Copilot() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [conversations, setConversations] =useState<ConversationItem[]>([]);
     const [search, setSearch] = useState("");
+    const [uploadedFiles, setUploadedFiles] = useState<UploadedDocument[]>([]);
 
   useEffect(() => {
   const loadConversations = async () => {
     try {
       const data = await getConversations();
       setConversations(data);
+      const files =
+        await getUploadedDocuments();
+
+    setUploadedFiles(files);
     } catch (error) {
       console.error(error);
     }
@@ -104,6 +120,60 @@ export default function Copilot() {
     .toLowerCase()
     .includes(search.toLowerCase())
     );
+
+const handleUpload = async (
+  file: File,
+) => {
+  try {
+    await uploadDocument(file);
+
+    const files =
+      await getUploadedDocuments();
+
+    setUploadedFiles(files);
+
+    toast.success(
+      "Document uploaded successfully!"
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+    toast.error(
+      "Upload failed."
+    );
+  }
+};
+
+const handleDeleteDocument = async (
+  filename: string,
+) => {
+
+  try {
+
+    await deleteUploadedDocument(
+      filename,
+    );
+
+    setUploadedFiles((prev) =>
+      prev.filter(
+        (file) =>
+          file.filename !== filename,
+      ),
+    );
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+  }
+
+};
+
+
   return (
     <div className="flex h-full overflow-hidden bg-slate-100">
       <ConversationSidebar
@@ -172,6 +242,7 @@ export default function Copilot() {
             </div>
           </div>
         </header>
+        
 
         {/* Scrollable Chat */}
 
@@ -240,13 +311,78 @@ export default function Copilot() {
         {/* Fixed Footer */}
 
         <footer className="bg-white border-t p-5 flex-shrink-0">
-          <div className="max-w-5xl mx-auto">
-            <ChatInput
-              loading={loading}
-              onSend={handleSend}
-            />
+
+  <div className="max-w-5xl mx-auto">
+
+    {uploadedFiles.length > 0 && (
+
+      <div className="flex flex-wrap gap-2 mb-3">
+
+        {uploadedFiles.map((file) => (
+
+          <div
+            key={file.filename}
+            className="
+              flex
+              items-center
+              gap-2
+              bg-slate-100
+              border
+              rounded-full
+              px-3
+              py-1
+              text-sm
+            "
+          >
+
+            📄
+
+            <span className="max-w-[220px] truncate">
+              {file.filename}
+            </span>
+
+            <button
+              onClick={() =>
+                handleDeleteDocument(
+                  file.filename,
+                )
+              }
+              className="
+                text-red-500
+                hover:text-red-700
+              "
+            >
+              ✕
+            </button>
+
           </div>
-        </footer>
+
+        ))}
+
+      </div>
+
+    )}
+
+    <div className="flex items-center gap-3">
+
+      <UploadButton
+        onUpload={handleUpload}
+      />
+
+      <div className="flex-1">
+
+        <ChatInput
+          loading={loading}
+          onSend={handleSend}
+        />
+
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
       </div>
     </div>
   );
