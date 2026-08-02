@@ -10,6 +10,9 @@ from app.api.report_routes import router as report_router
 from app.database.init_db import init_db
 from app.api.threat_routes import router as threat_router
 from app.api.conversation_routes import router as conversation_router
+from app.api.dashboard_ai_routes import (
+    router as dashboard_ai_router,
+)
 
 from app.core.config import settings
 
@@ -45,6 +48,7 @@ app.include_router(dashboard_router)
 app.include_router(report_router)
 app.include_router(threat_router)
 app.include_router(conversation_router)
+app.include_router(dashboard_ai_router)
 
 from app.api.copilot_routes import (
     router as copilot_router,

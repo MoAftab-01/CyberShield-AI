@@ -20,10 +20,24 @@ import PasswordDistribution from "../components/dashboard/PasswordDistribution";
 import URLDistribution from "../components/dashboard/URLDistribution";
 import TopDomains from "../components/dashboard/TopDomains";
 
+import AISummaryCard from "../components/dashboard/AISummaryCard";
+import LoadingAISummary from "../components/dashboard/LoadingAISummary";
+
 import { useDashboard } from "../hooks/useDashboard";
+import { useAISummary } from "../hooks/useAISummary";
 
 export default function Dashboard() {
+
   const { data, loading, error } = useDashboard();
+
+  const {
+    summary,
+    loading: aiLoading,
+    refreshing,
+    error: aiError,
+    lastUpdated,
+    refresh,
+  } = useAISummary();
 
   if (loading) {
     return (
@@ -51,6 +65,7 @@ export default function Dashboard() {
       {/* Welcome */}
 
       <section>
+
         <h1 className="text-4xl font-bold text-slate-800">
           Welcome Back 👋
         </h1>
@@ -58,19 +73,54 @@ export default function Dashboard() {
         <p className="mt-2 text-slate-500">
           Monitor your cyber security posture and analyze threats in real time.
         </p>
+
+      </section>
+
+      {/* AI Security Overview */}
+
+      <section>
+
+        {aiLoading && !summary ? (
+
+          <LoadingAISummary />
+
+        ) : aiError ? (
+
+          <div className="rounded-2xl border border-red-300 bg-red-50 p-6 text-red-600 shadow">
+
+            {aiError}
+
+          </div>
+
+        ) : (
+
+          <AISummaryCard
+            summary={summary?.summary ?? ""}
+            lastUpdated={lastUpdated}
+            refreshing={refreshing}
+            onRefresh={refresh}
+          />
+
+        )}
+
       </section>
 
       {/* Charts */}
 
       <section className="grid gap-6 lg:grid-cols-2">
-        <SecurityGauge score={data.stats.securityScore} />
+
+        <SecurityGauge
+          score={data.stats.securityScore}
+        />
 
         <ThreatChart />
+
       </section>
 
       {/* Statistics */}
 
       <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+
         <StatCard
           title="Security Score"
           value={data.stats.securityScore}
@@ -99,6 +149,7 @@ export default function Dashboard() {
           subtitle="Requires attention"
           icon={ShieldAlert}
         />
+
       </section>
 
       {/* Analytics */}
@@ -126,8 +177,11 @@ export default function Dashboard() {
       {/* Quick Actions */}
 
       <section>
+
         <h2 className="mb-5 text-2xl font-bold text-slate-800">
+
           Quick Actions
+
         </h2>
 
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
@@ -161,35 +215,49 @@ export default function Dashboard() {
           />
 
         </div>
+
       </section>
 
       {/* Recent Activity */}
 
       <section>
+
         <h2 className="mb-5 text-2xl font-bold text-slate-800">
+
           Recent Activity
+
         </h2>
 
         <div className="space-y-4">
 
           {data.activities.length === 0 ? (
+
             <div className="rounded-xl border bg-white p-6 text-center text-slate-500 shadow-sm">
+
               No recent activity found.
+
             </div>
+
           ) : (
+
             data.activities.map((activity) => (
+
               <ActivityCard
                 key={activity.id}
                 title={activity.title}
                 time={activity.time}
                 status={activity.status}
               />
+
             ))
+
           )}
 
         </div>
+
       </section>
 
     </div>
   );
+
 }
