@@ -1,6 +1,4 @@
-from fastapi import APIRouter
-from fastapi import Depends
-
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
@@ -10,38 +8,35 @@ from app.schemas.copilot_schema import (
     CopilotResponse,
 )
 
-from app.services.rag_service import (
-    RAGService,
-)
+from app.agents.orchestrator import CyberGPTOrchestrator
+
 
 router = APIRouter(
     prefix="/copilot",
-    tags=["Security Copilot"],
+    tags=["CyberGPT"],
 )
+
+orchestrator = CyberGPTOrchestrator()
 
 
 @router.post(
     "/ask",
     response_model=CopilotResponse,
 )
-def ask_copilot(
+async def ask_copilot(
     request: CopilotRequest,
     db: Session = Depends(get_db),
 ):
+    """
+    CyberGPT entry point.
+    """
 
-    # Temporary user
-    # Later this comes from JWT
-
+    # TODO: Replace with authenticated user later
     user_id = 1
 
-    return RAGService.ask(
-
+    return await orchestrator.handle(
         question=request.question,
-
         db=db,
-
         user_id=user_id,
-
         conversation_id=request.conversation_id,
-
     )
