@@ -1,12 +1,19 @@
+import { useState } from "react";
+
 import {
-  Trash2,
+  Check,
+  Edit2,
   MessageSquare,
+  Trash2,
+  X,
 } from "lucide-react";
 
-import { ConversationItem as Conversation } from "../../services/conversationService";
+import {
+  ConversationItem as Conversation,
+  renameConversation,
+} from "../../services/conversationService";
 
 interface Props {
-
   conversation: Conversation;
 
   active: boolean;
@@ -14,20 +21,19 @@ interface Props {
   onSelect: (id: number) => void;
 
   onDelete: (id: number) => void;
-
 }
 
 export default function ConversationItem({
-
   conversation,
-
   active,
-
   onSelect,
-
   onDelete,
-
 }: Props) {
+  const [editing, setEditing] = useState(false);
+
+  const [title, setTitle] = useState(
+    conversation.title,
+  );
 
   const updated = new Date(
     conversation.updated_at,
@@ -38,10 +44,36 @@ export default function ConversationItem({
     minute: "2-digit",
   });
 
-  return (
+  const saveRename = async () => {
+    const newTitle = title.trim();
 
+    if (!newTitle) {
+      setTitle(conversation.title);
+      setEditing(false);
+      return;
+    }
+
+    try {
+      await renameConversation(
+        conversation.id,
+        newTitle,
+      );
+
+      conversation.title = newTitle;
+
+      setEditing(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
     <div
-      onClick={() => onSelect(conversation.id)}
+      onClick={() => {
+        if (!editing) {
+          onSelect(conversation.id);
+        }
+      }}
       className={`
         group
         cursor-pointer
@@ -53,15 +85,11 @@ export default function ConversationItem({
 
         ${
           active
-
             ? "bg-cyan-600 border-cyan-500 text-white"
-
             : "bg-slate-900 border-slate-800 hover:bg-slate-800 text-slate-200"
-
         }
       `}
     >
-
       <div className="flex items-start justify-between">
 
         <div className="flex gap-3 flex-1 min-w-0">
@@ -75,75 +103,149 @@ export default function ConversationItem({
             }
           />
 
-          <div className="min-w-0 flex-1">
+          <div className="flex-1 min-w-0">
 
-            <h3
-              className="
-                font-medium
-                truncate
-              "
-            >
+            {editing ? (
+              <input
+                autoFocus
+                value={title}
+                onChange={(e) =>
+                  setTitle(e.target.value)
+                }
+                onClick={(e) =>
+                  e.stopPropagation()
+                }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    saveRename();
+                  }
 
-              {conversation.title}
-
-            </h3>
+                  if (e.key === "Escape") {
+                    setTitle(
+                      conversation.title,
+                    );
+                    setEditing(false);
+                  }
+                }}
+                className="
+                  w-full
+                  rounded-md
+                  px-2
+                  py-1
+                  text-black
+                  outline-none
+                "
+              />
+            ) : (
+              <h3 className="font-medium truncate">
+                {conversation.title}
+              </h3>
+            )}
 
             <p
-              className={`
-                mt-1
-                text-xs
-
-                ${
-                  active
-
-                    ? "text-cyan-100"
-
-                    : "text-slate-400"
-
-                }
-              `}
+              className={`mt-1 text-xs ${
+                active
+                  ? "text-cyan-100"
+                  : "text-slate-400"
+              }`}
             >
-
               {updated}
-
             </p>
 
           </div>
 
         </div>
 
-        <button
+        <div className="flex gap-1">
 
-          onClick={(e) => {
+          {editing ? (
+            <>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  saveRename();
+                }}
+                className="
+                  p-1
+                  rounded-lg
+                  hover:bg-green-500/20
+                "
+              >
+                <Check
+                  size={16}
+                  className="text-green-400"
+                />
+              </button>
 
-            e.stopPropagation();
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setTitle(
+                    conversation.title,
+                  );
+                  setEditing(false);
+                }}
+                className="
+                  p-1
+                  rounded-lg
+                  hover:bg-red-500/20
+                "
+              >
+                <X
+                  size={16}
+                  className="text-red-400"
+                />
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setEditing(true);
+                }}
+                className="
+                  opacity-0
+                  group-hover:opacity-100
+                  transition
+                  p-1
+                  rounded-lg
+                  hover:bg-cyan-500/20
+                "
+              >
+                <Edit2
+                  size={16}
+                  className="text-cyan-400"
+                />
+              </button>
 
-            onDelete(conversation.id);
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(
+                    conversation.id,
+                  );
+                }}
+                className="
+                  opacity-0
+                  group-hover:opacity-100
+                  transition
+                  p-1
+                  rounded-lg
+                  hover:bg-red-500/20
+                "
+              >
+                <Trash2
+                  size={16}
+                  className="text-red-400"
+                />
+              </button>
+            </>
+          )}
 
-          }}
-
-          className="
-            opacity-0
-            group-hover:opacity-100
-            transition
-            p-1
-            rounded-lg
-            hover:bg-red-500/20
-          "
-
-        >
-
-          <Trash2
-            size={16}
-            className="text-red-400"
-          />
-
-        </button>
+        </div>
 
       </div>
-
     </div>
-
   );
-
 }

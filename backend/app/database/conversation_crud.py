@@ -49,7 +49,9 @@ class ConversationCRUD:
             .filter(
                 ChatMessage.conversation_id == conversation_id
             )
-            .order_by(ChatMessage.created_at.asc())
+            .order_by(
+                ChatMessage.created_at.asc()
+            )
             .all()
         )
 
@@ -89,6 +91,31 @@ class ConversationCRUD:
             )
             .all()
         )
+
+    @staticmethod
+    def rename_conversation(
+        db: Session,
+        conversation_id: int,
+        title: str,
+    ):
+
+        conversation = (
+            db.query(Conversation)
+            .filter(
+                Conversation.id == conversation_id
+            )
+            .first()
+        )
+
+        if conversation is None:
+            return None
+
+        conversation.title = title[:80]
+
+        db.commit()
+        db.refresh(conversation)
+
+        return conversation
 
     @staticmethod
     def delete_conversation(

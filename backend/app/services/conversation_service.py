@@ -106,3 +106,15 @@ class ConversationService:
             db=db,
             conversation_id=conversation_id,
         )
+
+    @staticmethod
+    def rename(
+    db: Session,
+    conversation_id: int,
+    title: str,
+):
+        return ConversationCRUD.rename_conversation(
+        db=db,
+        conversation_id=conversation_id,
+        title=title,
+    )

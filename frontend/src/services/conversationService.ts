@@ -61,3 +61,17 @@ export async function deleteConversation(
   );
 
 }
+
+export async function renameConversation(
+  conversationId: number,
+  title: string,
+): Promise<void> {
+
+  await api.patch(
+    `/conversations/${conversationId}`,
+    {
+      title,
+    },
+  );
+
+}

@@ -9,6 +9,7 @@ from app.database.database import get_db
 from app.schemas.conversation_schema import (
     ConversationItem,
     ConversationResponse,
+    RenameConversationRequest,
 )
 
 from app.services.conversation_service import (
@@ -59,6 +60,32 @@ def get_conversation(
         )
 
     return conversation
+
+
+@router.patch(
+    "/{conversation_id}",
+)
+def rename_conversation(
+    conversation_id: int,
+    request: RenameConversationRequest,
+    db: Session = Depends(get_db),
+):
+
+    conversation = ConversationService.rename(
+        db=db,
+        conversation_id=conversation_id,
+        title=request.title,
+    )
+
+    if not conversation:
+        raise HTTPException(
+            status_code=404,
+            detail="Conversation not found",
+        )
+
+    return {
+        "message": "Conversation renamed."
+    }
 
 
 @router.delete(

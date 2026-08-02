@@ -38,3 +38,12 @@ class ConversationResponse(BaseModel):
     title: str
 
     messages: list[ChatMessageResponse]
+
+    class Config:
+
+        from_attributes = True
+
+
+class RenameConversationRequest(BaseModel):
+
+    title: str
