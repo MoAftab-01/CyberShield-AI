@@ -3,16 +3,20 @@ import remarkGfm from "remark-gfm";
 
 import {
   Bot,
-  Sparkles,
   RefreshCw,
   ShieldCheck,
 } from "lucide-react";
+
+import SecurityStatus from "./SecurityStatus";
+import InsightChips from "./InsightChips";
 
 interface Props {
 
   summary: string;
 
-  lastUpdated: Date |null;
+  score: number;
+
+  lastUpdated: Date | null;
 
   refreshing: boolean;
 
@@ -23,6 +27,8 @@ interface Props {
 export default function AISummaryCard({
 
   summary,
+
+  score,
 
   lastUpdated,
 
@@ -37,14 +43,14 @@ export default function AISummaryCard({
     <div
       className="
       rounded-2xl
+      overflow-hidden
       bg-gradient-to-br
       from-slate-900
       via-slate-800
       to-slate-900
-      shadow-xl
       border
       border-slate-700
-      overflow-hidden
+      shadow-xl
       "
     >
 
@@ -52,12 +58,23 @@ export default function AISummaryCard({
 
       <div className="flex items-center justify-between px-8 py-6 border-b border-slate-700">
 
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-4">
 
-          <div className="w-14 h-14 rounded-2xl bg-cyan-500 flex items-center justify-center">
+          <div
+            className="
+            h-14
+            w-14
+            rounded-2xl
+            bg-cyan-500
+            flex
+            items-center
+            justify-center
+            shadow-lg
+            "
+          >
 
             <Bot
-              size={28}
+              size={30}
               className="text-white"
             />
 
@@ -82,110 +99,163 @@ export default function AISummaryCard({
         </div>
 
         <button
-
           disabled={refreshing}
-
           onClick={onRefresh}
-
-          className="flex items-center gap-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 disabled:opacity-60 px-5 py-3 transition"
-
+          className="
+          flex
+          items-center
+          gap-2
+          rounded-xl
+          bg-cyan-600
+          hover:bg-cyan-500
+          disabled:opacity-60
+          px-5
+          py-3
+          transition
+          text-white
+          "
         >
 
           <RefreshCw
-
             size={18}
-
-            className={refreshing ? "animate-spin" : ""}
-
+            className={
+              refreshing
+                ? "animate-spin"
+                : ""
+            }
           />
 
-          {refreshing
+          {
 
-            ? "Refreshing..."
+            refreshing
 
-            : "Refresh"}
+              ? "Refreshing..."
+
+              : "Refresh"
+
+          }
 
         </button>
 
       </div>
 
-      {/* Badge */}
+      {/* Body */}
 
-      <div className="px-8 pt-6">
+      <div className="p-8">
 
-        <div className="inline-flex items-center gap-2 rounded-full bg-cyan-500/20 px-4 py-2 text-cyan-300">
+        <SecurityStatus
+          score={score}
+        />
 
-          <Sparkles size={18}/>
+        <InsightChips
+          score={score}
+        />
 
-          AI Generated Executive Summary
-
-        </div>
-
-      </div>
-
-      {/* Markdown */}
-
-      <div
-        className="
-        px-8
-        py-8
-
-        text-slate-200
-
-        [&_h1]:text-white
-        [&_h2]:text-white
-        [&_h3]:text-white
-        [&_h4]:text-white
-
-        [&_strong]:text-cyan-300
-
-        [&_p]:text-slate-200
-        [&_p]:leading-8
-
-        [&_li]:text-slate-200
-        [&_li]:mb-2
-
-        [&_ul]:list-disc
-        [&_ul]:ml-6
-
-        [&_ol]:list-decimal
-        [&_ol]:ml-6
-
-        [&_code]:text-cyan-300
-
-        [&_pre]:bg-slate-950
-        [&_pre]:rounded-xl
-        [&_pre]:p-4
-        "
-      >
-
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
+        <div
+          className="
+          rounded-xl
+          border
+          border-slate-700
+          bg-slate-950/40
+          p-6
+          "
         >
 
-          {summary}
+          <div className="flex items-center gap-3 mb-5">
 
-        </ReactMarkdown>
+            <ShieldCheck
+              className="text-cyan-400"
+              size={22}
+            />
+
+            <h3 className="text-lg font-semibold text-white">
+
+              AI Generated Executive Summary
+
+            </h3>
+
+          </div>
+
+          <div
+            className="
+            text-slate-200
+
+            [&_h1]:text-white
+            [&_h2]:text-white
+            [&_h3]:text-white
+            [&_h4]:text-white
+
+            [&_p]:text-slate-200
+            [&_p]:leading-8
+            [&_p]:mb-4
+
+            [&_strong]:text-cyan-300
+
+            [&_ul]:list-disc
+            [&_ul]:ml-6
+
+            [&_ol]:list-decimal
+            [&_ol]:ml-6
+
+            [&_li]:mb-2
+            [&_li]:text-slate-200
+
+            [&_code]:text-cyan-300
+
+            [&_pre]:bg-slate-900
+            [&_pre]:rounded-lg
+            [&_pre]:p-4
+            "
+          >
+
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+            >
+
+              {summary}
+
+            </ReactMarkdown>
+
+          </div>
+
+        </div>
 
       </div>
 
       {/* Footer */}
 
-      <div className="flex items-center justify-between px-8 py-5 border-t border-slate-700">
+      <div
+        className="
+        flex
+        justify-between
+        items-center
+        px-8
+        py-5
+        border-t
+        border-slate-700
+        "
+      >
 
-        <div className="flex items-center gap-2 text-green-400">
+        <div className="text-green-400 font-medium">
 
-          <ShieldCheck size={18}/>
-
-          Powered by CyberGPT
+          ✓ Powered by CyberGPT
 
         </div>
 
         <div className="text-slate-400 text-sm">
 
-          {lastUpdated
-            ? `Updated at ${lastUpdated.toLocaleTimeString()}`
-            : "Not updated"}
+          {
+
+            lastUpdated
+
+              ? `Updated at ${lastUpdated.toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}`
+
+              : "Not Updated"
+
+          }
 
         </div>
 

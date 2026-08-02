@@ -28,7 +28,11 @@ import { useAISummary } from "../hooks/useAISummary";
 
 export default function Dashboard() {
 
-  const { data, loading, error } = useDashboard();
+  const {
+    data,
+    loading,
+    error,
+  } = useDashboard();
 
   const {
     summary,
@@ -40,26 +44,43 @@ export default function Dashboard() {
   } = useAISummary();
 
   if (loading) {
+
     return (
+
       <div className="flex h-[70vh] items-center justify-center">
+
         <p className="text-lg text-slate-500">
+
           Loading dashboard...
+
         </p>
+
       </div>
+
     );
+
   }
 
   if (error || !data) {
+
     return (
+
       <div className="flex h-[70vh] items-center justify-center">
+
         <p className="text-lg text-red-500">
+
           {error || "Unable to load dashboard."}
+
         </p>
+
       </div>
+
     );
+
   }
 
   return (
+
     <div className="space-y-8">
 
       {/* Welcome */}
@@ -67,41 +88,60 @@ export default function Dashboard() {
       <section>
 
         <h1 className="text-4xl font-bold text-slate-800">
+
           Welcome Back 👋
+
         </h1>
 
         <p className="mt-2 text-slate-500">
+
           Monitor your cyber security posture and analyze threats in real time.
+
         </p>
 
       </section>
 
-      {/* AI Security Overview */}
+      {/* AI Summary */}
 
       <section>
 
-        {aiLoading && !summary ? (
+        {
 
-          <LoadingAISummary />
+          aiLoading && !summary
 
-        ) : aiError ? (
+            ?
 
-          <div className="rounded-2xl border border-red-300 bg-red-50 p-6 text-red-600 shadow">
+            <LoadingAISummary />
 
-            {aiError}
+            :
 
-          </div>
+            aiError
 
-        ) : (
+              ?
 
-          <AISummaryCard
-            summary={summary?.summary ?? ""}
-            lastUpdated={lastUpdated}
-            refreshing={refreshing}
-            onRefresh={refresh}
-          />
+              <div className="rounded-2xl border border-red-300 bg-red-50 p-6 text-red-600 shadow">
 
-        )}
+                {aiError}
+
+              </div>
+
+              :
+
+              <AISummaryCard
+
+                summary={summary?.summary ?? ""}
+
+                score={data.stats.securityScore}
+
+                lastUpdated={lastUpdated}
+
+                refreshing={refreshing}
+
+                onRefresh={refresh}
+
+              />
+
+        }
 
       </section>
 
@@ -230,34 +270,48 @@ export default function Dashboard() {
 
         <div className="space-y-4">
 
-          {data.activities.length === 0 ? (
+          {
 
-            <div className="rounded-xl border bg-white p-6 text-center text-slate-500 shadow-sm">
+            data.activities.length === 0
 
-              No recent activity found.
+              ?
 
-            </div>
+              <div className="rounded-xl border bg-white p-6 text-center text-slate-500 shadow-sm">
 
-          ) : (
+                No recent activity found.
 
-            data.activities.map((activity) => (
+              </div>
 
-              <ActivityCard
-                key={activity.id}
-                title={activity.title}
-                time={activity.time}
-                status={activity.status}
-              />
+              :
 
-            ))
+              data.activities.map(
 
-          )}
+                (activity) => (
+
+                  <ActivityCard
+
+                    key={activity.id}
+
+                    title={activity.title}
+
+                    time={activity.time}
+
+                    status={activity.status}
+
+                  />
+
+                ),
+
+              )
+
+          }
 
         </div>
 
       </section>
 
     </div>
+
   );
 
 }
