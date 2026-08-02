@@ -31,6 +31,7 @@ export default function Copilot() {
   const [conversationId, setConversationId] = useState<number>();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [conversations, setConversations] =useState<ConversationItem[]>([]);
+    const [search, setSearch] = useState("");
 
   useEffect(() => {
   const loadConversations = async () => {
@@ -98,15 +99,19 @@ export default function Copilot() {
       setLoading(false);
     }
   };
-
+    const filteredConversations = conversations.filter((conversation) =>
+  conversation.title
+    .toLowerCase()
+    .includes(search.toLowerCase())
+    );
   return (
     <div className="flex h-full overflow-hidden bg-slate-100">
       <ConversationSidebar
-  conversations={conversations}
+  conversations={filteredConversations}
   loading={false}
-  search=""
+  search={search}
   activeConversationId={conversationId ?? null}
-  onSearch={() => {}}
+  onSearch={setSearch}
 
   onSelectConversation={async (id) => {
   try {
