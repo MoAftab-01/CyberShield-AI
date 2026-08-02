@@ -6,6 +6,16 @@ import MessageList from "@/components/copilot/MessageList";
 import TypingIndicator from "@/components/copilot/TypingIndicator";
 
 import { askCopilot } from "@/services/copilotService";
+import {
+  ConversationItem,
+  getConversation,
+  getConversations,
+  deleteConversation,
+} from "@/services/conversationService";
+
+import { useEffect } from "react";
+
+
 import { Source } from "@/types/copilot";
 
 interface ChatMessage {
@@ -14,16 +24,26 @@ interface ChatMessage {
   sources?: Source[];
 }
 
-interface Conversation {
-  id: number;
-  title: string;
-}
+
 
 export default function Copilot() {
   const [loading, setLoading] = useState(false);
   const [conversationId, setConversationId] = useState<number>();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [conversations, setConversations] = useState<Conversation[]>([]);
+    const [conversations, setConversations] =useState<ConversationItem[]>([]);
+
+  useEffect(() => {
+  const loadConversations = async () => {
+    try {
+      const data = await getConversations();
+      setConversations(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  loadConversations();
+}, []);  
 
   const handleSend = async (question: string) => {
     if (!question.trim()) return;
@@ -47,13 +67,23 @@ export default function Copilot() {
       if (!conversationId) {
         setConversationId(response.conversation_id);
 
-        setConversations((prev) => [
-          {
-            id: response.conversation_id,
-            title: question,
-          },
-          ...prev,
-        ]);
+        setConversations((prev) => {
+  const exists = prev.some(
+    (conversation) =>
+      conversation.id === response.conversation_id
+  );
+
+  if (exists) return prev;
+
+  return [
+    {
+      id: response.conversation_id,
+      title: question,
+      updated_at: new Date().toISOString(),
+    },
+    ...prev,
+  ];
+});
       }
 
       setMessages((prev) => [
@@ -72,14 +102,50 @@ export default function Copilot() {
   return (
     <div className="flex h-full overflow-hidden bg-slate-100">
       <ConversationSidebar
-        conversations={conversations}
-        selectedConversation={conversationId}
-        onSelect={setConversationId}
-        onNewChat={() => {
-          setConversationId(undefined);
-          setMessages([]);
-        }}
-      />
+  conversations={conversations}
+  loading={false}
+  search=""
+  activeConversationId={conversationId ?? null}
+  onSearch={() => {}}
+
+  onSelectConversation={async (id) => {
+  try {
+    setConversationId(id);
+
+    const conversation = await getConversation(id);
+
+    setMessages(
+      conversation.messages.map((message) => ({
+        role: message.role,
+        content: message.content,
+      }))
+    );
+  } catch (error) {
+    console.error(error);
+  }
+}}
+
+  onDeleteConversation={async (id) => {
+  try {
+    await deleteConversation(id);
+
+    setConversations((prev) =>
+      prev.filter((conversation) => conversation.id !== id)
+    );
+
+    if (conversationId === id) {
+      setConversationId(undefined);
+      setMessages([]);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}}
+  onNewChat={() => {
+    setConversationId(undefined);
+    setMessages([]);
+  }}
+/>
 
       <div className="flex flex-1 flex-col min-h-0">
         {/* Header */}

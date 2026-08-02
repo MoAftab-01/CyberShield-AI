@@ -1,24 +1,24 @@
-export interface Source {
+    export interface Source {
 
-    filename: string;
+        filename: string;
 
-    page: number;
+        page: number;
 
-    folder: string;
-}
+        folder: string;
+    }
 
-export interface CopilotRequest {
+    export interface CopilotRequest {
 
-    question: string;
+        question: string;
 
-    conversation_id?: number;
-}
+        conversation_id?: number;
+    }
 
-export interface CopilotResponse {
+    export interface CopilotResponse {
 
-    conversation_id: number;
+        conversation_id: number;
 
-    answer: string;
+        answer: string;
 
-    sources: Source[];
-}
+        sources: Source[];
+    }

@@ -1,175 +1,144 @@
-import {
-    MessageSquare,
-    Plus,
-} from "lucide-react";
+import { Shield, Settings } from "lucide-react";
 
-import Button from "@/components/ui/Button";
+import ConversationList from "./ConversationList";
+import SearchConversation from "./SearchConversation";
+import NewChatButton from "./NewChatButton";
 
-interface Conversation {
-
-    id: number;
-
-    title: string;
-
-}
+import { ConversationItem } from "@/services/conversationService";
 
 interface Props {
+  conversations: ConversationItem[];
 
-    conversations: Conversation[];
+  loading: boolean;
 
-    selectedConversation?: number;
+  search: string;
 
-    onSelect: (id: number) => void;
+  activeConversationId: number | null;
 
-    onNewChat: () => void;
+  onSearch: (value: string) => void;
 
+  onSelectConversation: (id: number) => void;
+
+  onDeleteConversation: (id: number) => void;
+
+  onNewChat: () => void;
 }
 
 export default function ConversationSidebar({
-
-    conversations,
-
-    selectedConversation,
-
-    onSelect,
-
-    onNewChat,
-
+  conversations,
+  loading,
+  search,
+  activeConversationId,
+  onSearch,
+  onSelectConversation,
+  onDeleteConversation,
+  onNewChat,
 }: Props) {
+  return (
+    <aside
+      className="
+        w-80
+        h-full
+        bg-slate-950
+        border-r
+        border-slate-800
+        flex
+        flex-col
+      "
+    >
+      {/* Header */}
 
-    return (
-
-        <div
+      <div className="p-6 border-b border-slate-800">
+        <div className="flex items-center gap-3 mb-6">
+          <div
             className="
-            w-80
-            h-full
-            bg-white
-            border-r
-            border-slate-200
-            flex
-            flex-col
+              w-12
+              h-12
+              rounded-xl
+              bg-cyan-600
+              flex
+              items-center
+              justify-center
             "
-        >
+          >
+            <Shield
+              className="text-white"
+              size={24}
+            />
+          </div>
 
-            <div className="p-5 border-b border-slate-200">
+          <div>
+            <h2 className="text-white font-bold text-xl">
+              CyberGPT
+            </h2>
 
-                <Button
-
-                    className="w-full"
-
-                    leftIcon={<Plus size={18}/>}
-
-                    onClick={onNewChat}
-
-                >
-
-                    New Conversation
-
-                </Button>
-
-            </div>
-
-            <div className="flex-1 overflow-y-auto">
-
-                {
-
-                    conversations.length === 0 ? (
-
-                        <div className="p-6 text-center text-slate-500">
-
-                            No conversations yet.
-
-                        </div>
-
-                    ) : (
-
-                        conversations.map(
-
-                            (
-
-                                conversation,
-
-                            ) => (
-
-                                <button
-
-                                    key={conversation.id}
-
-                                    onClick={() =>
-
-                                        onSelect(
-
-                                            conversation.id,
-
-                                        )
-
-                                    }
-
-                                    className={`
-
-                                        w-full
-
-                                        flex
-
-                                        items-center
-
-                                        gap-3
-
-                                        px-5
-
-                                        py-4
-
-                                        text-left
-
-                                        transition
-
-                                        hover:bg-slate-100
-
-                                        ${
-                                            selectedConversation === conversation.id
-
-                                                ? "bg-blue-50"
-
-                                                : ""
-
-                                        }
-
-                                    `}
-
-                                >
-
-                                    <MessageSquare
-
-                                        size={18}
-
-                                    />
-
-                                    <span
-                                        className="truncate"
-                                    >
-
-                                        {
-
-                                            conversation.title
-
-                                        }
-
-                                    </span>
-
-                                </button>
-
-                            ),
-
-                        )
-
-                    )
-
-                }
-
-            </div>
-
+            <p className="text-slate-400 text-sm">
+              Enterprise AI Security Assistant
+            </p>
+          </div>
         </div>
 
-    );
+        <NewChatButton
+          onClick={onNewChat}
+        />
+      </div>
 
+      {/* Search */}
+
+      <div className="p-4">
+        <SearchConversation
+          value={search}
+          onChange={onSearch}
+        />
+      </div>
+
+      {/* Conversation List */}
+
+      <div
+        className="
+          flex-1
+          overflow-y-auto
+          px-4
+          pb-4
+        "
+      >
+        <ConversationList
+          conversations={conversations}
+          loading={loading}
+          activeConversationId={activeConversationId}
+          onSelect={onSelectConversation}
+          onDelete={onDeleteConversation}
+        />
+      </div>
+
+      {/* Footer */}
+
+      <div
+        className="
+          border-t
+          border-slate-800
+          p-5
+        "
+      >
+        <button
+          className="
+            w-full
+            flex
+            items-center
+            gap-3
+            rounded-xl
+            px-4
+            py-3
+            text-slate-300
+            hover:bg-slate-900
+            transition
+          "
+        >
+          <Settings size={20} />
+
+          Settings
+        </button>
+      </div>
+    </aside>
+  );
 }
