@@ -9,6 +9,13 @@ import URLTable from "../components/reports/URLTable";
 import ExecutiveSummaryCard from "../components/reports/ExecutiveSummaryCard";
 import { useAISummary } from "../hooks/useAISummary";
 
+import { Download } from "lucide-react";
+
+import {
+  generateExecutiveReport,
+} from "../services/pdfReportService";
+
+
 export default function Reports() {
   const { passwordReports, urlReports, loading } = useReports();
 
@@ -45,15 +52,48 @@ export default function Reports() {
           Review historical password and URL scans.
         </p>
       </div>
+
       <ExecutiveSummaryCard
   summary={summary?.summary ?? ""}
   loading={aiLoading}
   onRefresh={refresh}
 />
 
-      {/* Tabs */}
+<div className="flex justify-end">
 
-      <div className="flex gap-4">
+  <button
+    onClick={() =>
+      generateExecutiveReport(
+        summary?.summary ?? "",
+        passwordReports?.items.length ?? 0,
+        urlReports?.items.length ?? 0,
+      )
+    }
+    className="
+      flex
+      items-center
+      gap-2
+      rounded-xl
+      bg-cyan-600
+      px-5
+      py-3
+      text-white
+      hover:bg-cyan-700
+      transition
+    "
+  >
+
+    <Download size={18} />
+
+    Export Executive Report
+
+  </button>
+
+</div>
+
+{/* Tabs */}
+
+<div className="flex gap-4">
 
         <button
           onClick={() => setTab("passwords")}
