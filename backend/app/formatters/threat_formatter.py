@@ -1,7 +1,26 @@
 class ThreatFormatter:
 
     @staticmethod
-    def format(data: dict) -> str:
+    def format(data) -> str:
+
+        # ------------------------------------
+        # LLM Responses
+        # ------------------------------------
+
+        if isinstance(data, dict):
+
+            if "answer" in data:
+                return data["answer"]
+
+            if "message" in data:
+                return data["message"]
+
+            if "error" in data:
+                return f"❌ {data['error']}"
+
+        # ------------------------------------
+        # Threat Lookup
+        # ------------------------------------
 
         severity = data.get("severity", "Unknown")
         cvss = data.get("cvss", "N/A")
@@ -12,10 +31,25 @@ class ThreatFormatter:
 
         product = data.get("product", "Unknown")
 
-        exploited = "Yes" if data.get("known_exploited") else "No"
+        exploited = (
+            "Yes"
+            if data.get("known_exploited")
+            else "No"
+        )
 
-        epss = float(data.get("epss_score", 0)) * 100
-        percentile = float(data.get("epss_percentile", 0)) * 100
+        epss = float(
+            data.get(
+                "epss_score",
+                0,
+            )
+        ) * 100
+
+        percentile = float(
+            data.get(
+                "epss_percentile",
+                0,
+            )
+        ) * 100
 
         summary = data.get(
             "ai_summary",
@@ -54,7 +88,9 @@ class ThreatFormatter:
         recommendations_text = ""
 
         for item in recommendations:
-            recommendations_text += f"- {item}\n"
+            recommendations_text += (
+                f"- {item}\n"
+            )
 
         return f"""# 🛡️ {data.get("cve")}
 
@@ -75,6 +111,8 @@ class ThreatFormatter:
 ## ⚠️ Threat Assessment
 
 {assessment}
+
+**Risk Level:** {risk}
 
 ---
 

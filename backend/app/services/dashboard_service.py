@@ -1,6 +1,8 @@
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
+from app.database.models import User
+
 from app.models.password_scan import PasswordScan
 from app.models.url_scan import URLScan
 
@@ -8,18 +10,37 @@ from app.models.url_scan import URLScan
 class DashboardService:
 
     @staticmethod
-    def get_dashboard_stats(db: Session):
+    def get_dashboard_stats(
+        db: Session,
+        current_user: User,
+    ):
 
         # -----------------------
         # Basic Counts
         # -----------------------
-        password_count = db.query(PasswordScan).count()
 
-        url_count = db.query(URLScan).count()
+        password_count = (
+            db.query(PasswordScan)
+            .filter(
+                PasswordScan.user_id == current_user.id
+            )
+            .count()
+        )
+
+        url_count = (
+            db.query(URLScan)
+            .filter(
+                URLScan.user_id == current_user.id
+            )
+            .count()
+        )
 
         threat_count = (
             db.query(URLScan)
-            .filter(URLScan.is_safe == False)
+            .filter(
+                URLScan.user_id == current_user.id,
+                URLScan.is_safe == False,
+            )
             .count()
         )
 
@@ -31,52 +52,93 @@ class DashboardService:
         # -----------------------
         # Password Distribution
         # -----------------------
+
         password_distribution = {
-            "Weak": db.query(PasswordScan)
-            .filter(PasswordScan.password_strength == "Weak")
-            .count(),
 
-            "Medium": db.query(PasswordScan)
-            .filter(PasswordScan.password_strength == "Medium")
-            .count(),
+            "Weak": (
+                db.query(PasswordScan)
+                .filter(
+                    PasswordScan.user_id == current_user.id,
+                    PasswordScan.password_strength == "Weak",
+                )
+                .count()
+            ),
 
-            "Strong": db.query(PasswordScan)
-            .filter(PasswordScan.password_strength == "Strong")
-            .count(),
+            "Medium": (
+                db.query(PasswordScan)
+                .filter(
+                    PasswordScan.user_id == current_user.id,
+                    PasswordScan.password_strength == "Medium",
+                )
+                .count()
+            ),
+
+            "Strong": (
+                db.query(PasswordScan)
+                .filter(
+                    PasswordScan.user_id == current_user.id,
+                    PasswordScan.password_strength == "Strong",
+                )
+                .count()
+            ),
         }
 
         # -----------------------
         # URL Distribution
         # -----------------------
+
         url_distribution = {
-            "Low": db.query(URLScan)
-            .filter(URLScan.final_risk_level == "Low")
-            .count(),
 
-            "Medium": db.query(URLScan)
-            .filter(URLScan.final_risk_level == "Medium")
-            .count(),
+            "Low": (
+                db.query(URLScan)
+                .filter(
+                    URLScan.user_id == current_user.id,
+                    URLScan.final_risk_level == "Low",
+                )
+                .count()
+            ),
 
-            "High": db.query(URLScan)
-            .filter(URLScan.final_risk_level == "High")
-            .count(),
+            "Medium": (
+                db.query(URLScan)
+                .filter(
+                    URLScan.user_id == current_user.id,
+                    URLScan.final_risk_level == "Medium",
+                )
+                .count()
+            ),
+
+            "High": (
+                db.query(URLScan)
+                .filter(
+                    URLScan.user_id == current_user.id,
+                    URLScan.final_risk_level == "High",
+                )
+                .count()
+            ),
         }
 
         # -----------------------
         # Top Domains
         # -----------------------
+
         top_domains = (
             db.query(
                 URLScan.domain,
                 func.count(URLScan.domain).label("count"),
             )
+            .filter(
+                URLScan.user_id == current_user.id,
+            )
             .group_by(URLScan.domain)
-            .order_by(func.count(URLScan.domain).desc())
+            .order_by(
+                func.count(URLScan.domain).desc()
+            )
             .limit(5)
             .all()
         )
 
         return {
+
             "stats": {
                 "securityScore": security_score,
                 "passwordsChecked": password_count,

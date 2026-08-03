@@ -14,6 +14,7 @@ from app.services.ai_service import AIService
 
 from app.database.threat_crud import ThreatCRUD
 
+from app.services.llm.provider_factory import ProviderFactory
 
 class ThreatService:
 
@@ -99,3 +100,78 @@ class ThreatService:
         db: Session,
     ):
         return ThreatCRUD.get_total_searches(db)
+
+    @staticmethod
+    def explain(cve: str):
+
+        provider = ProviderFactory.get_provider()
+
+        return {
+            "answer": provider.chat(
+                f"""
+You are a cybersecurity expert.
+
+Explain vulnerability {cve}.
+
+Include:
+- What it is
+- Why it matters
+- Business impact
+
+Use markdown.
+"""
+            )
+        }
+
+    @staticmethod
+    def remediation(cve: str):
+
+        provider = ProviderFactory.get_provider()
+
+        return {
+            "answer": provider.chat(
+                f"""
+You are a cybersecurity expert.
+
+Provide remediation guidance for {cve}.
+
+Use bullet points.
+
+Focus on practical actions.
+"""
+            )
+        }
+
+    @staticmethod
+    def mitre(cve: str):
+
+        provider = ProviderFactory.get_provider()
+
+        return {
+            "answer": provider.chat(
+                f"""
+Explain how {cve} relates to the MITRE ATT&CK framework.
+
+Mention likely tactics and techniques.
+
+Use markdown.
+"""
+            )
+        }
+
+    @staticmethod
+    def summary(cve: str):
+
+        provider = ProviderFactory.get_provider()
+
+        return {
+            "answer": provider.chat(
+                f"""
+Provide an executive summary for {cve}.
+
+Maximum 200 words.
+
+Focus on business impact and urgency.
+"""
+            )
+        }

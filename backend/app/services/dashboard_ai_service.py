@@ -1,5 +1,7 @@
 from sqlalchemy.orm import Session
 
+from app.database.models import User
+
 from app.services.dashboard_service import DashboardService
 from app.services.conversation_service import ConversationService
 from app.services.llm.provider_factory import ProviderFactory
@@ -10,25 +12,27 @@ class DashboardAIService:
     @staticmethod
     def generate_summary(
         db: Session,
-        user_id: int = 1,
+        current_user: User,
     ):
 
-        dashboard = DashboardService.get_dashboard_stats(db)
+        dashboard = DashboardService.get_dashboard_stats(
+            db=db,
+            current_user=current_user,
+        )
 
         conversations = ConversationService.list_conversations(
             db=db,
-            user_id=user_id,
+            user_id=current_user.id,
         )
 
         recent = conversations[:5]
 
-        conversation_text = ""
-
         if recent:
 
-            for chat in recent:
-
-                conversation_text += f"- {chat.title}\n"
+            conversation_text = "\n".join(
+                f"- {chat.title}"
+                for chat in recent
+            )
 
         else:
 

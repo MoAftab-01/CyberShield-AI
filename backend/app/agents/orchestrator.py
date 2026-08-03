@@ -33,9 +33,22 @@ class CyberGPTOrchestrator:
 
         print(f"[CyberGPT] Intent -> {intent}")
 
-        # ---------------------------------------------------
-        # Create conversation if needed
-        # ---------------------------------------------------
+        # ---------------------------------------
+        # KNOWLEDGE AGENT
+        # ---------------------------------------
+
+        if intent == "knowledge":
+
+            return self.knowledge_agent.handle(
+                question=question,
+                db=db,
+                user_id=user_id,
+                conversation_id=conversation_id,
+            )
+
+        # ---------------------------------------
+        # Create Conversation
+        # ---------------------------------------
 
         if conversation_id is None:
 
@@ -47,9 +60,9 @@ class CyberGPTOrchestrator:
 
             conversation_id = conversation.id
 
-        # ---------------------------------------------------
+        # ---------------------------------------
         # Save User Message
-        # ---------------------------------------------------
+        # ---------------------------------------
 
         ConversationService.add_user_message(
             db=db,
@@ -57,24 +70,11 @@ class CyberGPTOrchestrator:
             message=question,
         )
 
-        # ---------------------------------------------------
-        # KNOWLEDGE AGENT
-        # ---------------------------------------------------
+        # ---------------------------------------
+        # THREAT
+        # ---------------------------------------
 
-        if intent == "knowledge":
-
-            return self.knowledge_agent.handle(
-                question=question,
-                db=db,
-                user_id=user_id,
-                conversation_id=conversation_id,
-            )
-
-        # ---------------------------------------------------
-        # THREAT AGENT
-        # ---------------------------------------------------
-
-        elif intent == "threat":
+        if intent == "threat":
 
             result = self.threat_agent.handle(
                 question=question,
@@ -83,9 +83,9 @@ class CyberGPTOrchestrator:
 
             answer = ThreatFormatter.format(result)
 
-        # ---------------------------------------------------
-        # URL AGENT
-        # ---------------------------------------------------
+        # ---------------------------------------
+        # URL
+        # ---------------------------------------
 
         elif intent == "url":
 
@@ -97,9 +97,9 @@ class CyberGPTOrchestrator:
 
             answer = URLFormatter.format(result)
 
-        # ---------------------------------------------------
-        # PASSWORD AGENT
-        # ---------------------------------------------------
+        # ---------------------------------------
+        # PASSWORD
+        # ---------------------------------------
 
         elif intent == "password":
 
@@ -111,9 +111,9 @@ class CyberGPTOrchestrator:
 
             answer = PasswordFormatter.format(result)
 
-        # ---------------------------------------------------
+        # ---------------------------------------
         # DEFAULT
-        # ---------------------------------------------------
+        # ---------------------------------------
 
         else:
 
@@ -122,9 +122,9 @@ class CyberGPTOrchestrator:
                 "should handle your request."
             )
 
-        # ---------------------------------------------------
-        # Save AI Response
-        # ---------------------------------------------------
+        # ---------------------------------------
+        # Save AI Message
+        # ---------------------------------------
 
         ConversationService.add_ai_message(
             db=db,
@@ -132,9 +132,9 @@ class CyberGPTOrchestrator:
             message=answer,
         )
 
-        # ---------------------------------------------------
-        # Return Chat Response
-        # ---------------------------------------------------
+        # ---------------------------------------
+        # Return
+        # ---------------------------------------
 
         return {
             "conversation_id": conversation_id,

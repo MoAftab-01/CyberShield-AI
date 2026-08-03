@@ -121,25 +121,14 @@ Rules
 
 3. Never invent information.
 
-4. If the answer is unavailable,
-say so.
+4. If the answer is unavailable, say so.
 
 5. Always recommend security best practices.
 """
 
-        # ---------------------------------------
-        # LLM
-        # ---------------------------------------
-
         provider = ProviderFactory.get_provider()
 
-        answer = provider.chat(
-            prompt
-        )
-
-        # ---------------------------------------
-        # Save Assistant Message
-        # ---------------------------------------
+        answer = provider.chat(prompt)
 
         ConversationService.add_ai_message(
             db=db,
@@ -147,12 +136,7 @@ say so.
             message=answer,
         )
 
-        # ---------------------------------------
-        # Sources
-        # ---------------------------------------
-
         sources = []
-
         seen = set()
 
         for doc in documents:
@@ -176,11 +160,79 @@ say so.
             )
 
         return {
-
             "conversation_id": conversation_id,
-
             "answer": answer,
-
             "sources": sources,
+        }
 
+    @staticmethod
+    def summarize(
+        question: str,
+        db: Session,
+        user_id: int,
+        conversation_id: int | None = None,
+    ):
+
+        return RAGService.ask(
+            question=f"""
+Summarize the uploaded document(s).
+
+User Request:
+
+{question}
+""",
+            db=db,
+            user_id=user_id,
+            conversation_id=conversation_id,
+        )
+
+    @staticmethod
+    def compare(
+        question: str,
+        db: Session,
+        user_id: int,
+        conversation_id: int | None = None,
+    ):
+
+        return RAGService.ask(
+            question=f"""
+Compare the uploaded document(s).
+
+User Request:
+
+{question}
+""",
+            db=db,
+            user_id=user_id,
+            conversation_id=conversation_id,
+        )
+
+    @staticmethod
+    def general(
+        question: str,
+    ):
+
+        provider = ProviderFactory.get_provider()
+
+        answer = provider.chat(
+            f"""
+You are CyberGPT, an enterprise cybersecurity assistant.
+
+Answer the following question using your cybersecurity knowledge.
+
+Question:
+{question}
+
+Rules:
+- Be accurate.
+- Use markdown.
+- Keep the answer concise.
+- Include security best practices when appropriate.
+"""
+        )
+
+        return {
+            "conversation_id": None,
+            "answer": answer,
+            "sources": [],
         }

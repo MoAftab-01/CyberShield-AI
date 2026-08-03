@@ -1,92 +1,46 @@
+import { useState } from "react";
 import {
   Bell,
   Search,
-  ShieldCheck,
+  ChevronDown,
+  LogOut,
 } from "lucide-react";
 
-import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function Navbar() {
+  const [open, setOpen] = useState(false);
 
-  const location = useLocation();
+  const { user, logout } = useAuth();
 
-  const getTitle = () => {
+  const navigate = useNavigate();
 
-    switch (location.pathname) {
-
-      case "/":
-      case "/dashboard":
-        return {
-          title: "Dashboard",
-          subtitle:
-            "AI Powered Cyber Threat Intelligence",
-        };
-
-      case "/copilot":
-        return {
-          title: "CyberGPT",
-          subtitle:
-            "Enterprise AI Security Assistant",
-        };
-
-      case "/password":
-        return {
-          title: "Password Analyzer",
-          subtitle:
-            "Analyze password strength and security",
-        };
-
-      case "/url-scanner":
-        return {
-          title: "URL Scanner",
-          subtitle:
-            "Detect phishing and malicious websites",
-        };
-
-      case "/threat-intel":
-        return {
-          title: "Threat Intelligence",
-          subtitle:
-            "Analyze CVEs and security threats",
-        };
-
-      case "/reports":
-        return {
-          title: "Reports",
-          subtitle:
-            "View reports and analytics",
-        };
-
-      default:
-        return {
-          title: "CyberShield AI",
-          subtitle:
-            "Enterprise Cybersecurity Platform",
-        };
-
-    }
-
-  };
-
-  const page = getTitle();
+  function handleLogout() {
+    logout();
+    navigate("/login");
+  }
 
   return (
-
     <header className="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8">
 
-      <div>
+      {/* Left */}
 
+      <div>
         <h1 className="text-2xl font-bold text-slate-800">
-          {page.title}
+          Dashboard
         </h1>
 
         <p className="text-slate-500">
-          {page.subtitle}
+          AI Powered Cyber Threat Intelligence
         </p>
-
       </div>
 
+      {/* Right */}
+
       <div className="flex items-center gap-6">
+
+        {/* Search */}
 
         <div className="relative">
 
@@ -96,26 +50,93 @@ export default function Navbar() {
           />
 
           <input
-            className="w-72 rounded-xl border border-slate-300 py-2 pl-10 pr-4 outline-none focus:border-cyan-500"
             placeholder="Search..."
+            className="w-72 rounded-xl border border-slate-300 py-2 pl-10 pr-4 outline-none focus:border-cyan-500"
           />
 
         </div>
+
+        {/* Notification */}
 
         <Bell
           size={22}
           className="cursor-pointer text-slate-600 hover:text-cyan-600"
         />
 
-        <ShieldCheck
-          size={24}
-          className="text-cyan-600"
-        />
+        {/* User */}
+
+        <div className="relative">
+
+          <button
+            onClick={() => setOpen(!open)}
+            className="flex items-center gap-3 rounded-xl border bg-white px-3 py-2 hover:bg-slate-50"
+          >
+
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-cyan-600 text-white font-semibold">
+
+              {user?.name?.charAt(0).toUpperCase() ?? "U"}
+
+            </div>
+
+            <div className="text-left">
+
+              <div className="font-semibold text-slate-800">
+
+                {user?.name ?? "User"}
+
+              </div>
+
+              <div className="text-xs text-slate-500">
+
+                {user?.email}
+
+              </div>
+
+            </div>
+
+            <ChevronDown size={18} />
+
+          </button>
+
+          {open && (
+
+            <div className="absolute right-0 mt-3 w-64 overflow-hidden rounded-xl border bg-white shadow-xl z-50">
+
+              <div className="border-b px-4 py-4">
+
+                <div className="font-semibold">
+
+                  {user?.name}
+
+                </div>
+
+                <div className="text-sm text-slate-500">
+
+                  {user?.email}
+
+                </div>
+
+              </div>
+
+              <button
+                onClick={handleLogout}
+                className="flex w-full items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50"
+              >
+
+                <LogOut size={18} />
+
+                Logout
+
+              </button>
+
+            </div>
+
+          )}
+
+        </div>
 
       </div>
 
     </header>
-
   );
-
 }

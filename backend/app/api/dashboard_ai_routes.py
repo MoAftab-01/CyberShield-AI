@@ -2,6 +2,9 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
+from app.database.models import User
+from app.dependencies.auth import get_current_user
+
 from app.services.dashboard_ai_service import DashboardAIService
 
 router = APIRouter(
@@ -13,17 +16,27 @@ router = APIRouter(
 @router.get("/ai-summary")
 def get_ai_summary(
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """
     Generate an AI-powered executive security summary
-    for the dashboard.
+    for the logged-in user.
     """
-
-    # TODO:
-    # Replace hardcoded user_id after JWT integration
-    user_id = 1
 
     return DashboardAIService.generate_summary(
         db=db,
-        user_id=user_id,
+        current_user=current_user,
+    )
+
+@router.get("/ai-summary")
+def get_ai_summary(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    print("AI SUMMARY ROUTE HIT")
+    print(current_user)
+
+    return DashboardAIService.generate_summary(
+        db=db,
+        current_user=current_user,
     )

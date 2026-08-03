@@ -3,6 +3,22 @@ class URLFormatter:
     @staticmethod
     def format(data) -> str:
 
+        # ------------------------------------
+        # LLM Responses
+        # ------------------------------------
+
+        if isinstance(data, dict):
+
+            if "answer" in data:
+                return data["answer"]
+
+            if "message" in data:
+                return data["message"]
+
+        # ------------------------------------
+        # URL Analysis
+        # ------------------------------------
+
         recommendations = ""
 
         for rec in getattr(data, "recommendations", []):

@@ -1,8 +1,12 @@
+import secrets
+import string
+
 from sqlalchemy.orm import Session
 
 from app.database.models import User
 from app.models.password_scan import PasswordScan
 from app.schemas.password_schema import PasswordResponse
+from app.services.llm.provider_factory import ProviderFactory
 from app.utils.password_utils import (
     calculate_entropy,
     calculate_score,
@@ -46,9 +50,6 @@ class PasswordService:
             patterns=patterns,
         )
 
-        # -----------------------------
-        # Save Scan to PostgreSQL
-        # -----------------------------
         scan = PasswordScan(
             user_id=current_user.id,
             password_strength=password_strength(score),
@@ -59,9 +60,6 @@ class PasswordService:
         db.add(scan)
         db.commit()
 
-        # -----------------------------
-        # Return API Response
-        # -----------------------------
         return PasswordResponse(
             password=password,
             length=len(password),
@@ -81,3 +79,86 @@ class PasswordService:
             risk_level=risk["risk_level"],
             recommendations=risk["recommendations"],
         )
+
+    @staticmethod
+    def generate(length: int = 16):
+
+        alphabet = (
+            string.ascii_letters
+            + string.digits
+            + "!@#$%^&*()-_=+"
+        )
+
+        while True:
+
+            password = "".join(
+                secrets.choice(alphabet)
+                for _ in range(length)
+            )
+
+            if (
+                any(c.isupper() for c in password)
+                and any(c.islower() for c in password)
+                and any(c.isdigit() for c in password)
+                and any(c in "!@#$%^&*()-_=+" for c in password)
+            ):
+                break
+
+        return {
+            "answer": f"""
+# 🔐 Suggested Strong Password
+
+**{password}**
+
+Length: {length}
+
+✅ Uppercase
+
+✅ Lowercase
+
+✅ Numbers
+
+✅ Special Characters
+
+Store this password in a password manager and enable MFA wherever possible.
+"""
+        }
+
+    @staticmethod
+    def recommend():
+
+        provider = ProviderFactory.get_provider()
+
+        return {
+            "answer": provider.chat(
+                """
+You are a cybersecurity expert.
+
+Provide concise password best practices.
+
+Use markdown bullet points.
+
+Maximum 8 bullets.
+"""
+            )
+        }
+
+    @staticmethod
+    def explain(question: str):
+
+        provider = ProviderFactory.get_provider()
+
+        return {
+            "answer": provider.chat(
+                f"""
+You are a cybersecurity expert.
+
+Explain this password-related question.
+
+Question:
+{question}
+
+Keep the explanation concise and practical.
+"""
+            )
+        }

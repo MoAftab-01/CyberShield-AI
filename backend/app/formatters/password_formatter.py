@@ -1,76 +1,77 @@
+from app.schemas.password_schema import PasswordResponse
+
+
 class PasswordFormatter:
 
     @staticmethod
-    def format(data) -> str:
+    def format(result):
 
-        recommendations = ""
+        # ------------------------------------
+        # LLM Responses
+        # ------------------------------------
 
-        for rec in getattr(data, "recommendations", []):
-            recommendations += f"- {rec}\n"
+        if isinstance(result, dict):
 
-        dictionary = getattr(
-            data,
-            "detected_dictionary_words",
-            [],
-        )
+            if "answer" in result:
+                return result["answer"]
 
-        patterns = getattr(
-            data,
-            "detected_patterns",
-            [],
-        )
+            if "message" in result:
+                return result["message"]
 
-        dictionary = (
-            ", ".join(dictionary)
-            if dictionary
-            else "None"
-        )
+        # ------------------------------------
+        # Password Analysis
+        # ------------------------------------
 
-        patterns = (
-            ", ".join(patterns)
-            if patterns
-            else "None"
-        )
+        if isinstance(result, PasswordResponse):
 
-        return f"""# 🔐 Password Security Analysis
+            return f"""
+# 🔐 Password Security Analysis
 
 ## 💪 Strength
 
-**{data.strength}**
+**{result.strength}**
 
-Score: {data.score}/100
+Score: {result.score}/100
 
-Entropy: {data.entropy:.2f}
+Entropy: {result.entropy:.2f}
 
-Entropy Rating: {data.entropy_rating}
+Entropy Rating: {result.entropy_rating}
 
 ---
 
 ## 🔍 Password Composition
 
-- Uppercase: {"✅" if data.has_uppercase else "❌"}
+- Uppercase: {"✅" if result.has_uppercase else "❌"}
 
-- Lowercase: {"✅" if data.has_lowercase else "❌"}
+- Lowercase: {"✅" if result.has_lowercase else "❌"}
 
-- Numbers: {"✅" if data.has_number else "❌"}
+- Numbers: {"✅" if result.has_number else "❌"}
 
-- Special Characters: {"✅" if data.has_special_character else "❌"}
+- Special Characters: {"✅" if result.has_special_character else "❌"}
 
 ---
 
 ## 🚨 Risks
 
-Risk Score: {data.risk_score}
+Risk Score: {result.risk_score}
 
-Risk Level: {data.risk_level}
+Risk Level: {result.risk_level}
 
-Dictionary Words: {dictionary}
+Dictionary Words:
+{", ".join(result.detected_dictionary_words) if result.detected_dictionary_words else "None"}
 
-Patterns: {patterns}
+Patterns:
+{", ".join(result.detected_patterns) if result.detected_patterns else "None"}
 
 ---
 
 ## 🛠️ Recommendations
 
-{recommendations}
+{chr(10).join(f"- {item}" for item in result.recommendations)}
 """
+
+        # ------------------------------------
+        # Fallback
+        # ------------------------------------
+
+        return str(result)

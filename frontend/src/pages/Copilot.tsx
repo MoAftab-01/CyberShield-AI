@@ -5,6 +5,9 @@ import ConversationSidebar from "@/components/copilot/ConversationSidebar";
 import MessageList from "@/components/copilot/MessageList";
 import TypingIndicator from "@/components/copilot/TypingIndicator";
 
+import ChatFooter from "@/components/copilot/ChatFooter";
+import ChatWelcome from "@/components/copilot/ChatWelcome";
+
 import { toast } from "sonner";
 
 import { askCopilot } from "@/services/copilotService";
@@ -248,53 +251,9 @@ const handleDeleteDocument = async (
 
         <div className="flex-1 overflow-y-auto px-8 py-8">
           {messages.length === 0 ? (
-            <div className="max-w-4xl mx-auto mt-12">
-              <h2 className="text-4xl font-bold text-slate-800 mb-4">
-                Welcome to CyberGPT 👋
-              </h2>
-
-              <p className="text-slate-500 text-lg mb-10">
-                Your enterprise AI assistant for cybersecurity.
-              </p>
-
-              <div className="grid grid-cols-2 gap-5">
-                <button
-                  onClick={() =>
-                    handleSend("Analyze CVE-2024-4577")
-                  }
-                  className="rounded-xl bg-white border p-6 hover:border-cyan-500 transition text-left"
-                >
-                  🛡 Analyze CVE-2024-4577
-                </button>
-
-                <button
-                  onClick={() =>
-                    handleSend("Explain SQL Injection")
-                  }
-                  className="rounded-xl bg-white border p-6 hover:border-cyan-500 transition text-left"
-                >
-                  🔐 Explain SQL Injection
-                </button>
-
-                <button
-                  onClick={() =>
-                    handleSend("Explain OWASP Top 10")
-                  }
-                  className="rounded-xl bg-white border p-6 hover:border-cyan-500 transition text-left"
-                >
-                  📚 Explain OWASP Top 10
-                </button>
-
-                <button
-                  onClick={() =>
-                    handleSend("Explain MITRE ATT&CK")
-                  }
-                  className="rounded-xl bg-white border p-6 hover:border-cyan-500 transition text-left"
-                >
-                  🎯 Explain MITRE ATT&CK
-                </button>
-              </div>
-            </div>
+            <ChatWelcome
+  onSuggestion={handleSend}
+/>
           ) : (
             <>
               <MessageList messages={messages} />
@@ -310,79 +269,13 @@ const handleDeleteDocument = async (
 
         {/* Fixed Footer */}
 
-        <footer className="bg-white border-t p-5 flex-shrink-0">
-
-  <div className="max-w-5xl mx-auto">
-
-    {uploadedFiles.length > 0 && (
-
-      <div className="flex flex-wrap gap-2 mb-3">
-
-        {uploadedFiles.map((file) => (
-
-          <div
-            key={file.filename}
-            className="
-              flex
-              items-center
-              gap-2
-              bg-slate-100
-              border
-              rounded-full
-              px-3
-              py-1
-              text-sm
-            "
-          >
-
-            📄
-
-            <span className="max-w-[220px] truncate">
-              {file.filename}
-            </span>
-
-            <button
-              onClick={() =>
-                handleDeleteDocument(
-                  file.filename,
-                )
-              }
-              className="
-                text-red-500
-                hover:text-red-700
-              "
-            >
-              ✕
-            </button>
-
-          </div>
-
-        ))}
-
-      </div>
-
-    )}
-
-    <div className="flex items-center gap-3">
-
-      <UploadButton
-        onUpload={handleUpload}
-      />
-
-      <div className="flex-1">
-
-        <ChatInput
-          loading={loading}
-          onSend={handleSend}
-        />
-
-      </div>
-
-    </div>
-
-  </div>
-
-</footer>
+        <ChatFooter
+  loading={loading}
+  uploadedFiles={uploadedFiles}
+  onSend={handleSend}
+  onUpload={handleUpload}
+  onDeleteDocument={handleDeleteDocument}
+/>
       </div>
     </div>
   );

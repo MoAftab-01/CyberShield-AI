@@ -16,6 +16,7 @@ from app.utils.url_utils import (
     uses_https,
 )
 
+from app.services.llm.provider_factory import ProviderFactory
 
 class URLService:
 
@@ -98,3 +99,62 @@ class URLService:
             confidence=aggregation["confidence"],
             analysis_summary=aggregation["reasons"],
         )
+
+    @staticmethod
+    def explain(question: str):
+
+        provider = ProviderFactory.get_provider()
+
+        return {
+            "answer": provider.chat(
+                f"""
+You are a cybersecurity expert.
+
+Explain the following URL security question.
+
+Question:
+{question}
+
+Be concise and practical.
+"""
+            )
+        }
+
+    @staticmethod
+    def recommend():
+
+        provider = ProviderFactory.get_provider()
+
+        return {
+            "answer": provider.chat(
+                """
+You are a cybersecurity expert.
+
+Provide URL safety best practices.
+
+Use markdown bullet points.
+
+Maximum 8 bullets.
+"""
+            )
+        }
+
+    @staticmethod
+    def education(question: str):
+
+        provider = ProviderFactory.get_provider()
+
+        return {
+            "answer": provider.chat(
+                f"""
+You are a cybersecurity trainer.
+
+Teach the following topic clearly.
+
+Topic:
+{question}
+
+Use markdown headings and bullets.
+"""
+            )
+        }    

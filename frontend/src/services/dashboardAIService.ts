@@ -1,16 +1,13 @@
-import axios from "axios";
-
-const API = "http://localhost:8000";
+import api from "./api";
 
 export interface AISummaryResponse {
-    summary: string;
+  summary: string;
 }
 
 export async function getAISummary(): Promise<AISummaryResponse> {
+  const response = await api.get<AISummaryResponse>(
+    "/dashboard/ai-summary"
+  );
 
-    const response = await axios.get<AISummaryResponse>(
-        `${API}/dashboard/ai-summary`
-    );
-
-    return response.data;
+  return response.data;
 }
