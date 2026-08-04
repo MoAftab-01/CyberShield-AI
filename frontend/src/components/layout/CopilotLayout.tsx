@@ -1,23 +1,58 @@
+import { useState } from "react";
 import { Outlet } from "react-router-dom";
 
-import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
+import AnimatedBackground from "./AnimatedBackground";
 
 export default function CopilotLayout() {
+
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
-    <div className="h-screen flex bg-slate-100 overflow-hidden">
+    <div
+      className="
+      relative
+      flex
+      h-screen
+      overflow-hidden
+      bg-[#06111F]
+      "
+    >
+      {/* Galaxy Background */}
 
-      <Sidebar />
+      <AnimatedBackground />
 
-      <div className="flex flex-col flex-1 overflow-hidden">
+      {/* Sidebar */}
 
-        <Navbar />
+      <div className="relative z-20">
 
-        <main className="flex-1 overflow-hidden">
-          <Outlet />
-        </main>
+        <Sidebar
+          collapsed={collapsed}
+          onToggle={() => setCollapsed((prev) => !prev)}
+        />
 
       </div>
+
+      {/* Main Content */}
+
+      <main
+        className="
+        relative
+        z-10
+
+        flex-1
+
+        overflow-hidden
+
+        px-8
+
+        pt-6
+        "
+      >
+
+        <Outlet />
+
+      </main>
 
     </div>
   );

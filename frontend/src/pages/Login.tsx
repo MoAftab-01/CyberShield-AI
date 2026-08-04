@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { Shield } from "lucide-react";
 
 import { useAuth } from "../contexts/AuthContext";
 
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
+import AnimatedBackground from "../components/layout/AnimatedBackground";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -13,15 +15,11 @@ export default function Login() {
   const { login } = useAuth();
 
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const [password, setPassword] =
-    useState("");
+  const [loading, setLoading] = useState(false);
 
-  const [loading, setLoading] =
-    useState(false);
-
-  const [error, setError] =
-    useState("");
+  const [error, setError] = useState("");
 
   async function handleLogin(
     e: React.FormEvent
@@ -29,7 +27,6 @@ export default function Login() {
     e.preventDefault();
 
     setError("");
-
     setLoading(true);
 
     try {
@@ -47,60 +44,186 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-6">
-      <Card>
-        <h1 className="mb-8 text-center text-3xl font-bold">
-          CyberShield AI
-        </h1>
+    <div
+      className="
+      relative
 
-        <form
-          onSubmit={handleLogin}
-          className="space-y-5"
-        >
-          <Input
-            label="Email"
-            type="email"
-            value={email}
-            onChange={(e) =>
-              setEmail(e.target.value)
-            }
-            required
-          />
+      flex
 
-          <Input
-            label="Password"
-            type="password"
-            value={password}
-            onChange={(e) =>
-              setPassword(e.target.value)
-            }
-            required
-          />
+      min-h-screen
 
-          {error && (
-            <div className="rounded bg-red-100 p-3 text-sm text-red-700">
-              {error}
-            </div>
-          )}
+      items-center
 
-          <Button
-            type="submit"
-            loading={loading}
-          >
-            Login
-          </Button>
+      justify-center
 
-          <p className="text-center text-sm">
-            Don't have an account?{" "}
-            <Link
-              to="/register"
-              className="font-semibold text-blue-600 hover:underline"
+      overflow-hidden
+
+      bg-[#050C18]
+
+      px-6
+      "
+    >
+      <AnimatedBackground />
+
+      <div className="relative z-10 w-full max-w-md">
+
+        <Card className="p-8">
+
+          <div className="mb-8 text-center">
+
+            <div
+              className="
+              mx-auto
+
+              mb-5
+
+              flex
+
+              h-16
+
+              w-16
+
+              items-center
+
+              justify-center
+
+              rounded-3xl
+
+              bg-gradient-to-br
+
+              from-cyan-400
+
+              via-cyan-500
+
+              to-blue-600
+
+              shadow-[0_0_35px_rgba(34,211,238,.35)]
+              "
             >
-              Register
-            </Link>
-          </p>
-        </form>
-      </Card>
+
+              <Shield
+                size={30}
+                className="text-white"
+              />
+
+            </div>
+
+            <h1
+              className="
+              text-3xl
+
+              font-bold
+
+              text-white
+              "
+            >
+              CyberGPT
+            </h1>
+
+            <p className="mt-2 text-slate-400">
+              Enterprise AI Security Platform
+            </p>
+
+          </div>
+
+          <form
+            onSubmit={handleLogin}
+            className="space-y-5"
+          >
+
+            <Input
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e) =>
+                setEmail(e.target.value)
+              }
+              placeholder="Enter your email"
+              required
+            />
+
+            <Input
+              label="Password"
+              type="password"
+              value={password}
+              onChange={(e) =>
+                setPassword(e.target.value)
+              }
+              placeholder="Enter your password"
+              required
+            />
+
+            {error && (
+
+              <div
+                className="
+                rounded-2xl
+
+                border
+
+                border-red-500/20
+
+                bg-red-500/10
+
+                p-4
+
+                text-red-300
+                "
+              >
+                {error}
+              </div>
+
+            )}
+
+            <Button
+              type="submit"
+              loading={loading}
+              className="
+              w-full
+
+              rounded-2xl
+
+              bg-gradient-to-r
+
+              from-cyan-400
+
+              via-cyan-500
+
+              to-blue-600
+
+              text-white
+
+              hover:shadow-[0_0_35px_rgba(34,211,238,.35)]
+              "
+            >
+              Sign In
+            </Button>
+
+            <p className="text-center text-sm text-slate-400">
+
+              Don't have an account?{" "}
+
+              <Link
+                to="/register"
+                className="
+                font-semibold
+
+                text-cyan-300
+
+                hover:text-cyan-200
+                "
+              >
+                Create Account
+              </Link>
+
+            </p>
+
+          </form>
+
+        </Card>
+
+      </div>
+
     </div>
   );
 }

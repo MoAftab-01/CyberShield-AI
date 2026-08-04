@@ -1,73 +1,298 @@
-import { useState } from "react";
-import { Send } from "lucide-react";
+import { useRef, useState } from "react";
 
-import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
+import {
+  Send,
+  Loader2,
+} from "lucide-react";
 
 interface Props {
-    loading: boolean;
-    onSend: (message: string) => void;
+  loading: boolean;
+  onSend: (message: string) => void;
 }
 
 export default function ChatInput({
-
-    loading,
-
-    onSend,
-
+  loading,
+  onSend,
 }: Props) {
 
-    const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("");
 
-    const handleSend = () => {
+  const textareaRef =
+    useRef<HTMLTextAreaElement>(null);
 
-        if (!message.trim()) return;
+  const handleSend = () => {
 
-        onSend(message);
+    if (!message.trim()) return;
 
-        setMessage("");
-    };
+    onSend(message);
 
-    return (
+    setMessage("");
 
-        <div className="flex gap-4">
+    if (textareaRef.current) {
 
-            <Input
+      textareaRef.current.style.height = "52px";
 
-                placeholder="Ask about CVEs, OWASP, Secure Coding..."
+    }
 
-                value={message}
+  };
 
-                onChange={(e) => setMessage(e.target.value)}
+  const resize = () => {
 
-                onKeyDown={(e) => {
+    if (!textareaRef.current) return;
 
-                    if (e.key === "Enter") {
+    textareaRef.current.style.height = "52px";
 
-                        handleSend();
+    textareaRef.current.style.height =
+      textareaRef.current.scrollHeight + "px";
 
-                    }
+  };
 
-                }}
+        return (
 
-            />
+  <div className="relative">
 
-            <Button
+    {/* Cyan Glow */}
 
-                loading={loading}
+    <div
+      className="
+      pointer-events-none
 
-                leftIcon={<Send size={18} />}
+      absolute
 
-                onClick={handleSend}
+      inset-0
 
-            >
+      rounded-3xl
 
-                Send
+      bg-cyan-500/5
 
-            </Button>
+      blur-2xl
+      "
+    />
 
-        </div>
+    <div
+      className="
+      relative
 
-    );
+      flex
 
+      items-end
+
+      gap-3
+
+      rounded-3xl
+
+      border
+
+      border-cyan-500/15
+
+      bg-slate-900/60
+
+      backdrop-blur-2xl
+
+      p-3
+
+      transition-all
+
+      duration-300
+
+      focus-within:border-cyan-400/40
+
+      focus-within:shadow-[0_0_35px_rgba(34,211,238,0.15)]
+      "
+    >
+
+      {/* Textarea */}
+
+      <textarea
+
+        ref={textareaRef}
+
+        rows={1}
+
+        value={message}
+
+        disabled={loading}
+
+        placeholder="Ask CyberGPT about CVEs, malware, OWASP, MITRE ATT&CK..."
+
+        onChange={(e) => {
+
+          setMessage(e.target.value);
+
+          resize();
+
+        }}
+
+        onKeyDown={(e) => {
+
+          if (
+            e.key === "Enter" &&
+            !e.shiftKey
+          ) {
+
+            e.preventDefault();
+
+            handleSend();
+
+          }
+
+        }}
+
+        className="
+        max-h-[180px]
+
+        min-h-[52px]
+
+        flex-1
+
+        resize-none
+
+        overflow-y-auto
+
+        bg-transparent
+
+        px-3
+
+        py-3
+
+        text-[15px]
+
+        leading-7
+
+        text-white
+
+        placeholder:text-slate-500
+
+        outline-none
+        "
+      />
+
+      {/* Send Button */}
+
+      <button
+
+        disabled={
+          loading ||
+          !message.trim()
+        }
+
+        onClick={handleSend}
+
+        className="
+        group
+
+        flex
+
+        h-12
+
+        w-12
+
+        flex-shrink-0
+
+        items-center
+
+        justify-center
+
+        rounded-2xl
+
+        bg-gradient-to-br
+
+        from-cyan-500
+
+        to-blue-600
+
+        text-white
+
+        shadow-[0_0_20px_rgba(34,211,238,0.35)]
+
+        transition-all
+
+        duration-300
+
+        hover:scale-105
+
+        hover:shadow-[0_0_30px_rgba(34,211,238,0.55)]
+
+        disabled:cursor-not-allowed
+
+        disabled:opacity-50
+        "
+      >
+
+        {
+
+          loading
+
+            ? (
+
+              <Loader2
+
+                size={22}
+
+                className="animate-spin"
+
+              />
+
+            )
+
+            : (
+
+              <Send
+
+                size={20}
+
+                className="
+                transition-transform
+
+                duration-300
+
+                group-hover:translate-x-0.5
+                "
+
+              />
+
+            )
+
+        }
+
+      </button>
+
+    </div>
+
+    {/* Footer Hint */}
+
+    <div
+      className="
+      mt-2
+
+      flex
+
+      justify-between
+
+      px-2
+
+      text-xs
+
+      text-slate-500
+      "
+    >
+
+      <span>
+
+        Shift + Enter for new line
+
+      </span>
+
+      <span>
+
+        Enter to send
+
+      </span>
+
+    </div>
+
+  </div>
+
+);
 }
+

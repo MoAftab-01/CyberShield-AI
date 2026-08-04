@@ -34,7 +34,7 @@ export default function ConversationList({
 
     return (
 
-      <div className="space-y-3">
+      <div className="space-y-2">
 
         {
 
@@ -43,10 +43,10 @@ export default function ConversationList({
             <div
               key={index}
               className="
-                h-20
-                rounded-xl
-                bg-slate-800
-                animate-pulse
+              h-24
+              rounded-2xl
+              bg-slate-800/70
+              animate-pulse
               "
             />
 
@@ -66,24 +66,51 @@ export default function ConversationList({
 
       <div
         className="
-          rounded-xl
-          border
-          border-slate-700
-          bg-slate-900
-          p-6
-          text-center
+        rounded-3xl
+
+        border
+
+        border-slate-800
+
+        bg-slate-900
+
+        p-8
+
+        text-center
+
+        shadow-lg
         "
       >
 
-        <p className="text-slate-400">
+        <div className="text-5xl mb-4">
 
-          No conversations yet.
+          🤖
 
-        </p>
+        </div>
 
-        <p className="text-slate-500 text-sm mt-2">
+        <h3
+          className="
+          text-lg
+          font-semibold
+          text-white
+          "
+        >
 
-          Start a new CyberGPT conversation.
+          No Conversations Yet
+
+        </h3>
+
+        <p
+          className="
+          mt-3
+          text-slate-400
+          leading-7
+          "
+        >
+
+          Start a new CyberGPT conversation
+          to begin analyzing threats,
+          documents and security data.
 
         </p>
 
@@ -95,7 +122,7 @@ export default function ConversationList({
 
   return (
 
-    <div className="space-y-3">
+    <div className="space-y-4">
 
       {
 
@@ -109,7 +136,13 @@ export default function ConversationList({
 
               conversation={conversation}
 
-              active={activeConversationId === conversation.id}
+              active={
+
+                activeConversationId ===
+
+                conversation.id
+
+              }
 
               onSelect={onSelect}
 

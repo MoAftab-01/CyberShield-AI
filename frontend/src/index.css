@@ -9,4 +9,87 @@ body,
 
 body {
   margin: 0;
+
+  background:
+    radial-gradient(circle at top left, #eef8ff 0%, transparent 35%),
+    radial-gradient(circle at top right, #f5f9ff 0%, transparent 40%),
+    linear-gradient(
+      180deg,
+      #f8fbff 0%,
+      #f4f7fb 45%,
+      #eef3f9 100%
+    );
+
+  color: #0f172a;
+
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif;
+}
+
+@keyframes floatSlow {
+
+  0% {
+    transform: translateY(0px) translateX(0px);
+  }
+
+  50% {
+    transform: translateY(-25px) translateX(15px);
+  }
+
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+
+}
+
+@keyframes floatMedium {
+
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(20px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+
+}
+
+@keyframes floatFast {
+
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-15px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+
+}
+
+.animate-floatSlow {
+
+  animation: floatSlow 14s ease-in-out infinite;
+
+}
+
+.animate-floatMedium {
+
+  animation: floatMedium 10s ease-in-out infinite;
+
+}
+
+.animate-floatFast {
+
+  animation: floatFast 7s ease-in-out infinite;
+
 }

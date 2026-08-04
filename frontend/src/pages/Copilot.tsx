@@ -1,4 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+// import {
+//   PanelLeftClose,
+//   PanelLeftOpen,
+// } from "lucide-react";
 
 import ChatInput from "@/components/copilot/ChatInput";
 import ConversationSidebar from "@/components/copilot/ConversationSidebar";
@@ -17,8 +21,6 @@ import {
   getConversations,
   deleteConversation,
 } from "@/services/conversationService";
-
-import { useEffect } from "react";
 
 
 import { Source } from "@/types/copilot";
@@ -178,78 +180,171 @@ const handleDeleteDocument = async (
 
 
   return (
-    <div className="flex h-full overflow-hidden bg-slate-100">
-      <ConversationSidebar
-  conversations={filteredConversations}
-  loading={false}
-  search={search}
-  activeConversationId={conversationId ?? null}
-  onSearch={setSearch}
+  <div
+    className="
+    relative
 
-  onSelectConversation={async (id) => {
-  try {
-    setConversationId(id);
+    flex
 
-    const conversation = await getConversation(id);
+    h-full
 
-    setMessages(
-      conversation.messages.map((message) => ({
-        role: message.role,
-        content: message.content,
-      }))
-    );
-  } catch (error) {
-    console.error(error);
-  }
-}}
+    overflow-hidden
 
-  onDeleteConversation={async (id) => {
-  try {
-    await deleteConversation(id);
+    rounded-3xl
 
-    setConversations((prev) =>
-      prev.filter((conversation) => conversation.id !== id)
-    );
+    border
+    border-cyan-500/15
 
-    if (conversationId === id) {
+    bg-slate-900/20
+
+    backdrop-blur-2xl
+
+    shadow-[0_0_50px_rgba(34,211,238,0.08)]
+    "
+  >
+      {/* Galaxy Glow */}
+
+<div
+  className="
+  absolute
+  inset-0
+
+  overflow-hidden
+
+  pointer-events-none
+  "
+>
+
+  <div
+    className="
+    absolute
+
+    top-[-150px]
+    right-[20%]
+
+    h-[520px]
+    w-[520px]
+
+    rounded-full
+
+    bg-cyan-500/8
+
+    blur-[190px]
+    "
+  />
+
+  <div
+    className="
+    absolute
+
+    bottom-[-180px]
+    left-[-100px]
+
+    h-[450px]
+    w-[450px]
+
+    rounded-full
+
+    bg-blue-500/10
+
+    blur-[180px]
+    "
+  />
+
+</div>
+
+  <ConversationSidebar
+    conversations={filteredConversations}
+    loading={false}
+    search={search}
+    activeConversationId={conversationId ?? null}
+    onSearch={setSearch}
+
+    onSelectConversation={async (id) => {
+      try {
+        setConversationId(id);
+
+        const conversation =
+          await getConversation(id);
+
+        setMessages(
+          conversation.messages.map((message) => ({
+            role: message.role,
+            content: message.content,
+          }))
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    }}
+
+    onDeleteConversation={async (id) => {
+      try {
+        await deleteConversation(id);
+
+        setConversations((prev) =>
+          prev.filter(
+            (conversation) =>
+              conversation.id !== id
+          )
+        );
+
+        if (conversationId === id) {
+          setConversationId(undefined);
+          setMessages([]);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }}
+
+    onNewChat={() => {
       setConversationId(undefined);
       setMessages([]);
-    }
-  } catch (error) {
-    console.error(error);
-  }
-}}
-  onNewChat={() => {
-    setConversationId(undefined);
-    setMessages([]);
-  }}
-/>
+    }}
+  />
 
-      <div className="flex flex-1 flex-col min-h-0">
+
+
+      <div
+  className="
+  relative
+
+  z-10
+
+  flex
+
+  min-w-0
+
+  flex-1
+
+  flex-col
+
+  overflow-hidden
+  "
+>
         {/* Header */}
 
-        <header className="bg-white border-b px-8 py-5 shadow-sm flex-shrink-0">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-cyan-600 flex items-center justify-center text-2xl text-white shadow-lg">
-              🛡️
-            </div>
 
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight">
-                CyberGPT
-              </h1>
-
-              <p className="text-slate-500">
-                Enterprise AI Security Assistant
-              </p>
-            </div>
-          </div>
-        </header>
         
 
         {/* Scrollable Chat */}
 
-        <div className="flex-1 overflow-y-auto px-8 py-8">
+        <div
+  className="
+  relative
+
+  flex-1
+
+  overflow-y-auto
+
+  px-6
+
+  py-4
+
+  bg-transparent
+  "
+>
           {messages.length === 0 ? (
             <ChatWelcome
   onSuggestion={handleSend}

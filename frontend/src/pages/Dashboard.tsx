@@ -81,19 +81,74 @@ export default function Dashboard() {
 
   return (
 
-    <div className="space-y-8">
+    <div className="mx-auto max-w-[1700px] space-y-10 px-2">
 
       {/* Welcome */}
 
-      <section>
+     <section
+  className="
+  relative
 
-        <h1 className="text-4xl font-bold text-slate-800">
+  overflow-hidden
+
+  rounded-[28px]
+
+  border
+
+  border-cyan-400/20
+
+  bg-slate-900/55
+
+  p-8
+
+  backdrop-blur-2xl
+
+  shadow-[0_0_45px_rgba(34,211,238,.08)]
+  "
+>
+
+  <div
+    className="
+    absolute
+
+    -right-24
+
+    -top-24
+
+    h-72
+
+    w-72
+
+    rounded-full
+
+    bg-cyan-500/10
+
+    blur-[140px]
+    "
+  />
+
+        <h1
+  className="
+    text-5xl
+    font-bold
+    tracking-tight
+    text-white
+  "
+>
 
           Welcome Back 👋
 
         </h1>
 
-        <p className="mt-2 text-slate-500">
+        <p
+  className="
+    mt-3
+    max-w-3xl
+    text-lg
+    leading-8
+    text-slate-400
+  "
+>
 
           Monitor your cyber security posture and analyze threats in real time.
 
@@ -119,7 +174,21 @@ export default function Dashboard() {
 
               ?
 
-              <div className="rounded-2xl border border-red-300 bg-red-50 p-6 text-red-600 shadow">
+              <div
+  className="
+  rounded-[24px]
+
+  border
+
+  border-red-500/20
+
+  bg-red-500/10
+
+  p-6
+
+  text-red-300
+  "
+>
 
                 {aiError}
 
@@ -218,7 +287,7 @@ export default function Dashboard() {
 
       <section>
 
-        <h2 className="mb-5 text-2xl font-bold text-slate-800">
+        <h2 className="mb-5 text-2xl font-bold text-white">
 
           Quick Actions
 
@@ -262,7 +331,7 @@ export default function Dashboard() {
 
       <section>
 
-        <h2 className="mb-5 text-2xl font-bold text-slate-800">
+        <h2 className="mb-5 text-2xl font-bold text-white">
 
           Recent Activity
 
@@ -276,7 +345,23 @@ export default function Dashboard() {
 
               ?
 
-              <div className="rounded-xl border bg-white p-6 text-center text-slate-500 shadow-sm">
+              <div
+  className="
+  rounded-[24px]
+
+  border
+
+  border-cyan-400/20
+
+  bg-slate-900/55
+
+  p-6
+
+  text-center
+
+  text-slate-400
+  "
+>
 
                 No recent activity found.
 

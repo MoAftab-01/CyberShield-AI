@@ -38,90 +38,292 @@ export default function Reports() {
   }
 
   return (
-    <div className="space-y-8">
+  <div className="mx-auto max-w-7xl space-y-8">
 
-      {/* Header */}
+    {/* Header */}
 
-      <div>
-        <h1 className="flex items-center gap-3 text-4xl font-bold text-slate-800">
-          <FileText size={36} />
-          Reports
-        </h1>
+    <section
+      className="
+      relative
 
-        <p className="mt-2 text-slate-500">
-          Review historical password and URL scans.
-        </p>
-      </div>
+      overflow-hidden
 
-      <ExecutiveSummaryCard
-  summary={summary?.summary ?? ""}
-  loading={aiLoading}
-  onRefresh={refresh}
-/>
+      rounded-[28px]
 
-<div className="flex justify-end">
+      border
 
-  <button
-    onClick={() =>
-      generateExecutiveReport(
-        summary?.summary ?? "",
-        passwordReports?.items.length ?? 0,
-        urlReports?.items.length ?? 0,
-      )
-    }
-    className="
-      flex
-      items-center
-      gap-2
-      rounded-xl
-      bg-cyan-600
-      px-5
-      py-3
-      text-white
-      hover:bg-cyan-700
-      transition
-    "
-  >
+      border-cyan-400/20
 
-    <Download size={18} />
+      bg-slate-900/55
 
-    Export Executive Report
+      p-8
 
-  </button>
+      backdrop-blur-2xl
 
-</div>
+      shadow-[0_0_45px_rgba(34,211,238,.08)]
+      "
+    >
 
-{/* Tabs */}
+      <div
+        className="
+        absolute
 
-<div className="flex gap-4">
+        -right-24
+
+        -top-24
+
+        h-72
+
+        w-72
+
+        rounded-full
+
+        bg-cyan-500/10
+
+        blur-[140px]
+        "
+      />
+
+      <div className="relative flex items-center justify-between">
+
+        <div className="flex items-center gap-6">
+
+          <div
+            className="
+            flex
+
+            h-16
+
+            w-16
+
+            items-center
+
+            justify-center
+
+            rounded-3xl
+
+            bg-gradient-to-br
+
+            from-cyan-400
+
+            via-cyan-500
+
+            to-blue-600
+
+            shadow-[0_0_35px_rgba(34,211,238,.35)]
+            "
+          >
+
+            <FileText
+              size={32}
+              className="text-white"
+            />
+
+          </div>
+
+          <div>
+
+            <h1
+              className="
+              text-4xl
+
+              font-bold
+
+              tracking-tight
+
+              text-white
+              "
+            >
+              Security Reports
+            </h1>
+
+            <p
+              className="
+              mt-2
+
+              text-slate-400
+              "
+            >
+              Review historical scans, executive summaries,
+              and export security reports.
+            </p>
+
+          </div>
+
+        </div>
 
         <button
-          onClick={() => setTab("passwords")}
-          className={`flex items-center gap-2 rounded-xl px-5 py-3 transition
-          ${
-            tab === "passwords"
-              ? "bg-blue-600 text-white"
-              : "bg-white border"
-          }`}
-        >
-          <Shield size={18} />
-          Password Reports
-        </button>
+          onClick={() =>
+            generateExecutiveReport(
+              summary?.summary ?? "",
+              passwordReports?.items.length ?? 0,
+              urlReports?.items.length ?? 0,
+            )
+          }
+          className="
+          flex
 
-        <button
-          onClick={() => setTab("urls")}
-          className={`flex items-center gap-2 rounded-xl px-5 py-3 transition
-          ${
-            tab === "urls"
-              ? "bg-blue-600 text-white"
-              : "bg-white border"
-          }`}
+          items-center
+
+          gap-3
+
+          rounded-2xl
+
+          bg-gradient-to-r
+
+          from-cyan-400
+
+          via-cyan-500
+
+          to-blue-600
+
+          px-6
+
+          py-3
+
+          font-semibold
+
+          text-white
+
+          transition-all
+
+          duration-300
+
+          hover:shadow-[0_0_35px_rgba(34,211,238,.35)]
+          "
         >
-          <Globe size={18} />
-          URL Reports
+
+          <Download size={18} />
+
+          Export Report
+
         </button>
 
       </div>
+
+    </section>
+
+    {/* Executive Summary */}
+
+    <ExecutiveSummaryCard
+      summary={summary?.summary ?? ""}
+      loading={aiLoading}
+      onRefresh={refresh}
+    />
+
+    {/* Tabs */}
+
+    <div className="flex gap-4">
+
+      <button
+        onClick={() =>
+          setTab("passwords")
+        }
+        className={`
+        flex
+
+        items-center
+
+        gap-3
+
+        rounded-2xl
+
+        px-6
+
+        py-3
+
+        transition-all
+
+        duration-300
+
+        ${
+          tab === "passwords"
+            ? `
+            border
+            border-cyan-300/40
+
+            bg-cyan-500/15
+
+            text-cyan-300
+
+            shadow-[0_0_25px_rgba(34,211,238,.15)]
+            `
+            : `
+            border
+            border-cyan-400/15
+
+            bg-slate-900/45
+
+            text-slate-400
+
+            hover:border-cyan-300/30
+            `
+        }
+        `}
+      >
+
+        <Shield size={18} />
+
+        Password Reports
+
+      </button>
+
+      <button
+        onClick={() =>
+          setTab("urls")
+        }
+        className={`
+        flex
+
+        items-center
+
+        gap-3
+
+        rounded-2xl
+
+        px-6
+
+        py-3
+
+        transition-all
+
+        duration-300
+
+        ${
+          tab === "urls"
+            ? `
+            border
+            border-cyan-300/40
+
+            bg-cyan-500/15
+
+            text-cyan-300
+
+            shadow-[0_0_25px_rgba(34,211,238,.15)]
+            `
+            : `
+            border
+            border-cyan-400/15
+
+            bg-slate-900/45
+
+            text-slate-400
+
+            hover:border-cyan-300/30
+            `
+        }
+        `}
+      >
+
+        <Globe size={18} />
+
+        URL Reports
+
+      </button>
+
+    </div>
+
+    {/* Content */}
 
       {/* Content */}
 

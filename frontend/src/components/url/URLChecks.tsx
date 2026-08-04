@@ -6,7 +6,7 @@ interface Props {
   subdomains: number;
 }
 
-function Check({
+function StatusCard({
   label,
   ok,
 }: {
@@ -14,16 +14,128 @@ function Check({
   ok: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between rounded-lg border p-4">
-      <span>{label}</span>
+    <div
+      className="
+      flex
+
+      items-center
+
+      justify-between
+
+      rounded-2xl
+
+      border
+
+      border-cyan-400/20
+
+      bg-slate-900/45
+
+      px-5
+
+      py-4
+
+      backdrop-blur-xl
+
+      transition-all
+
+      duration-300
+
+      hover:border-cyan-300/40
+
+      hover:shadow-[0_0_30px_rgba(34,211,238,.12)]
+      "
+    >
+      <span className="font-medium text-slate-200">
+        {label}
+      </span>
 
       <span
-        className={`font-bold ${
-          ok ? "text-green-600" : "text-red-600"
-        }`}
+        className={`
+        rounded-full
+
+        px-3
+
+        py-1
+
+        text-xs
+
+        font-semibold
+
+        ${
+          ok
+            ? `
+            border
+            border-emerald-500/20
+
+            bg-emerald-500/10
+
+            text-emerald-300
+            `
+            : `
+            border
+            border-red-500/20
+
+            bg-red-500/10
+
+            text-red-300
+            `
+        }
+        `}
       >
-        {ok ? "✓" : "✗"}
+        {ok ? "✓ Pass" : "✕ Fail"}
       </span>
+    </div>
+  );
+}
+
+function MetricCard({
+  title,
+  value,
+}: {
+  title: string;
+  value: number;
+}) {
+  return (
+    <div
+      className="
+      rounded-2xl
+
+      border
+
+      border-cyan-400/20
+
+      bg-slate-900/45
+
+      p-5
+
+      backdrop-blur-xl
+
+      transition-all
+
+      duration-300
+
+      hover:border-cyan-300/40
+
+      hover:shadow-[0_0_30px_rgba(34,211,238,.12)]
+      "
+    >
+      <p className="text-sm text-slate-400">
+        {title}
+      </p>
+
+      <h3
+        className="
+        mt-3
+
+        text-3xl
+
+        font-bold
+
+        text-white
+        "
+      >
+        {value}
+      </h3>
     </div>
   );
 }
@@ -36,26 +148,66 @@ export default function URLChecks({
   subdomains,
 }: Props) {
   return (
-    <div className="rounded-2xl border bg-white p-6 shadow-sm">
-      <h2 className="mb-5 text-xl font-bold">
+    <div
+      className="
+      rounded-[28px]
+
+      border
+
+      border-cyan-400/20
+
+      bg-slate-900/55
+
+      p-6
+
+      backdrop-blur-2xl
+
+      shadow-[0_0_45px_rgba(34,211,238,.08)]
+      "
+    >
+      <h2
+        className="
+        mb-6
+
+        text-2xl
+
+        font-bold
+
+        text-white
+        "
+      >
         URL Properties
       </h2>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <Check label="Valid URL" ok={valid} />
-        <Check label="Uses HTTPS" ok={https} />
-        <Check label="Contains IP Address" ok={!containsIP} />
 
-        <div className="rounded-lg border p-4">
-          <p className="font-semibold">Length</p>
-          <p>{length}</p>
-        </div>
+        <StatusCard
+          label="Valid URL"
+          ok={valid}
+        />
 
-        <div className="rounded-lg border p-4">
-          <p className="font-semibold">Subdomains</p>
-          <p>{subdomains}</p>
-        </div>
+        <StatusCard
+          label="HTTPS Enabled"
+          ok={https}
+        />
+
+        <StatusCard
+          label="No IP Address"
+          ok={!containsIP}
+        />
+
+        <MetricCard
+          title="URL Length"
+          value={length}
+        />
+
+        <MetricCard
+          title="Subdomains"
+          value={subdomains}
+        />
+
       </div>
+
     </div>
   );
 }

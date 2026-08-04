@@ -26,7 +26,7 @@ export default function MessageList({
 
     return (
 
-        <div className="space-y-6">
+        <div className="mx-auto max-w-5xl space-y-10">
 
             {
 

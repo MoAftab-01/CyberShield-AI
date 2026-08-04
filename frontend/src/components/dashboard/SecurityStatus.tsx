@@ -14,7 +14,7 @@ export default function SecurityStatus({
 
   let title = "";
   let message = "";
-  let bg = "";
+  let glow = "";
   let border = "";
   let text = "";
   let Icon = ShieldCheck;
@@ -25,11 +25,11 @@ export default function SecurityStatus({
 
     message = "Overall security posture is healthy.";
 
-    bg = "bg-green-500/15";
+    glow = "from-emerald-500/20 to-green-500/5";
 
-    border = "border-green-500/30";
+    border = "border-emerald-400/40";
 
-    text = "text-green-400";
+    text = "text-emerald-400";
 
     Icon = ShieldCheck;
 
@@ -41,9 +41,9 @@ export default function SecurityStatus({
 
     message = "Minor improvements are recommended.";
 
-    bg = "bg-cyan-500/15";
+    glow = "from-cyan-500/20 to-blue-500/5";
 
-    border = "border-cyan-500/30";
+    border = "border-cyan-400/40";
 
     text = "text-cyan-400";
 
@@ -57,9 +57,9 @@ export default function SecurityStatus({
 
     message = "Several security issues should be reviewed.";
 
-    bg = "bg-yellow-500/15";
+    glow = "from-yellow-500/20 to-orange-500/5";
 
-    border = "border-yellow-500/30";
+    border = "border-yellow-400/40";
 
     text = "text-yellow-400";
 
@@ -73,9 +73,9 @@ export default function SecurityStatus({
 
     message = "Immediate action is required.";
 
-    bg = "bg-red-500/15";
+    glow = "from-red-500/20 to-red-700/5";
 
-    border = "border-red-500/30";
+    border = "border-red-400/40";
 
     text = "text-red-400";
 
@@ -87,46 +87,122 @@ export default function SecurityStatus({
 
     <div
       className={`
-        ${bg}
-        ${border}
-        border
-        rounded-2xl
-        p-6
-        mb-8
+      group
+      relative
+      overflow-hidden
+
+      rounded-3xl
+
+      border
+
+      ${border}
+
+      bg-[#0B1628]/85
+      backdrop-blur-2xl
+
+      p-6
+
+      shadow-xl
+
+      transition-all
+      duration-500
+
+      hover:shadow-[0_0_35px_rgba(34,211,238,0.25)]
       `}
     >
 
-      <div className="flex items-center gap-4">
+      {/* Glow */}
 
-        <Icon
-          className={text}
-          size={34}
-        />
+      <div
+        className={`
+        absolute
 
-        <div>
+        -top-20
+        -right-20
 
-          <p className="text-slate-400 text-sm uppercase tracking-wider">
+        h-56
+        w-56
 
+        rounded-full
+
+        bg-gradient-to-br
+
+        ${glow}
+
+        blur-[90px]
+        `}
+      />
+
+      <div className="relative flex items-center gap-5">
+
+        <div
+          className={`
+          flex
+
+          h-16
+          w-16
+
+          items-center
+          justify-center
+
+          rounded-2xl
+
+          border
+
+          ${border}
+
+          bg-slate-900/60
+
+          shadow-[0_0_20px_rgba(34,211,238,0.25)]
+          `}
+        >
+
+          <Icon
+            size={34}
+            className={text}
+          />
+
+        </div>
+
+        <div className="flex-1">
+
+          <p
+            className="
+            text-xs
+
+            uppercase
+
+            tracking-[0.25em]
+
+            text-slate-400
+            "
+          >
             Security Status
-
           </p>
 
-          <h2 className={`text-3xl font-bold ${text}`}>
+          <h2
+            className={`
+            mt-2
 
+            text-3xl
+
+            font-bold
+
+            ${text}
+            `}
+          >
             {title}
-
           </h2>
 
-          <p className="text-slate-300 mt-2">
-
-            Security Score: {score}/100
-
+          <p className="mt-2 text-slate-300">
+            Security Score
+            <span className="ml-2 font-semibold text-white">
+              {score}/100
+            </span>
           </p>
 
-          <p className="text-slate-400 mt-1">
-
+          <p className="mt-1 text-sm text-slate-400">
             {message}
-
           </p>
 
         </div>

@@ -13,18 +13,82 @@ function Item({
   ok: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between rounded-lg border p-4">
-      <span>{label}</span>
+    <div
+      className="
+      flex
+
+      items-center
+
+      justify-between
+
+      rounded-2xl
+
+      border
+
+      border-cyan-500/10
+
+      bg-slate-900/40
+
+      px-5
+
+      py-4
+
+      backdrop-blur-xl
+
+      transition-all
+
+      duration-300
+
+      hover:border-cyan-400/25
+      "
+    >
 
       <span
-        className={`font-bold ${
-          ok
-            ? "text-green-600"
-            : "text-red-600"
-        }`}
+        className="
+        font-medium
+
+        text-slate-200
+        "
       >
-        {ok ? "✓" : "✗"}
+        {label}
       </span>
+
+      <span
+        className={`
+        rounded-full
+
+        px-3
+
+        py-1
+
+        text-xs
+
+        font-semibold
+
+        ${
+          ok
+            ? `
+            border
+            border-emerald-500/20
+
+            bg-emerald-500/10
+
+            text-emerald-300
+            `
+            : `
+            border
+            border-red-500/20
+
+            bg-red-500/10
+
+            text-red-300
+            `
+        }
+        `}
+      >
+        {ok ? "✓ Present" : "✕ Missing"}
+      </span>
+
     </div>
   );
 }
@@ -36,19 +100,47 @@ export default function CharacterChecklist({
   special,
 }: Props) {
   return (
-    <div className="rounded-2xl border bg-white p-6 shadow-sm">
-      <h2 className="mb-5 text-xl font-bold">
+    <div
+      className="
+      rounded-3xl
+
+      border
+
+      border-cyan-500/10
+
+      bg-slate-900/40
+
+      p-6
+
+      backdrop-blur-2xl
+
+      shadow-[0_0_35px_rgba(34,211,238,.08)]
+      "
+    >
+
+      <h2
+        className="
+        mb-6
+
+        text-xl
+
+        font-bold
+
+        text-white
+        "
+      >
         Character Checklist
       </h2>
 
       <div className="grid gap-4 md:grid-cols-2">
+
         <Item
-          label="Uppercase"
+          label="Uppercase Letters"
           ok={uppercase}
         />
 
         <Item
-          label="Lowercase"
+          label="Lowercase Letters"
           ok={lowercase}
         />
 
@@ -61,7 +153,9 @@ export default function CharacterChecklist({
           label="Special Characters"
           ok={special}
         />
+
       </div>
+
     </div>
   );
 }

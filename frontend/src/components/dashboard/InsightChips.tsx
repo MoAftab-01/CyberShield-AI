@@ -78,7 +78,17 @@ export default function InsightChips({
 
   return (
 
-    <div className="flex flex-wrap gap-3 mb-8">
+    <div
+  className="
+  mt-5
+
+  flex
+
+  flex-wrap
+
+  gap-3
+  "
+>
 
       {
 
@@ -97,15 +107,34 @@ export default function InsightChips({
               key={index}
 
               className="
-                rounded-full
-                bg-slate-800
-                border
-                border-slate-700
-                px-4
-                py-2
-                text-sm
-                text-slate-200
-              "
+inline-flex
+
+items-center
+
+rounded-full
+
+border
+
+border-slate-700
+
+bg-slate-800/70
+
+px-5
+
+py-3
+
+text-sm
+
+font-medium
+
+text-slate-300
+
+transition-all
+
+hover:border-cyan-400/40
+
+hover:bg-cyan-500/10
+"
 
             >
 
