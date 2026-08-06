@@ -39,25 +39,18 @@ services:
     restart: unless-stopped
 
   frontend:
-    build:
-      context: ./frontend
+  build:
+    context: ./frontend
 
-    container_name: cybershield-frontend
+  container_name: cybershield-frontend
 
-    ports:
-      - "5174:5173"
+  ports:
+    - "80:80"
 
-    environment:
-      - VITE_API_URL=http://backend:8000
+  depends_on:
+    - backend
 
-    depends_on:
-      - backend
-
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-
-    restart: unless-stopped
+  restart: unless-stopped
 
 volumes:
   postgres_data:
