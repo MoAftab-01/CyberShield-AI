@@ -1,0 +1,63 @@
+services:
+
+  postgres:
+    image: postgres:16
+
+    container_name: cybershield-postgres
+
+    environment:
+      POSTGRES_DB: cybershield
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+
+    container_name: cybershield-backend
+
+    env_file:
+      - backend/.env
+
+    depends_on:
+      - postgres
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - ./backend:/app
+
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+
+    container_name: cybershield-frontend
+
+    ports:
+      - "5174:5173"
+
+    environment:
+      - VITE_API_URL=http://backend:8000
+
+    depends_on:
+      - backend
+
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

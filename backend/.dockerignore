@@ -1,0 +1,9 @@
+.venv
+__pycache__
+.pytest_cache
+.env
+uploads
+vector_db
+temp_vector_db
+upload_vector_db
+.git
