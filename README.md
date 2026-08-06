@@ -1,213 +1,230 @@
-<div align="center">
-
 # 🛡️ CyberShield AI
 
-### Enterprise AI-Powered Cybersecurity Platform
+An AI-powered cybersecurity platform that combines threat intelligence, document intelligence, vulnerability analysis, and an enterprise security copilot into a single application.
 
-An enterprise-grade cybersecurity platform that combines **Generative AI**, **Hybrid Retrieval-Augmented Generation (RAG)**, and **Multi-Agent Intelligence** to help security analysts investigate threats, analyze vulnerabilities, assess URLs and passwords, and generate AI-driven security insights.
-
----
-
-![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)
-![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi)
-![React](https://img.shields.io/badge/React-Frontend-61DAFB?logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-336791?logo=postgresql)
-![LangChain](https://img.shields.io/badge/LangChain-RAG-success)
-![FAISS](https://img.shields.io/badge/FAISS-Vector_DB-orange)
-![License](https://img.shields.io/badge/License-MIT-green)
-
-</div>
+Built using **FastAPI**, **React**, **PostgreSQL**, **Docker**, and **Ollama (Llama 3)**.
 
 ---
 
-# 📖 Overview
+# Features
 
-CyberShield AI is an enterprise cybersecurity assistant built to demonstrate modern AI engineering practices.
+### 🤖 CyberGPT (Enterprise Security Copilot)
 
-The platform combines a **multi-agent architecture**, **Hybrid RAG**, **LLM-powered reasoning**, and **security intelligence** into a single application that assists users with cybersecurity analysis and decision-making.
-
-Unlike traditional chatbots, CyberShield AI routes user requests to specialized AI agents capable of handling different cybersecurity tasks.
-
----
-
-# ✨ Features
-
-## 🤖 AI Features
-
-- Multi-Agent CyberGPT
-- Hybrid RAG (FAISS + BM25)
-- Conversation History
-- Knowledge Base Search
-- Executive AI Summaries
-- Context-aware Question Answering
+- AI-powered cybersecurity assistant
+- Hybrid RAG over uploaded security documents
+- Conversation memory
+- Document summarization
+- Multi-document comparison
+- Security best practice recommendations
 
 ---
 
-## 🔐 Security Features
+### 📄 Document Intelligence
 
-- Password Strength Analyzer
-- URL Security Scanner
-- Threat Intelligence Dashboard
-- Security Reports
-- AI Risk Assessment
-
----
-
-## 📊 Dashboard
-
-- Enterprise Analytics
-- Security Metrics
-- AI Insights
-- Interactive Charts
-- Recent Activity
-- User Dashboard
+- Upload PDF security reports
+- Hybrid RAG (BM25 + Vector Search)
+- AI summaries
+- AI document comparison
+- Source citations
 
 ---
 
-# 🏗 System Architecture
+### 🛡️ Threat Intelligence Dashboard
 
-```text
-                    Frontend (React)
+- AI-generated security summaries
+- CVE insights
+- Security recommendations
+- Executive dashboard
 
-                            │
+---
 
-                            ▼
+### 🔍 URL Scanner
 
-                    FastAPI Backend
+- URL reputation analysis
+- Phishing detection
+- Risk assessment
 
-                            │
+---
 
-                CyberGPT Orchestrator
+### 🔐 Password Analyzer
 
-                            │
+- Password strength evaluation
+- Entropy analysis
+- Security recommendations
 
-        ┌──────────┬──────────┬──────────┐
+---
 
-        ▼          ▼          ▼          ▼
+### 👤 Authentication
 
- Knowledge     Threat      URL      Password
-   Agent        Agent      Agent      Agent
+- JWT Authentication
+- Login / Registration
+- Protected routes
 
-        │
+---
 
-        ▼
+# Tech Stack
 
-     Hybrid RAG
+## Backend
 
-        │
+- FastAPI
+- SQLAlchemy
+- PostgreSQL
+- LangChain
+- Hybrid RAG
+- Ollama
+- Llama 3
 
-  ┌───────────────┐
+## Frontend
 
-  │               │
+- React
+- TypeScript
+- Vite
+- TailwindCSS
+- Axios
+- Recharts
 
-Knowledge Base    FAISS
+## Infrastructure
 
-        │
+- Docker
+- Docker Compose
+- Nginx
 
-      BM25
+---
 
-        │
+# Project Architecture
 
-        ▼
-
-      OpenAI LLM
+```
+                    Browser
+                        │
+                        ▼
+               React Frontend
+                        │
+                REST API Calls
+                        │
+                        ▼
+                 FastAPI Backend
+          ┌─────────────┴─────────────┐
+          ▼                           ▼
+   PostgreSQL                  Ollama (Llama 3)
+          │                           │
+          └─────────────┬─────────────┘
+                        ▼
+                  Hybrid RAG Engine
 ```
 
 ---
 
-# 🧠 AI Pipeline
+# Screenshots
 
-```text
-User Question
+> Add screenshots here.
 
-↓
-
-Intent Classifier
-
-↓
-
-Capability Router
-
-↓
-
-Knowledge Agent
-
-↓
-
-Hybrid Retriever
-
-↓
-
-FAISS + BM25
-
-↓
-
-LLM
-
-↓
-
-Final Response
-```
+- Login
+- Dashboard
+- CyberGPT
+- Threat Intelligence
+- URL Scanner
+- Password Analyzer
 
 ---
 
-# 🛠 Tech Stack
+# Quick Start
 
-| Category | Technologies |
-|----------|--------------|
-| Frontend | React, TypeScript, Tailwind CSS, Vite |
-| Backend | FastAPI, SQLAlchemy |
-| AI | LangChain, OpenAI, Sentence Transformers |
-| Vector DB | FAISS |
-| Search | BM25 |
-| Database | PostgreSQL |
-| Authentication | JWT |
-| Deployment | Docker (Planned), Vercel, Railway |
+## Prerequisites
+
+Install:
+
+- Docker Desktop
 
 ---
-
-# 📂 Project Structure
-
-```text
-CyberShield-AI/
-
-├── backend/
-│   ├── app/
-│   ├── scripts/
-│   ├── knowledge_base/
-│   └── vector_db/
-│
-├── frontend/
-│
-├── docs/
-│
-└── README.md
-```
-
----
-
-# 🚀 Getting Started
 
 ## Clone Repository
 
 ```bash
-git clone https://github.com/<your-username>/CyberShield-AI.git
+git clone https://github.com/MoAftab-01/CyberShield-AI.git
+
+cd CyberShield-AI
 ```
 
-## Backend
+---
+
+## Run the Project
+
+```bash
+docker compose up -d
+```
+
+---
+
+## Open the Application
+
+Frontend
+
+```
+http://localhost
+```
+
+Backend API
+
+```
+http://localhost:8000/docs
+```
+
+---
+
+# First Startup
+
+On the first startup Docker will automatically:
+
+- Build the backend
+- Build the frontend
+- Start PostgreSQL
+- Start Ollama
+- Automatically download the **Llama 3** model (one-time setup)
+
+The initial setup may take several minutes depending on your internet connection.
+
+Subsequent startups are significantly faster because the model is cached.
+
+---
+
+# Docker Services
+
+| Service | Port |
+|----------|------|
+| Frontend | 80 |
+| Backend | 8000 |
+| PostgreSQL | 5432 |
+| Ollama | 11434 |
+
+---
+
+# Stopping the Application
+
+```bash
+docker compose down
+```
+
+---
+
+# Restarting
+
+```bash
+docker compose up -d
+```
+
+---
+
+# Development
+
+Backend
 
 ```bash
 cd backend
 
-python -m venv .venv
-
-pip install -r requirements.txt
-
 uvicorn app.main:app --reload
 ```
 
-## Frontend
+Frontend
 
 ```bash
 cd frontend
@@ -219,69 +236,18 @@ npm run dev
 
 ---
 
-# 📸 Screenshots
+# Future Improvements
 
-> Add screenshots here after deployment.
-
-- Dashboard
-- CyberGPT
-- Password Analyzer
-- URL Scanner
-- Threat Intelligence
-- Reports
-
----
-
-# 📚 Documentation
-
-Detailed documentation is available in the `docs` folder.
-
-- Architecture
-- Deployment
-- API
-- Features
-- Changelog
-- Roadmap
+- AWS Deployment
+- Kubernetes Deployment
+- CI/CD Pipeline
+- Multi-model AI Support
+- Real-time Threat Feeds
+- Redis Caching
+- User Role Management
 
 ---
 
-# 🗺 Roadmap
+# License
 
-### v1.0
-
-- Enterprise Dashboard
-- CyberGPT
-- Hybrid RAG
-- Multi-Agent Architecture
-- Password Analyzer
-- URL Scanner
-- Threat Intelligence
-
-### v1.1
-
-- Chat with Uploaded Documents
-- Multi-Document Comparison
-- Better Source Citations
-- Improved Retrieval Ranking
-
-### v2.0
-
-- SOC Copilot
-- SIEM Integration
-- Threat Hunting
-- Streaming Responses
-- Multi-LLM Support
-
----
-
-# 📄 License
-
-This project is licensed under the MIT License.
-
----
-
-<div align="center">
-
-**CyberShield AI — Enterprise AI for Cybersecurity**
-
-</div>
+This project is intended for educational and portfolio purposes.
