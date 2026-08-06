@@ -8,8 +8,8 @@ import {
   Settings,
   ShieldCheck,
   UserCircle,
-  PanelLeftClose,
-  PanelLeftOpen,
+  // PanelLeftClose,
+  // PanelLeftOpen,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";

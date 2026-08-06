@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 //   PanelLeftOpen,
 // } from "lucide-react";
 
-import ChatInput from "@/components/copilot/ChatInput";
+// import ChatInput from "@/components/copilot/ChatInput";
 import ConversationSidebar from "@/components/copilot/ConversationSidebar";
 import MessageList from "@/components/copilot/MessageList";
 import TypingIndicator from "@/components/copilot/TypingIndicator";
@@ -25,7 +25,7 @@ import {
 
 import { Source } from "@/types/copilot";
 
-import UploadButton from "@/components/upload/UploadButton";
+// import UploadButton from "@/components/upload/UploadButton";
 
 import {
   uploadDocument,

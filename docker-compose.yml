@@ -17,6 +17,23 @@ services:
 
     restart: unless-stopped
 
+  ollama:
+    build:
+      context: ./ollama
+
+    container_name: cybershield-ollama
+
+    environment:
+      OLLAMA_MODEL: llama3:latest
+
+    ports:
+      - "11434:11434"
+
+    volumes:
+      - ollama_data:/root/.ollama
+
+    restart: unless-stopped
+
   backend:
     build:
       context: ./backend
@@ -28,6 +45,7 @@ services:
 
     depends_on:
       - postgres
+      - ollama
 
     ports:
       - "8000:8000"
@@ -53,3 +71,4 @@ services:
 
 volumes:
   postgres_data:
+  ollama_data:

@@ -7,10 +7,8 @@ from app.services.llm.base import BaseLLMProvider
 class OllamaProvider(BaseLLMProvider):
 
     def __init__(self):
-
         self.model = settings.OLLAMA_MODEL
-
-        self.base_url = "http://localhost:11434"
+        self.base_url = settings.OLLAMA_BASE_URL
 
     def chat(
         self,
@@ -18,17 +16,13 @@ class OllamaProvider(BaseLLMProvider):
     ) -> str:
 
         response = requests.post(
-
             f"{self.base_url}/api/generate",
-
             json={
                 "model": self.model,
                 "prompt": prompt,
                 "stream": False,
             },
-
             timeout=180,
-
         )
 
         response.raise_for_status()
