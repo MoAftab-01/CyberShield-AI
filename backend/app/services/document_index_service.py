@@ -1,4 +1,5 @@
 from langchain_core.documents import Document
+import fitz
 
 from app.services.document_extractor import DocumentExtractor
 from app.rag.chunker import DocumentChunker
@@ -15,21 +16,35 @@ class DocumentIndexService:
         filename: str,
     ):
 
-        text = DocumentExtractor.extract_text(
-            file_path
-        )
-
-        document = Document(
-            page_content=text,
-            metadata={
-                "filename": filename,
-                "page": 0,
-                "source_folder": "uploads",
-            },
-        )
+        if file_path.lower().endswith(".pdf"):
+            pdf = fitz.open(file_path)
+            documents = [
+                Document(
+                    page_content=page.get_text(),
+                    metadata={
+                        "filename": filename,
+                        "page": page_number,
+                        "source_folder": "uploads",
+                    },
+                )
+                for page_number, page in enumerate(pdf)
+                if page.get_text().strip()
+            ]
+            pdf.close()
+        else:
+            documents = [
+                Document(
+                    page_content=DocumentExtractor.extract_text(file_path),
+                    metadata={
+                        "filename": filename,
+                        "page": 0,
+                        "source_folder": "uploads",
+                    },
+                )
+            ]
 
         chunks = DocumentChunker.chunk_documents(
-            [document]
+            documents
         )
 
         embeddings = (

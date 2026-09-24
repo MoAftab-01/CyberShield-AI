@@ -269,6 +269,24 @@ The frontend is served through Nginx, which routes API requests to the FastAPI b
 | PostgreSQL | Application database | 5432 |
 | Groq API | Hosted Llama inference | External API |
 
+## RAG document storage
+
+- Bundled knowledge-base PDFs are stored in
+  `backend/knowledge_base/` and are copied into the backend image.
+- The current bundled pack includes OWASP Top 10, OWASP ASVS 5.0,
+  NIST CSF 2.0, NIST SP 800-53, NIST SP 800-61 incident response, and
+  NIST SP 800-207 zero trust architecture.
+- User-uploaded PDFs are stored under `backend/uploads/user_<id>/` during local
+  development.
+- The generated FAISS and BM25 indexes are stored under
+  `backend/vector_db/`.
+- The production Compose file persists uploads in the `backend_uploads` Docker
+  volume and indexes in the `backend_vector_db` Docker volume.
+
+The backend automatically indexes documents in `backend/knowledge_base/` on
+startup when the RAG indexes do not exist. Newly uploaded documents are indexed
+immediately and added to both the semantic and lexical indexes.
+
 ---
 
 # 🔎 Verify Running Containers

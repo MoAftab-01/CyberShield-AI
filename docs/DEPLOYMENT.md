@@ -128,3 +128,12 @@ Should return
 The Docker deployment uses Groq's hosted, OpenAI-compatible API. No model
 weights are downloaded into the backend image. Keep `GROQ_API_KEY` in
 `backend/.env` or your deployment platform's secret manager; never commit it.
+
+RAG storage:
+
+- `backend/knowledge_base/` contains bundled PDFs.
+- The bundled pack covers OWASP Top 10, OWASP ASVS 5.0, NIST CSF 2.0,
+  NIST SP 800-53, NIST SP 800-61, and NIST SP 800-207.
+- `backend/uploads/` contains user uploads in local development.
+- `backend/vector_db/` contains FAISS and BM25 indexes in local development.
+- Production Compose persists uploads and indexes using named Docker volumes.

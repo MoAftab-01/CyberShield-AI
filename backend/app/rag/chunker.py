@@ -20,4 +20,13 @@ class DocumentChunker:
             ],
         )
 
-        return splitter.split_documents(documents)
+        chunks = splitter.split_documents(documents)
+
+        for index, chunk in enumerate(chunks):
+            chunk.metadata = {
+                **chunk.metadata,
+                "chunk_index": index,
+                "chunk_id": f"{chunk.metadata.get('filename', 'document')}:{index}",
+            }
+
+        return chunks

@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class CopilotRequest(BaseModel):
@@ -19,6 +19,23 @@ class Source(BaseModel):
     folder: str
 
 
+class RetrievalMetrics(BaseModel):
+
+    status: str
+
+    retrieved_count: int
+
+    candidate_count: Optional[int] = None
+
+    vector_candidates: Optional[int] = None
+
+    lexical_candidates: Optional[int] = None
+
+    fusion: Optional[str] = None
+
+    reason: Optional[str] = None
+
+
 class CopilotResponse(BaseModel):
 
     answer: str
@@ -26,3 +43,9 @@ class CopilotResponse(BaseModel):
     sources: list[Source]
 
     conversation_id: int
+    retrieval_metrics: RetrievalMetrics = Field(
+        default_factory=lambda: RetrievalMetrics(
+            status="unknown",
+            retrieved_count=0,
+        )
+    )

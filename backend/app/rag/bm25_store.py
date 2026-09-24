@@ -1,4 +1,5 @@
 import pickle
+import re
 from pathlib import Path
 
 from rank_bm25 import BM25Okapi
@@ -18,10 +19,7 @@ class BM25Store:
         documents,
     ):
 
-        corpus = [
-            doc.page_content.split()
-            for doc in documents
-        ]
+        corpus = [cls.tokenize(doc.page_content) for doc in documents]
 
         bm25 = BM25Okapi(corpus)
 
@@ -104,3 +102,8 @@ class BM25Store:
             cls._bm25 = pickle.load(f)
 
         return cls._bm25
+    TOKEN_PATTERN = re.compile(r"[a-z0-9_]+")
+
+    @classmethod
+    def tokenize(cls, text: str) -> list[str]:
+        return cls.TOKEN_PATTERN.findall(text.lower())

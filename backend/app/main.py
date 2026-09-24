@@ -19,12 +19,14 @@ from app.api.upload_routes import (
 )
 
 from app.core.config import settings
+from app.services.knowledge_base_service import KnowledgeBaseService
 
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
 )
 init_db()
+KnowledgeBaseService.ensure_index()
 # ==========================================
 # CORS Configuration
 # ==========================================

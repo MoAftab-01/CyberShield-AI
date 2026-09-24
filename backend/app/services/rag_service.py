@@ -68,15 +68,18 @@ class RAGService:
         # Hybrid Retrieval
         # ---------------------------------------
 
-        documents = HybridRetriever.search(
+        documents, retrieval_metrics = HybridRetriever.search_with_metrics(
             query=question,
             top_k=5,
         )
 
         knowledge = "\n\n".join(
-            doc.page_content
-            for doc in documents
+            f"[Source {index}: {doc.metadata.get('filename', 'unknown')} "
+            f"page {int(doc.metadata.get('page', 0)) + 1}]\n{doc.page_content}"
+            for index, doc in enumerate(documents, start=1)
         )
+        if not knowledge:
+            knowledge = "[No matching knowledge-base passages were found.]"
 
         # ---------------------------------------
         # Prompt
@@ -115,15 +118,15 @@ Rules
 
 ================================================
 
-1. Use conversation history for context.
+1. Use conversation history for context, but treat the Knowledge Base as the source of truth.
 
-2. Use the knowledge base for facts.
+2. Use only facts supported by the Knowledge Base. If it is insufficient, say so.
 
-3. Never invent information.
+3. Never invent information or citations.
 
-4. If the answer is unavailable, say so.
+4. Cite supporting passages inline as [Source N].
 
-5. Always recommend security best practices.
+5. Always recommend security best practices, clearly separating them from sourced facts.
 """
 
         provider = ProviderFactory.get_provider()
@@ -154,7 +157,7 @@ Rules
             sources.append(
                 {
                     "filename": doc.metadata.get("filename"),
-                    "page": doc.metadata.get("page") + 1,
+                    "page": int(doc.metadata.get("page", 0)) + 1,
                     "folder": doc.metadata.get("source_folder"),
                 }
             )
@@ -163,6 +166,7 @@ Rules
             "conversation_id": conversation_id,
             "answer": answer,
             "sources": sources,
+            "retrieval_metrics": retrieval_metrics,
         }
 
     @staticmethod
