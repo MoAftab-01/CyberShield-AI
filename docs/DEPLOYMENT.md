@@ -79,8 +79,10 @@ Backend:
 ```env
 DATABASE_URL=
 JWT_SECRET=
-OPENAI_API_KEY=
-OPENAI_MODEL=
+LLM_PROVIDER=groq
+GROQ_API_KEY=
+GROQ_MODEL=llama-3.1-8b-instant
+GROQ_BASE_URL=https://api.groq.com/openai/v1
 ```
 
 Frontend:
@@ -122,3 +124,7 @@ Should return
     "status":"ok"
 }
 ```
+
+The Docker deployment uses Groq's hosted, OpenAI-compatible API. No model
+weights are downloaded into the backend image. Keep `GROQ_API_KEY` in
+`backend/.env` or your deployment platform's secret manager; never commit it.

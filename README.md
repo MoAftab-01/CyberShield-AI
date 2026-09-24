@@ -2,7 +2,7 @@
 
 CyberShield AI is an AI-powered cybersecurity platform that combines threat intelligence, document intelligence, vulnerability analysis, and an enterprise security copilot into a single application.
 
-Built with **FastAPI, React, PostgreSQL, Docker, Docker Compose, Nginx, and Ollama (Llama 3)**.
+Built with **FastAPI, React, PostgreSQL, Docker, Docker Compose, Nginx, and Groq-hosted Llama**.
 
 ---
 
@@ -15,7 +15,7 @@ Built with **FastAPI, React, PostgreSQL, Docker, Docker Compose, Nginx, and Olla
 - Document summarization
 - Multi-document comparison
 - Security best-practice recommendations
-- Local LLM inference using Ollama
+- Hosted LLM inference using Groq's OpenAI-compatible API
 
 ### 📄 Document Intelligence
 - Upload PDF security reports
@@ -76,8 +76,8 @@ Built with **FastAPI, React, PostgreSQL, Docker, Docker Compose, Nginx, and Olla
               ┌───────────┘   └────────────┐
               ▼                            ▼
       ┌───────────────┐           ┌────────────────┐
-      │  PostgreSQL   │           │    Ollama      │
-      │   Database    │           │    Llama 3     │
+      │  PostgreSQL   │           │  Groq API      │
+      │   Database    │           │ Hosted Llama   │
       └───────────────┘           └───────┬────────┘
                                           │
                                           ▼
@@ -91,7 +91,7 @@ Built with **FastAPI, React, PostgreSQL, Docker, Docker Compose, Nginx, and Olla
 
 # 🧠 AI Architecture
 
-CyberShield AI uses a local LLM architecture for AI inference.
+CyberShield AI uses a hosted LLM architecture for AI inference.
 
 ```text
 User Question
@@ -112,7 +112,7 @@ History            BM25 + Vector Search
         Context Builder
               │
               ▼
-        Ollama / Llama 3
+        Groq / Llama
               │
               ▼
         AI Response
@@ -136,8 +136,8 @@ For document-based questions, relevant document content is retrieved and supplie
 - Hybrid RAG
 - BM25
 - Vector Search
-- Ollama
-- Llama 3
+- Groq API
+- Llama model
 - JWT Authentication
 
 ## Frontend
@@ -172,10 +172,6 @@ CyberShield-AI/
 │   ├── Dockerfile
 │   ├── nginx.conf
 │   └── ...
-│
-├── ollama/
-│   ├── Dockerfile
-│   └── entrypoint.sh
 │
 ├── docker-compose.yml
 └── README.md
@@ -216,6 +212,10 @@ cp backend/.env.example backend/.env
 
 The `.env.example` file contains placeholders and does not contain private credentials.
 
+Set `GROQ_API_KEY` in `backend/.env` using a key from
+[console.groq.com](https://console.groq.com/). The application defaults to
+`llama-3.1-8b-instant`; you can change it with `GROQ_MODEL`.
+
 ## 3. Start the Application
 
 ```bash
@@ -228,59 +228,17 @@ Docker Compose automatically:
 3. Starts PostgreSQL
 4. Starts the FastAPI backend
 5. Starts the React/Nginx frontend
-6. Starts Ollama
-7. Checks for the required Llama 3 model
-8. Downloads the model automatically if it is not already available
+6. Connects the backend to Groq using `GROQ_API_KEY`
+7. Exposes a backend health check at `/health`
 
 ---
 
-# ⚠️ First Startup
+# Hosted model configuration
 
-**Important:** The first startup requires downloading the **Llama 3 model (~4.7 GB)**.
-
-Depending on your internet connection, this may take several minutes.
-
-Monitor the Ollama setup:
-
-```bash
-docker logs -f cybershield-ollama
-```
-
-When the model download finishes, you should see:
-
-```text
-verifying sha256 digest
-writing manifest
-success
-```
-
-Verify the installed model:
-
-```bash
-docker exec cybershield-ollama ollama list
-```
-
-You should see:
-
-```text
-llama3:latest
-```
-
-### Subsequent Startups
-
-The Llama model is stored in a persistent Docker volume:
-
-```text
-ollama_data
-```
-
-Therefore, restarting the application does **not** require downloading the model again.
-
-```bash
-docker compose up -d
-```
-
-will reuse the existing model.
+The container does not download or store model weights. Each AI request is sent
+to Groq's hosted API, so startup remains lightweight. If the API key is absent,
+AI requests fail explicitly with a configuration error rather than silently
+falling back to a local model.
 
 ---
 
@@ -309,7 +267,7 @@ The frontend is served through Nginx, which routes API requests to the FastAPI b
 | Frontend | React + Nginx | 80 |
 | Backend | FastAPI REST API | 8000 |
 | PostgreSQL | Application database | 5432 |
-| Ollama | Local LLM inference | 11434 |
+| Groq API | Hosted Llama inference | External API |
 
 ---
 
@@ -325,7 +283,6 @@ Expected services:
 cybershield-frontend
 cybershield-backend
 cybershield-postgres
-cybershield-ollama
 ```
 
 ---
@@ -375,7 +332,8 @@ To stop the application and remove persistent Docker volumes:
 docker compose down -v
 ```
 
-> **Warning:** Removing volumes deletes the PostgreSQL database and downloaded Ollama model. The next startup will require the Llama 3 model to be downloaded again.
+> **Warning:** Removing volumes deletes the PostgreSQL database. Hosted model
+> configuration is kept in `backend/.env` and is not stored in Docker volumes.
 
 ---
 
@@ -435,7 +393,7 @@ npm install
 npm run dev
 ```
 
-> For the complete application, including PostgreSQL, Ollama, and Nginx, Docker Compose is recommended.
+> For the complete application, including PostgreSQL, Groq API integration, and Nginx, Docker Compose is recommended.
 
 ---
 

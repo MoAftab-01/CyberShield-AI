@@ -19,5 +19,5 @@ def health():
     logger.info("Health check endpoint accessed")
 
     return {
-        "status": "Healthy"
+        "status": "ok"
     }

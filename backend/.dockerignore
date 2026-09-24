@@ -7,3 +7,10 @@ vector_db
 temp_vector_db
 upload_vector_db
 .git
+*.pyc
+*.pyo
+*.pyd
+tests
+test_*.py
+vector_db
+uploads

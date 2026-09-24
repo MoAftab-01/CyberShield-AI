@@ -26,19 +26,15 @@ class Settings(BaseSettings):
     # ==========================
     OPENAI_API_KEY: str = ""
     # ==========================
-# LLM Configuration
-# ==========================
+    # LLM Configuration
+    # ==========================
+    LLM_PROVIDER: str = "groq"
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "llama-3.1-8b-instant"
+    GROQ_BASE_URL: str = "https://api.groq.com/openai/v1"
 
-    LLM_PROVIDER: str = "ollama"
-
-    OLLAMA_MODEL: str = "llama3:latest"
-
+    # Retained for users who explicitly select the OpenAI provider.
     OPENAI_MODEL: str = "gpt-4o-mini"
-
-    # Ollama
-    AI_PROVIDER: str = "ollama"
-    OLLAMA_MODEL: str = "llama3:latest"
-    OLLAMA_BASE_URL: str = "http://localhost:11434"
 
     # ==========================
     # VirusTotal

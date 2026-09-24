@@ -1,6 +1,6 @@
 from app.core.config import settings
 
-from app.services.llm.ollama_provider import OllamaProvider
+from app.services.llm.groq_provider import GroqProvider
 from app.services.llm.openai_provider import OpenAIProvider
 
 
@@ -16,21 +16,17 @@ class ProviderFactory:
 
         provider = settings.LLM_PROVIDER.lower()
 
-        if provider == "openai":
+        if provider == "groq":
+            print(f"Loading Groq: {settings.GROQ_MODEL}")
+            cls._provider = GroqProvider()
+
+        elif provider == "openai":
 
             print(
                 f"Loading OpenAI: {settings.OPENAI_MODEL}"
             )
 
             cls._provider = OpenAIProvider()
-
-        elif provider == "ollama":
-
-            print(
-                f"Loading Ollama: {settings.OLLAMA_MODEL}"
-            )
-
-            cls._provider = OllamaProvider()
 
         else:
 

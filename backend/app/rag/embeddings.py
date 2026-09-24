@@ -1,25 +1,39 @@
-from sentence_transformers import SentenceTransformer
+import hashlib
+import re
+
+import numpy as np
 
 
 class EmbeddingService:
+    DIMENSION = 384
+    TOKEN_PATTERN = re.compile(r"[a-z0-9_]+")
 
-    _model = SentenceTransformer(
-        "all-MiniLM-L6-v2"
-    )
+    @classmethod
+    def _embed(cls, text: str) -> np.ndarray:
+        vector = np.zeros(cls.DIMENSION, dtype=np.float32)
+        tokens = cls.TOKEN_PATTERN.findall(text.lower())
 
-    @staticmethod
-    def embed_documents(texts):
+        for token in tokens:
+            digest = hashlib.blake2b(
+                token.encode("utf-8"),
+                digest_size=8,
+            ).digest()
+            index = int.from_bytes(digest[:4], "little") % cls.DIMENSION
+            vector[index] += 1.0
 
-        return EmbeddingService._model.encode(
-            texts,
-            convert_to_numpy=True,
-            show_progress_bar=False,
+        norm = np.linalg.norm(vector)
+        if norm:
+            vector /= norm
+
+        return vector
+
+    @classmethod
+    def embed_documents(cls, texts):
+        return np.asarray(
+            [cls._embed(text) for text in texts],
+            dtype=np.float32,
         )
 
-    @staticmethod
-    def embed_query(query):
-
-        return EmbeddingService._model.encode(
-            query,
-            convert_to_numpy=True,
-        )
+    @classmethod
+    def embed_query(cls, query):
+        return cls._embed(query).reshape(1, -1)
