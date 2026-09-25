@@ -8,16 +8,13 @@ from app.schemas.copilot_schema import (
     CopilotResponse,
 )
 
-from app.agents.orchestrator import CyberGPTOrchestrator
+from app.services.rag_service import RAGService
 
 
 router = APIRouter(
     prefix="/copilot",
     tags=["CyberGPT"],
 )
-
-orchestrator = CyberGPTOrchestrator()
-
 
 @router.post(
     "/ask",
@@ -34,7 +31,7 @@ async def ask_copilot(
     # TODO: Replace with authenticated user later
     user_id = 1
 
-    return await orchestrator.handle(
+    return RAGService.ask(
         question=request.question,
         db=db,
         user_id=user_id,

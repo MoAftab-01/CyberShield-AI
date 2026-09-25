@@ -7,11 +7,25 @@ import numpy as np
 class EmbeddingService:
     DIMENSION = 384
     TOKEN_PATTERN = re.compile(r"[a-z0-9_]+")
+    STOP_WORDS = {
+        "a", "an", "and", "are", "as", "at", "be", "by", "can", "could",
+        "do", "for", "from", "how", "i", "in", "is", "it", "of", "on",
+        "or", "should", "that", "the", "this", "to", "what", "when",
+        "where", "which", "who", "why", "with", "would", "you",
+    }
 
     @classmethod
     def _embed(cls, text: str) -> np.ndarray:
         vector = np.zeros(cls.DIMENSION, dtype=np.float32)
-        tokens = cls.TOKEN_PATTERN.findall(text.lower())
+        tokens = [
+            token
+            for token in cls.TOKEN_PATTERN.findall(text.lower())
+            if token not in cls.STOP_WORDS
+        ]
+        tokens += [
+            f"phrase:{left}_{right}"
+            for left, right in zip(tokens, tokens[1:])
+        ]
 
         for token in tokens:
             digest = hashlib.blake2b(

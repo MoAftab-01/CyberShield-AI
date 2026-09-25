@@ -33,6 +33,12 @@ class RetrievalMetrics(BaseModel):
 
     fusion: Optional[str] = None
 
+    top_score: Optional[float] = None
+
+    top_term_coverage: Optional[float] = None
+
+    relevance_floor: Optional[float] = None
+
     reason: Optional[str] = None
 
 

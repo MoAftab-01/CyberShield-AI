@@ -233,6 +233,44 @@ Docker Compose automatically:
 
 ---
 
+# 🧠 CyberGPT RAG
+
+CyberGPT uses a document-grounded retrieval-augmented generation pipeline.
+The `/copilot/ask` endpoint always uses the RAG service; it does not route
+questions to the Password Analyzer, URL Scanner, CVE tools, or other
+application features.
+
+The pipeline:
+
+1. Extracts uploaded PDF text page by page.
+2. Splits documents into overlapping chunks while preserving filename and page.
+3. Searches with both FAISS semantic retrieval and BM25 lexical retrieval.
+4. Combines results with Reciprocal Rank Fusion.
+5. Removes weakly matching passages and duplicate page results.
+6. Sends labeled passages to Groq with source-citation instructions.
+7. Returns answer sources and retrieval metrics.
+
+If the documents do not contain enough evidence, CyberGPT is instructed to say
+so instead of guessing. The response includes metrics such as
+`retrieved_count`, `candidate_count`, `top_score`, `top_term_coverage`, and
+`relevance_floor`.
+
+The bundled knowledge base currently contains:
+
+- OWASP Top 10
+- OWASP ASVS 5.0
+- NIST CSF 2.0
+- NIST SP 800-53 security controls
+- NIST SP 800-61 incident response
+- NIST SP 800-207 zero trust architecture
+
+Bundled PDFs are stored in `backend/knowledge_base/`. Uploaded files are
+stored in `backend/uploads/user_<id>/` locally. FAISS and BM25 indexes are
+stored in `backend/vector_db/`. Indexes are built automatically at backend
+startup when they do not exist, and uploaded files are indexed immediately.
+
+---
+
 # Hosted model configuration
 
 The container does not download or store model weights. Each AI request is sent
@@ -257,6 +295,45 @@ http://localhost:8000/docs
 ```
 
 The frontend is served through Nginx, which routes API requests to the FastAPI backend.
+
+---
+
+# ☁️ Free Hosting
+
+The application can be hosted using free tiers, but free hosting is best
+suited for a demo or portfolio deployment rather than production workloads.
+
+Recommended split:
+
+| Component | Free-tier option | Important limitation |
+|---|---|---|
+| Frontend | Vercel or Netlify | Set `VITE_API_URL` to the public backend URL |
+| Backend | Render, Koyeb, or another Docker host | Free instances may sleep |
+| PostgreSQL | Neon or Supabase | Storage, connection, and compute limits |
+| LLM | Groq API | Rate limits and usage quotas |
+| Uploaded files | Supabase Storage or Cloudflare R2 | Required if files must survive redeploys |
+
+The bundled PDFs are included in the backend image, so they can be rebuilt on
+startup. Do not rely on a free host's local filesystem for user uploads or
+generated FAISS/BM25 indexes: many free services erase local files during
+redeployments or restarts. The production Compose file uses named Docker
+volumes for self-hosted deployments, but cloud deployment needs persistent
+object storage or a persistent disk.
+
+## Cloud deployment checklist
+
+1. Create a managed PostgreSQL database and copy its connection URL.
+2. Create a backend web service from the `backend/` Dockerfile.
+3. Configure `DATABASE_URL`, `JWT_SECRET`, `LLM_PROVIDER=groq`,
+   `GROQ_API_KEY`, `GROQ_MODEL`, and `GROQ_BASE_URL` as service secrets.
+4. Confirm the service health check works at `/health`.
+5. Deploy the frontend and set `VITE_API_URL` to the backend URL.
+6. Configure persistent storage before enabling user PDF uploads.
+7. Test registration, login, upload, document Q&A, and a cold start.
+
+Never commit `backend/.env`, API keys, database passwords, or JWT secrets.
+Free-tier services can change quotas and pricing, so verify current limits
+before choosing a provider.
 
 ---
 
@@ -319,6 +396,7 @@ After startup:
 8. Test URL Scanner
 9. Upload a security document
 10. Test document Q&A and summarization
+11. Confirm the answer cites the uploaded document and inspect retrieval metrics
 
 Example CyberGPT question:
 
