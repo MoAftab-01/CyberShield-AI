@@ -1,0 +1,92 @@
+[
+  {
+    "id": "RAG-01",
+    "question": "How should developers prevent SQL injection attacks?",
+    "relevant_pages": [{"source": "owasp-top-10.pdf", "page": 15}]
+  },
+  {
+    "id": "RAG-02",
+    "question": "What is an example of an injection vulnerability in a SQL query?",
+    "relevant_pages": [{"source": "owasp-top-10.pdf", "page": 14}]
+  },
+  {
+    "id": "RAG-03",
+    "question": "What are common broken access control vulnerabilities?",
+    "relevant_pages": [{"source": "owasp-top-10.pdf", "page": 8}]
+  },
+  {
+    "id": "RAG-04",
+    "question": "How can an application prevent broken access control?",
+    "relevant_pages": [{"source": "owasp-top-10.pdf", "page": 9}]
+  },
+  {
+    "id": "RAG-05",
+    "question": "What does zero trust mean, and why is trust never implicit?",
+    "relevant_pages": [{"source": "NIST-SP-800-207-Zero-Trust.pdf", "page": 13}]
+  },
+  {
+    "id": "RAG-06",
+    "question": "How does least privilege restrict access in a zero trust architecture?",
+    "relevant_pages": [{"source": "NIST-SP-800-207-Zero-Trust.pdf", "page": 16}]
+  },
+  {
+    "id": "RAG-07",
+    "question": "What are the responsibilities of policy decision and policy enforcement points?",
+    "relevant_pages": [{"source": "NIST-SP-800-207-Zero-Trust.pdf", "page": 19}]
+  },
+  {
+    "id": "RAG-08",
+    "question": "What are the six functions in the NIST Cybersecurity Framework 2.0?",
+    "relevant_pages": [{"source": "NIST-CSF-2.0.pdf", "page": 10}]
+  },
+  {
+    "id": "RAG-09",
+    "question": "What is a NIST CSF organizational profile used for?",
+    "relevant_pages": [{"source": "NIST-CSF-2.0.pdf", "page": 11}]
+  },
+  {
+    "id": "RAG-10",
+    "question": "How should an organization coordinate the six CSF functions during incidents?",
+    "relevant_pages": [{"source": "NIST-CSF-2.0.pdf", "page": 10}]
+  },
+  {
+    "id": "RAG-11",
+    "question": "How does NIST integrate incident response into cybersecurity risk management?",
+    "relevant_pages": [{"source": "NIST-SP-800-61r3.pdf", "page": 12}]
+  },
+  {
+    "id": "RAG-12",
+    "question": "How is the incident response life cycle mapped to the CSF functions?",
+    "relevant_pages": [{"source": "NIST-SP-800-61r3.pdf", "page": 13}]
+  },
+  {
+    "id": "RAG-13",
+    "question": "Which roles and responsibilities should be defined for incident response?",
+    "relevant_pages": [{"source": "NIST-SP-800-61r3.pdf", "page": 15}]
+  },
+  {
+    "id": "RAG-14",
+    "question": "What does NIST control AC-2 require for account management?",
+    "relevant_pages": [{"source": "NIST-SP-800-53r5.pdf", "page": 46}]
+  },
+  {
+    "id": "RAG-15",
+    "question": "What does control AC-6 require about least privilege?",
+    "relevant_pages": [{"source": "NIST-SP-800-53r5.pdf", "page": 63}]
+  },
+  {
+    "id": "RAG-16",
+    "question": "What should organizations consider when selecting audit events under AU-2?",
+    "relevant_pages": [{"source": "NIST-SP-800-53r5.pdf", "page": 93}]
+  },
+  {
+    "id": "RAG-17",
+    "question": "What protections are required when constructing URLs from untrusted input?",
+    "relevant_pages": [{"source": "OWASP-ASVS-5.0.0.pdf", "page": 26}]
+  },
+  {
+    "id": "RAG-18",
+    "question": "What does OWASP ASVS require for multifactor authentication?",
+    "relevant_pages": [{"source": "OWASP-ASVS-5.0.0.pdf", "page": 48}]
+  }
+]

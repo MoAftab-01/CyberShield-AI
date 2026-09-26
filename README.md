@@ -1,533 +1,135 @@
-# 🛡️ CyberShield AI
+# CyberShield AI
 
-CyberShield AI is an AI-powered cybersecurity platform that combines threat intelligence, document intelligence, vulnerability analysis, and an enterprise security copilot into a single application.
+**An AI-assisted cybersecurity workspace for security-document Q&A, vulnerability research, URL triage, and password analysis.**
 
-Built with **FastAPI, React, PostgreSQL, Docker, Docker Compose, Nginx, and Groq-hosted Llama**.
+[Live application](https://cybershieldai-security.vercel.app/login) | [API health](https://cybershield-backend-oz7p.onrender.com/health) | [API docs](https://cybershield-backend-oz7p.onrender.com/docs) | [Deployment guide](docs/DEPLOYMENT.md) | [RAG evaluation](backend/evaluation/README.md)
 
----
+CyberShield AI brings common security research workflows into one web application. Users can ask questions against security references, inspect CVE intelligence, assess suspicious URLs, and analyze password strength. It is a portfolio project and decision-support tool, not a replacement for security review or incident-response procedures.
 
-## ✨ Features
+## Screenshots
 
-### 🤖 CyberGPT — Enterprise Security Copilot
-- AI-powered cybersecurity assistant
-- Hybrid RAG over uploaded security documents
-- Conversation memory
-- Document summarization
-- Multi-document comparison
-- Security best-practice recommendations
-- Hosted LLM inference using Groq's OpenAI-compatible API
+| Dashboard | CyberGPT | Password Analyzer |
+| --- | --- | --- |
+| <img src="docs/screenshots/dashboard.png" alt="CyberShield AI dashboard" width="320" /> | <img src="docs/screenshots/cybergpt.png" alt="CyberGPT assistant" width="320" /> | <img src="docs/screenshots/password-analyzer.png" alt="Password Analyzer" width="320" /> |
 
-### 📄 Document Intelligence
-- Upload PDF security reports
-- Hybrid RAG using BM25 + vector search
-- AI-powered document summaries
-- Multi-document comparison
-- Source citations and document references
+| Sign in | Create account |
+| --- | --- |
+| <img src="docs/screenshots/login.png" alt="CyberShield AI sign-in page" width="320" /> | <img src="docs/screenshots/register.png" alt="CyberShield AI registration page" width="320" /> |
 
-### 🛡️ Threat Intelligence Dashboard
-- AI-generated security summaries
-- CVE insights
-- Security recommendations
-- Executive-level security dashboard
+## What It Does
 
-### 🔍 URL Scanner
-- URL reputation analysis
-- Phishing detection
-- Risk assessment
-- Security classification
+- **CyberGPT:** Answers cybersecurity questions using retrieved document passages, keeps conversation history, and returns source references.
+- **Document intelligence:** Accepts PDF, DOCX, and TXT documents; supports question answering, summaries, and comparisons.
+- **Threat intelligence:** Enriches CVE lookups with data from NVD, CISA KEV, EPSS, and GitHub advisories, then generates summaries and recommendations.
+- **URL scanner:** Combines local URL-risk heuristics with VirusTotal reputation results when configured.
+- **Password analyzer:** Scores passwords using length, entropy, dictionary-word, and pattern checks; generates recommendations.
+- **Dashboard and reports:** Presents account activity and security scan results.
 
-### 🔐 Password Analyzer
-- Password strength evaluation
-- Entropy analysis
-- Security recommendations
+## Architecture
 
-### 👤 Authentication
-- User registration
-- JWT-based authentication
-- Login/logout
-- Protected routes
-- User-specific data
-
----
-
-# 🏗️ Architecture
-
-```text
-                         Browser
-                            │
-                            ▼
-                  ┌──────────────────┐
-                  │  React Frontend  │
-                  │   TypeScript     │
-                  └────────┬─────────┘
-                           │ REST API
-                           ▼
-                  ┌──────────────────┐
-                  │      Nginx       │
-                  │  Reverse Proxy   │
-                  └────────┬─────────┘
-                           │
-                           ▼
-                  ┌──────────────────┐
-                  │  FastAPI Backend │
-                  │     Python       │
-                  └───────┬───┬──────┘
-                          │   │
-              ┌───────────┘   └────────────┐
-              ▼                            ▼
-      ┌───────────────┐           ┌────────────────┐
-      │  PostgreSQL   │           │  Groq API      │
-      │   Database    │           │ Hosted Llama   │
-      └───────────────┘           └───────┬────────┘
-                                          │
-                                          ▼
-                                  ┌────────────────┐
-                                  │   Hybrid RAG   │
-                                  │ BM25 + Vector  │
-                                  └────────────────┘
+```mermaid
+flowchart LR
+    Browser[React + TypeScript] -->|HTTPS / REST| API[FastAPI]
+    API --> DB[(PostgreSQL / Neon)]
+    API --> LLM[Groq-hosted Llama]
+    API --> RAG[Document RAG]
+    RAG --> BM25[BM25 lexical search]
+    RAG --> FAISS[FAISS hashed-vector search]
+    BM25 --> RRF[Reciprocal Rank Fusion]
+    FAISS --> RRF
+    RRF --> Context[Retrieved pages and context]
+    Context --> LLM
+    API --> Feeds[NVD / CISA / EPSS / GitHub / VirusTotal]
 ```
 
----
+The frontend is a React, TypeScript, and Vite single-page application. FastAPI exposes REST endpoints and uses SQLAlchemy with PostgreSQL for application data. The hosted deployment uses Vercel for the frontend, Render for the backend, and Neon for PostgreSQL.
 
-# 🧠 AI Architecture
+### AI and Retrieval
 
-CyberShield AI uses a hosted LLM architecture for AI inference.
+The default hosted model is **Llama 3.1 8B Instant through Groq's OpenAI-compatible API**. The backend does not download model weights.
 
-```text
-User Question
-      │
-      ▼
-FastAPI API
-      │
-      ▼
-RAG / AI Service
-      │
-      ├───────────────┐
-      ▼               ▼
-Conversation       Hybrid Retrieval
-History            BM25 + Vector Search
-      │               │
-      └───────┬───────┘
-              ▼
-        Context Builder
-              │
-              ▼
-        Groq / Llama
-              │
-              ▼
-        AI Response
-              │
-              ▼
-        Source References
-```
+For document retrieval, the application extracts text, chunks it at 800 characters with 150-character overlap, and preserves source/page metadata. It combines:
 
-For document-based questions, relevant document content is retrieved and supplied to the LLM as context.
+- BM25 keyword retrieval.
+- A deterministic, normalized 384-dimensional feature-hashing representation searched with FAISS L2. This is **not** a pretrained semantic embedding model.
+- Reciprocal Rank Fusion, a query-term coverage adjustment, duplicate-page removal, and up to five returned passages.
 
----
+The six bundled public references are OWASP Top 10, OWASP ASVS 5.0, NIST CSF 2.0, NIST SP 800-53 Rev. 5, NIST SP 800-61r3, and NIST SP 800-207. The current evaluation index contains 3,662 chunks from those references.
 
-# 🛠️ Tech Stack
+## Evaluation
 
-## Backend
-- Python
-- FastAPI
-- SQLAlchemy
-- PostgreSQL
-- LangChain
-- Hybrid RAG
-- BM25
-- Vector Search
-- Groq API
-- Llama model
-- JWT Authentication
+An 18-question, manually page-labeled benchmark compares the retrieval methods over the six public references. Metrics are macro averages; a hit means the exact labeled source page was returned in the top five.
 
-## Frontend
-- React
-- TypeScript
-- Vite
-- TailwindCSS
-- Axios
-- Recharts
+| Method | Recall@5 | MRR | nDCG@5 |
+| --- | ---: | ---: | ---: |
+| BM25 | 66.67% | 0.4648 | 0.5155 |
+| Feature-hashed vectors | 38.89% | 0.1963 | 0.2433 |
+| Hybrid BM25 + FAISS + RRF | **72.22%** | **0.4713** | **0.5314** |
 
-## Infrastructure
-- Docker
-- Docker Compose
-- Nginx
+These are **small internal retrieval-benchmark results**, not answer accuracy or a general quality guarantee. The URL heuristic was separately checked on 24 synthetic fixtures: accuracy 87.50%, precision 100%, recall 75%, and F1 85.71%. That fixture set is not a real-world phishing dataset, and the measurement excludes VirusTotal. Generated-answer citation correctness and faithfulness still require manual review.
 
----
+See [the evaluation guide](backend/evaluation/README.md) for the methodology, per-question rankings, datasets, and rerun command. Results are saved in [backend/evaluation/results.json](backend/evaluation/results.json).
 
-# 📁 Project Structure
+## Technology
 
-```text
-CyberShield-AI/
-│
-├── backend/
-│   ├── app/
-│   ├── requirements.txt
-│   ├── Dockerfile
-│   ├── .env.example
-│   └── ...
-│
-├── frontend/
-│   ├── src/
-│   ├── Dockerfile
-│   ├── nginx.conf
-│   └── ...
-│
-├── docker-compose.yml
-└── README.md
-```
+| Area | Technologies |
+| --- | --- |
+| Frontend | React, TypeScript, Vite, Tailwind CSS, Axios, Recharts |
+| API and services | Python, FastAPI, Pydantic, SQLAlchemy |
+| Persistence | PostgreSQL; Neon in the hosted deployment |
+| Retrieval | FAISS, BM25, feature hashing, Reciprocal Rank Fusion |
+| Hosted inference | Groq API, Llama 3.1 8B Instant |
+| Security data | NVD, CISA KEV, EPSS, GitHub advisories, VirusTotal |
+| Deployment | Vercel, Render, Neon, Docker, Docker Compose, Nginx |
 
----
+## Run Locally
 
-# 🚀 Quick Start
-
-## Prerequisites
-
-Install:
-- Docker Desktop
-- Git
-
-Make sure Docker Desktop is running before starting the application.
-
-## 1. Clone the Repository
+Requirements: Git, Docker Desktop, and a Groq API key for AI responses.
 
 ```bash
 git clone https://github.com/MoAftab-01/CyberShield-AI.git
 cd CyberShield-AI
 ```
 
-## 2. Configure Environment Variables
-
-### Windows PowerShell
+Create the backend environment file:
 
 ```powershell
 Copy-Item backend\.env.example backend\.env
 ```
 
-### macOS / Linux
+On macOS/Linux, use `cp backend/.env.example backend/.env`. Set `GROQ_API_KEY` and replace `JWT_SECRET` in `backend/.env`, then start the services:
 
 ```bash
-cp backend/.env.example backend/.env
+docker compose up --build
 ```
 
-The `.env.example` file contains placeholders and does not contain private credentials.
+Open the frontend at `http://localhost` and the API documentation at `http://localhost:8000/docs`. The Compose setup provides PostgreSQL, backend, and Nginx-served frontend. Never commit `.env` files or real credentials.
 
-Set `GROQ_API_KEY` in `backend/.env` using a key from
-[console.groq.com](https://console.groq.com/). The application defaults to
-`llama-3.1-8b-instant`; you can change it with `GROQ_MODEL`.
+## Hosted Deployment
 
-## 3. Start the Application
+- **Frontend:** [Vercel](https://cybershieldai-security.vercel.app/login)
+- **Backend:** [Render API](https://cybershield-backend-oz7p.onrender.com/), with [health check](https://cybershield-backend-oz7p.onrender.com/health) and [interactive API docs](https://cybershield-backend-oz7p.onrender.com/docs)
+- **Database:** Neon PostgreSQL
+- **LLM:** Groq-hosted Llama
 
-```bash
-docker compose up -d
-```
+The Render free service may sleep when idle, so the first request can be delayed. Its local filesystem is ephemeral: do not rely on it to preserve user uploads or generated indexes across restarts. Use persistent/object storage for durable files. See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for build settings and environment-variable setup.
 
-Docker Compose automatically:
-1. Builds the backend
-2. Builds the frontend
-3. Starts PostgreSQL
-4. Starts the FastAPI backend
-5. Starts the React/Nginx frontend
-6. Connects the backend to Groq using `GROQ_API_KEY`
-7. Exposes a backend health check at `/health`
+## Current Limitations
 
----
+- Retrieval evaluation is a small, manually labeled benchmark and should be expanded and independently reviewed before making broad performance claims.
+- URL-detection scores come from synthetic fixtures, not a representative phishing corpus.
+- Generated-answer citation correctness and factual faithfulness have not yet been measured.
+- The Copilot API currently uses a placeholder user ID; per-user isolation for Copilot conversations and uploaded documents needs to be completed before handling sensitive data.
+- Free-tier hosting can sleep and does not provide durable local upload storage.
 
-# 🧠 CyberGPT RAG
+## Repository Guide
 
-CyberGPT uses a document-grounded retrieval-augmented generation pipeline.
-The `/copilot/ask` endpoint always uses the RAG service; it does not route
-questions to the Password Analyzer, URL Scanner, CVE tools, or other
-application features.
+| Path | Contents |
+| --- | --- |
+| `frontend/` | React application and Vercel configuration |
+| `backend/app/` | FastAPI routes, services, agents, integrations, and retrieval code |
+| `backend/knowledge_base/` | Bundled security-reference PDFs |
+| `backend/evaluation/` | Curated benchmark cases, result report, and annotation template |
+| `docs/` | Deployment and architecture documentation |
 
-The pipeline:
-
-1. Extracts uploaded PDF text page by page.
-2. Splits documents into overlapping chunks while preserving filename and page.
-3. Searches with both FAISS semantic retrieval and BM25 lexical retrieval.
-4. Combines results with Reciprocal Rank Fusion.
-5. Removes weakly matching passages and duplicate page results.
-6. Sends labeled passages to Groq with source-citation instructions.
-7. Returns answer sources and retrieval metrics.
-
-If the documents do not contain enough evidence, CyberGPT is instructed to say
-so instead of guessing. The response includes metrics such as
-`retrieved_count`, `candidate_count`, `top_score`, `top_term_coverage`, and
-`relevance_floor`.
-
-The bundled knowledge base currently contains:
-
-- OWASP Top 10
-- OWASP ASVS 5.0
-- NIST CSF 2.0
-- NIST SP 800-53 security controls
-- NIST SP 800-61 incident response
-- NIST SP 800-207 zero trust architecture
-
-Bundled PDFs are stored in `backend/knowledge_base/`. Uploaded files are
-stored in `backend/uploads/user_<id>/` locally. FAISS and BM25 indexes are
-stored in `backend/vector_db/`. Indexes are built automatically at backend
-startup when they do not exist, and uploaded files are indexed immediately.
-
----
-
-# Hosted model configuration
-
-The container does not download or store model weights. Each AI request is sent
-to Groq's hosted API, so startup remains lightweight. If the API key is absent,
-AI requests fail explicitly with a configuration error rather than silently
-falling back to a local model.
-
----
-
-# 🌐 Access the Application
-
-### Frontend
-
-```text
-http://localhost
-```
-
-### Backend API Documentation
-
-```text
-http://localhost:8000/docs
-```
-
-The frontend is served through Nginx, which routes API requests to the FastAPI backend.
-
----
-
-# ☁️ Free Hosting
-
-The application can be hosted using free tiers, but free hosting is best
-suited for a demo or portfolio deployment rather than production workloads.
-
-Recommended split:
-
-| Component | Free-tier option | Important limitation |
-|---|---|---|
-| Frontend | Vercel or Netlify | Set `VITE_API_URL` to the public backend URL |
-| Backend | Render, Koyeb, or another Docker host | Free instances may sleep |
-| PostgreSQL | Neon or Supabase | Storage, connection, and compute limits |
-| LLM | Groq API | Rate limits and usage quotas |
-| Uploaded files | Supabase Storage or Cloudflare R2 | Required if files must survive redeploys |
-
-The bundled PDFs are included in the backend image, so they can be rebuilt on
-startup. Do not rely on a free host's local filesystem for user uploads or
-generated FAISS/BM25 indexes: many free services erase local files during
-redeployments or restarts. The production Compose file uses named Docker
-volumes for self-hosted deployments, but cloud deployment needs persistent
-object storage or a persistent disk.
-
-## Cloud deployment checklist
-
-1. Create a managed PostgreSQL database and copy its connection URL.
-2. Create a backend web service from the `backend/` Dockerfile.
-3. Configure `DATABASE_URL`, `JWT_SECRET`, `LLM_PROVIDER=groq`,
-   `GROQ_API_KEY`, `GROQ_MODEL`, and `GROQ_BASE_URL` as service secrets.
-4. Confirm the service health check works at `/health`.
-5. Deploy the frontend and set `VITE_API_URL` to the backend URL.
-6. Configure persistent storage before enabling user PDF uploads.
-7. Test registration, login, upload, document Q&A, and a cold start.
-
-Never commit `backend/.env`, API keys, database passwords, or JWT secrets.
-Free-tier services can change quotas and pricing, so verify current limits
-before choosing a provider.
-
----
-
-# 🐳 Docker Services
-
-| Service | Description | Port |
-|---|---|---:|
-| Frontend | React + Nginx | 80 |
-| Backend | FastAPI REST API | 8000 |
-| PostgreSQL | Application database | 5432 |
-| Groq API | Hosted Llama inference | External API |
-
-## RAG document storage
-
-- Bundled knowledge-base PDFs are stored in
-  `backend/knowledge_base/` and are copied into the backend image.
-- The current bundled pack includes OWASP Top 10, OWASP ASVS 5.0,
-  NIST CSF 2.0, NIST SP 800-53, NIST SP 800-61 incident response, and
-  NIST SP 800-207 zero trust architecture.
-- User-uploaded PDFs are stored under `backend/uploads/user_<id>/` during local
-  development.
-- The generated FAISS and BM25 indexes are stored under
-  `backend/vector_db/`.
-- The production Compose file persists uploads in the `backend_uploads` Docker
-  volume and indexes in the `backend_vector_db` Docker volume.
-
-The backend automatically indexes documents in `backend/knowledge_base/` on
-startup when the RAG indexes do not exist. Newly uploaded documents are indexed
-immediately and added to both the semantic and lexical indexes.
-
----
-
-# 🔎 Verify Running Containers
-
-```bash
-docker ps
-```
-
-Expected services:
-
-```text
-cybershield-frontend
-cybershield-backend
-cybershield-postgres
-```
-
----
-
-# 🧪 Testing the Application
-
-After startup:
-
-1. Open `http://localhost`
-2. Create an account
-3. Log in
-4. Open the Dashboard
-5. Test the AI Dashboard
-6. Ask CyberGPT a cybersecurity question
-7. Test Password Analyzer
-8. Test URL Scanner
-9. Upload a security document
-10. Test document Q&A and summarization
-11. Confirm the answer cites the uploaded document and inspect retrieval metrics
-
-Example CyberGPT question:
-
-```text
-What is phishing and how can an organization protect against it?
-```
-
----
-
-# 🛑 Stop the Application
-
-```bash
-docker compose down
-```
-
-This stops and removes the containers while preserving persistent Docker volumes.
-
-# 🔄 Restart the Application
-
-```bash
-docker compose up -d
-```
-
-# 🧹 Full Reset
-
-To stop the application and remove persistent Docker volumes:
-
-```bash
-docker compose down -v
-```
-
-> **Warning:** Removing volumes deletes the PostgreSQL database. Hosted model
-> configuration is kept in `backend/.env` and is not stored in Docker volumes.
-
----
-
-# 🔐 Security Notes
-
-- Do not commit the `.env` file.
-- Use `.env.example` as the configuration template.
-- Replace placeholder secrets before production deployment.
-- Store external API keys in environment variables.
-- The included configuration is intended primarily for local and portfolio deployment.
-
----
-
-# 🖼️ Screenshots
-
-Screenshots can be added here to showcase:
-- Login
-- Registration
-- Dashboard
-- AI Dashboard
-- CyberGPT
-- Threat Intelligence
-- URL Scanner
-- Password Analyzer
-- Document Intelligence
-
-Example structure:
-
-```text
-docs/
-└── screenshots/
-    ├── login.png
-    ├── dashboard.png
-    ├── cybergpt.png
-    ├── threat-intelligence.png
-    ├── url-scanner.png
-    └── password-analyzer.png
-```
-
----
-
-# 💻 Development
-
-## Backend
-
-```bash
-cd backend
-pip install -r requirements.txt
-uvicorn app.main:app --reload
-```
-
-## Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-> For the complete application, including PostgreSQL, Groq API integration, and Nginx, Docker Compose is recommended.
-
----
-
-# 🚧 Future Improvements
-
-- AWS deployment
-- Kubernetes deployment
-- CI/CD pipeline
-- Multi-model AI support
-- Real-time threat intelligence feeds
-- Redis caching
-- Role-based access control
-- Production monitoring and observability
-
----
-
-# 📌 Project Highlights
-
-CyberShield AI demonstrates hands-on experience with:
-
-- Full-stack application development
-- REST API design
-- FastAPI backend development
-- React + TypeScript frontend development
-- PostgreSQL database design
-- JWT authentication
-- Docker containerization
-- Docker Compose orchestration
-- Nginx reverse proxy
-- Local LLM deployment
-- RAG pipelines
-- Hybrid retrieval
-- BM25 search
-- Vector search
-- AI-powered cybersecurity workflows
-
----
-
-# 📄 License
-
-This project is intended for educational, demonstration, and portfolio purposes.
+Licensed under the terms in [LICENSE](LICENSE).

@@ -1,0 +1,2132 @@
+{
+  "generated_at_utc": "2026-09-26T23:25:49.809625+00:00",
+  "retrieval": {
+    "sample_size": 18,
+    "top_k": 5,
+    "included_public_sources": [
+      "NIST-CSF-2.0.pdf",
+      "NIST-SP-800-207-Zero-Trust.pdf",
+      "NIST-SP-800-53r5.pdf",
+      "NIST-SP-800-61r3.pdf",
+      "OWASP-ASVS-5.0.0.pdf",
+      "owasp-top-10.pdf"
+    ],
+    "safe_index_chunks": 3662,
+    "excluded_non_kb_index_chunks": 7,
+    "metrics": {
+      "bm25_only": {
+        "recall_at_5": 0.6667,
+        "mrr": 0.4648,
+        "ndcg_at_5": 0.5155,
+        "source_page_precision_at_5": 0.1333,
+        "source_page_recall_at_5": 0.6667
+      },
+      "hashed_vector_only": {
+        "recall_at_5": 0.3889,
+        "mrr": 0.1963,
+        "ndcg_at_5": 0.2433,
+        "source_page_precision_at_5": 0.0778,
+        "source_page_recall_at_5": 0.3889
+      },
+      "hybrid_rrf": {
+        "recall_at_5": 0.7222,
+        "mrr": 0.4713,
+        "ndcg_at_5": 0.5314,
+        "source_page_precision_at_5": 0.1444,
+        "source_page_recall_at_5": 0.7222
+      }
+    },
+    "per_question": [
+      {
+        "id": "RAG-01",
+        "question": "How should developers prevent SQL injection attacks?",
+        "gold_pages": [
+          {
+            "source": "owasp-top-10.pdf",
+            "page": 15
+          }
+        ],
+        "methods": {
+          "bm25_only": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 1.0,
+              "ndcg_at_5": 1.0,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 15
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 101
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 13
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 18
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 44
+              }
+            ]
+          },
+          "hashed_vector_only": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 12
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 343
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 47
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 264
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 137
+              }
+            ]
+          },
+          "hybrid_rrf": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 1.0,
+              "ndcg_at_5": 1.0,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 15
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 13
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 18
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 30
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 101
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "RAG-02",
+        "question": "What is an example of an injection vulnerability in a SQL query?",
+        "gold_pages": [
+          {
+            "source": "owasp-top-10.pdf",
+            "page": 14
+          }
+        ],
+        "methods": {
+          "bm25_only": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 0.5,
+              "ndcg_at_5": 0.6309297535714575,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 13
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 14
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 10
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 101
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 15
+              }
+            ]
+          },
+          "hashed_vector_only": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 7
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 7
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 272
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 240
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 13
+              }
+            ]
+          },
+          "hybrid_rrf": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 0.25,
+              "ndcg_at_5": 0.43067655807339306,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 13
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 10
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 7
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 14
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 101
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "RAG-03",
+        "question": "What are common broken access control vulnerabilities?",
+        "gold_pages": [
+          {
+            "source": "owasp-top-10.pdf",
+            "page": 8
+          }
+        ],
+        "methods": {
+          "bm25_only": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 1.0,
+              "ndcg_at_5": 1.0,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 8
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 9
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 7
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 36
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 84
+              }
+            ]
+          },
+          "hashed_vector_only": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 39
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 84
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 54
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 9
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 52
+              }
+            ]
+          },
+          "hybrid_rrf": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 1.0,
+              "ndcg_at_5": 1.0,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 8
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 9
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 84
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 7
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 118
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "RAG-04",
+        "question": "How can an application prevent broken access control?",
+        "gold_pages": [
+          {
+            "source": "owasp-top-10.pdf",
+            "page": 9
+          }
+        ],
+        "methods": {
+          "bm25_only": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 1.0,
+              "ndcg_at_5": 1.0,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 9
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 8
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 7
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 54
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 36
+              }
+            ]
+          },
+          "hashed_vector_only": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 1.0,
+              "ndcg_at_5": 1.0,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 9
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 84
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 52
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 54
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 39
+              }
+            ]
+          },
+          "hybrid_rrf": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 1.0,
+              "ndcg_at_5": 1.0,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 9
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 54
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 8
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 52
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 7
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "RAG-05",
+        "question": "What does zero trust mean, and why is trust never implicit?",
+        "gold_pages": [
+          {
+            "source": "NIST-SP-800-207-Zero-Trust.pdf",
+            "page": 13
+          }
+        ],
+        "methods": {
+          "bm25_only": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 1.0,
+              "ndcg_at_5": 1.0,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 13
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 4
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 11
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 10
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 7
+              }
+            ]
+          },
+          "hashed_vector_only": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 0.5,
+              "ndcg_at_5": 0.6309297535714575,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 4
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 13
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 11
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 32
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 5
+              }
+            ]
+          },
+          "hybrid_rrf": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 0.3333333333333333,
+              "ndcg_at_5": 0.5,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 4
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 11
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 13
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 10
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 14
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "RAG-06",
+        "question": "How does least privilege restrict access in a zero trust architecture?",
+        "gold_pages": [
+          {
+            "source": "NIST-SP-800-207-Zero-Trust.pdf",
+            "page": 16
+          }
+        ],
+        "methods": {
+          "bm25_only": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 0.5,
+              "ndcg_at_5": 0.6309297535714575,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 13
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 16
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 10
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 7
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 32
+              }
+            ]
+          },
+          "hashed_vector_only": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 13
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 14
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 10
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 32
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 45
+              }
+            ]
+          },
+          "hybrid_rrf": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 1.0,
+              "ndcg_at_5": 1.0,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 16
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 13
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 10
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 14
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 314
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "RAG-07",
+        "question": "What are the responsibilities of policy decision and policy enforcement points?",
+        "gold_pages": [
+          {
+            "source": "NIST-SP-800-207-Zero-Trust.pdf",
+            "page": 19
+          }
+        ],
+        "methods": {
+          "bm25_only": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 356
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 55
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 54
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 18
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 357
+              }
+            ]
+          },
+          "hashed_vector_only": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 357
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 356
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 428
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 59
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 293
+              }
+            ]
+          },
+          "hybrid_rrf": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 54
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 356
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 357
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 59
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 18
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "RAG-08",
+        "question": "What are the six functions in the NIST Cybersecurity Framework 2.0?",
+        "gold_pages": [
+          {
+            "source": "NIST-CSF-2.0.pdf",
+            "page": 10
+          }
+        ],
+        "methods": {
+          "bm25_only": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 44
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 9
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 6
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 2
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 1
+              }
+            ]
+          },
+          "hashed_vector_only": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 2
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 6
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 1
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 44
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 32
+              }
+            ]
+          },
+          "hybrid_rrf": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 0.25,
+              "ndcg_at_5": 0.43067655807339306,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 9
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 6
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 20
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 10
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 44
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "RAG-09",
+        "question": "What is a NIST CSF organizational profile used for?",
+        "gold_pages": [
+          {
+            "source": "NIST-CSF-2.0.pdf",
+            "page": 11
+          }
+        ],
+        "methods": {
+          "bm25_only": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 1.0,
+              "ndcg_at_5": 1.0,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 11
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 31
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 4
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 12
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 13
+              }
+            ]
+          },
+          "hashed_vector_only": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 0.3333333333333333,
+              "ndcg_at_5": 0.5,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 31
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 12
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 11
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 83
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 3
+              }
+            ]
+          },
+          "hybrid_rrf": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 1.0,
+              "ndcg_at_5": 1.0,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 11
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 12
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 31
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 4
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 13
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "RAG-10",
+        "question": "How should an organization coordinate the six CSF functions during incidents?",
+        "gold_pages": [
+          {
+            "source": "NIST-CSF-2.0.pdf",
+            "page": 10
+          }
+        ],
+        "methods": {
+          "bm25_only": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 0.3333333333333333,
+              "ndcg_at_5": 0.5,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 31
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 9
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 10
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 13
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 4
+              }
+            ]
+          },
+          "hashed_vector_only": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 258
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 234
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 236
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 260
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 257
+              }
+            ]
+          },
+          "hybrid_rrf": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 31
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 9
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 13
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 8
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 9
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "RAG-11",
+        "question": "How does NIST integrate incident response into cybersecurity risk management?",
+        "gold_pages": [
+          {
+            "source": "NIST-SP-800-61r3.pdf",
+            "page": 12
+          }
+        ],
+        "methods": {
+          "bm25_only": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 0.3333333333333333,
+              "ndcg_at_5": 0.5,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 9
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 14
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 12
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 8
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 28
+              }
+            ]
+          },
+          "hashed_vector_only": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 0.25,
+              "ndcg_at_5": 0.43067655807339306,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 9
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 17
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 8
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 12
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 13
+              }
+            ]
+          },
+          "hybrid_rrf": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 0.25,
+              "ndcg_at_5": 0.43067655807339306,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 9
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 22
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 8
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 12
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 17
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "RAG-12",
+        "question": "How is the incident response life cycle mapped to the CSF functions?",
+        "gold_pages": [
+          {
+            "source": "NIST-SP-800-61r3.pdf",
+            "page": 13
+          }
+        ],
+        "methods": {
+          "bm25_only": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 0.2,
+              "ndcg_at_5": 0.38685280723454163,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 8
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 14
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 12
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 9
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 13
+              }
+            ]
+          },
+          "hashed_vector_only": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 12
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 14
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 8
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 9
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 186
+              }
+            ]
+          },
+          "hybrid_rrf": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 0.2,
+              "ndcg_at_5": 0.38685280723454163,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 9
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 12
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 8
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 14
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 13
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "RAG-13",
+        "question": "Which roles and responsibilities should be defined for incident response?",
+        "gold_pages": [
+          {
+            "source": "NIST-SP-800-61r3.pdf",
+            "page": 15
+          }
+        ],
+        "methods": {
+          "bm25_only": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 21
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 186
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 176
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 14
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 177
+              }
+            ]
+          },
+          "hashed_vector_only": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 0.25,
+              "ndcg_at_5": 0.43067655807339306,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 186
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 18
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 177
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 15
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 176
+              }
+            ]
+          },
+          "hybrid_rrf": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 0.2,
+              "ndcg_at_5": 0.38685280723454163,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 177
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 176
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 186
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 21
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 15
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "RAG-14",
+        "question": "What does NIST control AC-2 require for account management?",
+        "gold_pages": [
+          {
+            "source": "NIST-SP-800-53r5.pdf",
+            "page": 46
+          }
+        ],
+        "methods": {
+          "bm25_only": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 0.5,
+              "ndcg_at_5": 0.6309297535714575,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 456
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 46
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 47
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 48
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 63
+              }
+            ]
+          },
+          "hashed_vector_only": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 0.2,
+              "ndcg_at_5": 0.38685280723454163,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 456
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 227
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 63
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 47
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 46
+              }
+            ]
+          },
+          "hybrid_rrf": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 1.0,
+              "ndcg_at_5": 1.0,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 46
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 456
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 47
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 63
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 174
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "RAG-15",
+        "question": "What does control AC-6 require about least privilege?",
+        "gold_pages": [
+          {
+            "source": "NIST-SP-800-53r5.pdf",
+            "page": 63
+          }
+        ],
+        "methods": {
+          "bm25_only": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 1.0,
+              "ndcg_at_5": 1.0,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 63
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 457
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 314
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 309
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 289
+              }
+            ]
+          },
+          "hashed_vector_only": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 1.0,
+              "ndcg_at_5": 1.0,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 63
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 190
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 192
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 314
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 227
+              }
+            ]
+          },
+          "hybrid_rrf": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 1.0,
+              "ndcg_at_5": 1.0,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 63
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 51
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 457
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 309
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 314
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "RAG-16",
+        "question": "What should organizations consider when selecting audit events under AU-2?",
+        "gold_pages": [
+          {
+            "source": "NIST-SP-800-53r5.pdf",
+            "page": 93
+          }
+        ],
+        "methods": {
+          "bm25_only": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 76
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 461
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 193
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 54
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 61
+              }
+            ]
+          },
+          "hashed_vector_only": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 461
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 94
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 462
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 54
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 76
+              }
+            ]
+          },
+          "hybrid_rrf": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 76
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 54
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 94
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 36
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 95
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "RAG-17",
+        "question": "What protections are required when constructing URLs from untrusted input?",
+        "gold_pages": [
+          {
+            "source": "OWASP-ASVS-5.0.0.pdf",
+            "page": 26
+          }
+        ],
+        "methods": {
+          "bm25_only": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 164
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 378
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 27
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 166
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 449
+              }
+            ]
+          },
+          "hashed_vector_only": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 216
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 6
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 14
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 3
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 403
+              }
+            ]
+          },
+          "hybrid_rrf": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 377
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 164
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 378
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 27
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 449
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "RAG-18",
+        "question": "What does OWASP ASVS require for multifactor authentication?",
+        "gold_pages": [
+          {
+            "source": "OWASP-ASVS-5.0.0.pdf",
+            "page": 48
+          }
+        ],
+        "methods": {
+          "bm25_only": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 20
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 16
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 19
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 12
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 103
+              }
+            ]
+          },
+          "hashed_vector_only": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 29
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 31
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 19
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 159
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 101
+              }
+            ]
+          },
+          "hybrid_rrf": {
+            "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 19
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 12
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 71
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 173
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "url_detection": {
+    "sample_size": 24,
+    "positive_decision_threshold": [
+      "High",
+      "Critical"
+    ],
+    "scope": "Local URL heuristic only; VirusTotal is not queried.",
+    "dataset_note": "Synthetic, hand-labeled fixtures; not a real-world phishing corpus.",
+    "metrics": {
+      "accuracy": 0.875,
+      "precision": 1.0,
+      "recall": 0.75,
+      "f1": 0.8571,
+      "specificity": 1.0,
+      "confusion_matrix": {
+        "true_positive": 9,
+        "false_positive": 0,
+        "true_negative": 12,
+        "false_negative": 3
+      }
+    },
+    "per_case": [
+      {
+        "id": "URL-01",
+        "expected_suspicious": 1,
+        "predicted_suspicious": 1,
+        "risk_score": 40,
+        "risk_level": "High"
+      },
+      {
+        "id": "URL-02",
+        "expected_suspicious": 1,
+        "predicted_suspicious": 1,
+        "risk_score": 40,
+        "risk_level": "High"
+      },
+      {
+        "id": "URL-03",
+        "expected_suspicious": 1,
+        "predicted_suspicious": 1,
+        "risk_score": 40,
+        "risk_level": "High"
+      },
+      {
+        "id": "URL-04",
+        "expected_suspicious": 1,
+        "predicted_suspicious": 1,
+        "risk_score": 50,
+        "risk_level": "High"
+      },
+      {
+        "id": "URL-05",
+        "expected_suspicious": 1,
+        "predicted_suspicious": 1,
+        "risk_score": 65,
+        "risk_level": "High"
+      },
+      {
+        "id": "URL-06",
+        "expected_suspicious": 1,
+        "predicted_suspicious": 0,
+        "risk_score": 85,
+        "risk_level": "Medium"
+      },
+      {
+        "id": "URL-07",
+        "expected_suspicious": 1,
+        "predicted_suspicious": 0,
+        "risk_score": 85,
+        "risk_level": "Medium"
+      },
+      {
+        "id": "URL-08",
+        "expected_suspicious": 1,
+        "predicted_suspicious": 0,
+        "risk_score": 85,
+        "risk_level": "Medium"
+      },
+      {
+        "id": "URL-09",
+        "expected_suspicious": 1,
+        "predicted_suspicious": 1,
+        "risk_score": 55,
+        "risk_level": "High"
+      },
+      {
+        "id": "URL-10",
+        "expected_suspicious": 1,
+        "predicted_suspicious": 1,
+        "risk_score": 60,
+        "risk_level": "High"
+      },
+      {
+        "id": "URL-11",
+        "expected_suspicious": 1,
+        "predicted_suspicious": 1,
+        "risk_score": 65,
+        "risk_level": "High"
+      },
+      {
+        "id": "URL-12",
+        "expected_suspicious": 1,
+        "predicted_suspicious": 1,
+        "risk_score": 50,
+        "risk_level": "High"
+      },
+      {
+        "id": "URL-13",
+        "expected_suspicious": 0,
+        "predicted_suspicious": 0,
+        "risk_score": 100,
+        "risk_level": "Low"
+      },
+      {
+        "id": "URL-14",
+        "expected_suspicious": 0,
+        "predicted_suspicious": 0,
+        "risk_score": 85,
+        "risk_level": "Medium"
+      },
+      {
+        "id": "URL-15",
+        "expected_suspicious": 0,
+        "predicted_suspicious": 0,
+        "risk_score": 85,
+        "risk_level": "Medium"
+      },
+      {
+        "id": "URL-16",
+        "expected_suspicious": 0,
+        "predicted_suspicious": 0,
+        "risk_score": 85,
+        "risk_level": "Medium"
+      },
+      {
+        "id": "URL-17",
+        "expected_suspicious": 0,
+        "predicted_suspicious": 0,
+        "risk_score": 85,
+        "risk_level": "Medium"
+      },
+      {
+        "id": "URL-18",
+        "expected_suspicious": 0,
+        "predicted_suspicious": 0,
+        "risk_score": 80,
+        "risk_level": "Medium"
+      },
+      {
+        "id": "URL-19",
+        "expected_suspicious": 0,
+        "predicted_suspicious": 0,
+        "risk_score": 100,
+        "risk_level": "Low"
+      },
+      {
+        "id": "URL-20",
+        "expected_suspicious": 0,
+        "predicted_suspicious": 0,
+        "risk_score": 100,
+        "risk_level": "Low"
+      },
+      {
+        "id": "URL-21",
+        "expected_suspicious": 0,
+        "predicted_suspicious": 0,
+        "risk_score": 100,
+        "risk_level": "Low"
+      },
+      {
+        "id": "URL-22",
+        "expected_suspicious": 0,
+        "predicted_suspicious": 0,
+        "risk_score": 80,
+        "risk_level": "Medium"
+      },
+      {
+        "id": "URL-23",
+        "expected_suspicious": 0,
+        "predicted_suspicious": 0,
+        "risk_score": 100,
+        "risk_level": "Low"
+      },
+      {
+        "id": "URL-24",
+        "expected_suspicious": 0,
+        "predicted_suspicious": 0,
+        "risk_score": 85,
+        "risk_level": "Medium"
+      }
+    ]
+  },
+  "answer_review": {
+    "status": "pending_manual_review",
+    "sample_size": 0,
+    "citation_correctness": null,
+    "faithfulness": null
+  },
+  "methodology": {
+    "retrieval_relevance": "A result is relevant only when its source filename and 1-based PDF page match a curated gold page.",
+    "retrieval_averaging": "Macro average across benchmark questions; page-level binary relevance.",
+    "url_decision": "High/Critical local risk is suspicious; Low/Medium is not suspicious.",
+    "answer_review": "Claim support and citation correctness require manual review of generated answers; retrieval source-page alignment alone is not answer faithfulness."
+  }
+}
