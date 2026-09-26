@@ -14,6 +14,13 @@ class Settings(BaseSettings):
     # ==========================
     DATABASE_URL: str
 
+    # Comma-separated browser origins allowed to call the API.
+    CORS_ORIGINS: str = (
+        "http://localhost:5173,http://127.0.0.1:5173,"
+        "http://localhost:5174,http://127.0.0.1:5174,"
+        "https://cybershieldai-security.vercel.app"
+    )
+
     # ==========================
     # JWT Authentication
     # ==========================

@@ -10,7 +10,7 @@ class Base(DeclarativeBase):
 
 engine = create_engine(
     settings.DATABASE_URL,
-    echo=True,          # Shows SQL in terminal (great while learning)
+    echo=False,
 )
 
 SessionLocal = sessionmaker(
