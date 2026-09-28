@@ -42,6 +42,18 @@ BACKEND_AUTO = "auto"
 BACKEND_FASTEMBED = "fastembed"
 BACKEND_HASH = "hash"
 
+#: Minimum container memory, in megabytes, for `auto` to choose the semantic
+#: model. Loading the ONNX runtime plus a 384-d sentence encoder costs roughly
+#: 250-300MB resident on top of the interpreter, NumPy, FAISS and SQLAlchemy -
+#: measured, not guessed: on a 512MB Render instance the previous `auto` default
+#: loaded the model and was OOM-killed seconds later, before uvicorn could bind
+#: a port. A floor of 900MB means anything at or below the 512MB free tier
+#: picks hashing, and a 1GB+ instance still gets semantic search.
+#:
+#: `EMBEDDING_BACKEND=fastembed` overrides this, because a hard request from an
+#: operator who knows their instance is the one case where guessing is wrong.
+EMBEDDING_MEMORY_FLOOR_MB = 900
+
 
 class EmbeddingService:
     """Embeds documents and queries, preferring a real semantic model."""
@@ -72,6 +84,68 @@ class EmbeddingService:
         return os.getenv("EMBEDDING_BACKEND", BACKEND_AUTO).strip().lower()
 
     @classmethod
+    def _memory_limit_mb(cls) -> float | None:
+        """The memory this process is actually allowed to use, or None.
+
+        A container sees the host's total RAM through the usual interfaces, so
+        the cgroup limit is read first - it is the number that gets enforced,
+        and on a 512MB instance it is the difference between "fits" and
+        "OOM-killed". Physical RAM is only a fallback for a bare-metal run.
+        """
+
+        for path in (
+            "/sys/fs/cgroup/memory.max",  # cgroup v2
+            "/sys/fs/cgroup/memory/memory.limit_in_bytes",  # cgroup v1
+        ):
+            try:
+                raw = open(path, encoding="utf-8").read().strip()
+            except OSError:
+                continue
+
+            if raw == "max":  # v2's "no limit"
+                continue
+
+            try:
+                limit = int(raw)
+            except ValueError:
+                continue
+
+            # An unset v1 limit is reported as a huge sentinel, not as absent.
+            if 0 < limit < (1 << 62):
+                return limit / (1024 * 1024)
+
+        try:
+            return (
+                os.sysconf("SC_PHYS_PAGES")
+                * os.sysconf("SC_PAGE_SIZE")
+                / (1024 * 1024)
+            )
+        except (AttributeError, ValueError, OSError):
+            return None
+
+    @classmethod
+    def _semantic_fits_in_memory(cls) -> bool:
+        floor = float(
+            os.getenv("EMBEDDING_MEMORY_FLOOR_MB", EMBEDDING_MEMORY_FLOOR_MB)
+        )
+        limit = cls._memory_limit_mb()
+
+        if limit is None:
+            return True  # cannot tell, so do not block a working setup
+
+        if limit < floor:
+            print(
+                f"[embeddings] {limit:.0f}MB available, below the {floor:.0f}MB "
+                f"needed for {DEFAULT_MODEL}; using the hashed backend. Raise "
+                "EMBEDDING_MEMORY_FLOOR_MB only if the instance really has the "
+                "memory - the model loads and is OOM-killed later, which takes "
+                "the whole service down rather than degrading it."
+            )
+            return False
+
+        return True
+
+    @classmethod
     def _resolve_backend(cls) -> None:
         """Decide once which encoder is available, and cache the decision."""
 
@@ -85,7 +159,15 @@ class EmbeddingService:
 
             configured = cls._configured_backend()
 
+            # Memory is checked only for `auto`. An explicit request is
+            # honoured, because the operator may know something the probe
+            # cannot see.
             if configured in (BACKEND_AUTO, BACKEND_FASTEMBED):
+                if configured == BACKEND_AUTO and not cls._semantic_fits_in_memory():
+                    cls._backend = BACKEND_HASH
+                    cls._dimension = HASH_DIMENSION
+                    return
+
                 model = cls._try_load_fastembed()
                 if model is not None:
                     cls._model = model
