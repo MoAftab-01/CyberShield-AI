@@ -56,6 +56,15 @@ class DocumentLoader:
                         file.parent.name
                     )
 
+                    # Marks this chunk as public knowledge-base material so
+                    # retrieval never has to infer visibility from a folder
+                    # name. User uploads are tagged "user_upload" instead.
+                    doc.metadata["scope"] = "knowledge_base"
+
+                    doc.metadata["document_title"] = file.stem.replace(
+                        "_", " "
+                    )
+
                 documents.extend(docs)
 
             except Exception as e:

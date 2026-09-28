@@ -27,15 +27,45 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: backend/requirements*.txt
 
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
 
       - name: Verify Imports
         run: |
-          python -m compileall app
+          python -m compileall -q app
+
+      - name: Run Tests
+        # No database server and no API keys are needed: the suite runs against
+        # a temporary SQLite file, uses the hashed embedding backend so nothing
+        # is downloaded, and stubs the LLM provider so no quota is spent.
+        env:
+          APP_NAME: CyberShield AI (ci)
+          APP_VERSION: ci
+          ENVIRONMENT: test
+          DATABASE_URL: sqlite:///./ci.db
+          JWT_SECRET: ci-secret-value-that-is-long-enough-0000
+          JWT_ALGORITHM: HS256
+          ACCESS_TOKEN_EXPIRE_MINUTES: "30"
+          EMBEDDING_BACKEND: hash
+        run: |
+          python -m pytest tests/ -q
+
+      - name: Check No Secrets Are Committed
+        # The .env file holds the Groq key, the VirusTotal key and the JWT
+        # signing secret. A committed .env is the one mistake here that cannot
+        # be fixed by a later commit, so it fails the build rather than relying
+        # on .gitignore being correct.
+        run: |
+          if git ls-files --error-unmatch .env >/dev/null 2>&1; then
+            echo "::error::backend/.env is tracked by git. Remove it with 'git rm --cached .env' and rotate every secret it contained."
+            exit 1
+          fi
+          echo "No .env file is tracked."
 
   frontend:
 

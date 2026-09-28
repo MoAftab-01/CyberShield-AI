@@ -1,0 +1,201 @@
+{
+  "sample_size": 18,
+  "top_k": 5,
+  "note": "Every configuration is scored through HybridRetriever.search_with_metrics with user_id=None, the same path the API serves, so these numbers describe what a user would receive. Relevance is binary page-level: a result counts only when its source filename and 1-based PDF page match a gold page. With 18 questions one question is worth 5.6 points of Recall@5, so differences smaller than about two questions are not decisive.",
+  "shipped_configuration": {
+    "chunk_size": 600,
+    "chunk_overlap": 100,
+    "fusion": "on",
+    "mmr_lambda": 0.72,
+    "rerank_weights": {
+      "rrf": 0.3,
+      "semantic": 0.55,
+      "coverage": 0.15
+    }
+  },
+  "restored_after_sweep": {
+    "status": "built",
+    "chunks": 4873,
+    "uploads_reindexed": 0,
+    "embedding_backend": "fastembed"
+  },
+  "grid": {
+    "600/100": {
+      "index": {
+        "status": "existing"
+      },
+      "configurations": {
+        "dense + mmr": {
+          "recall_at_5": 0.7778,
+          "mrr": 0.5824,
+          "ndcg_at_5": 0.6297,
+          "source_page_precision_at_5": 0.1556,
+          "queries_with_no_result": 0
+        },
+        "dense, no mmr": {
+          "recall_at_5": 0.7222,
+          "mrr": 0.5713,
+          "ndcg_at_5": 0.6082,
+          "source_page_precision_at_5": 0.1444,
+          "queries_with_no_result": 0
+        },
+        "fused + mmr, tuned dense weight": {
+          "recall_at_5": 0.8333,
+          "mrr": 0.6028,
+          "ndcg_at_5": 0.6585,
+          "source_page_precision_at_5": 0.1741,
+          "queries_with_no_result": 0
+        },
+        "fused + mmr, inherited weights": {
+          "recall_at_5": 0.8333,
+          "mrr": 0.5704,
+          "ndcg_at_5": 0.6346,
+          "source_page_precision_at_5": 0.1741,
+          "queries_with_no_result": 0
+        },
+        "fused + mmr, relevance floor off": {
+          "recall_at_5": 0.8333,
+          "mrr": 0.6028,
+          "ndcg_at_5": 0.6585,
+          "source_page_precision_at_5": 0.1667,
+          "queries_with_no_result": 0
+        }
+      }
+    },
+    "800/150": {
+      "index": {
+        "status": "built",
+        "chunks": 3662,
+        "uploads_reindexed": 0,
+        "embedding_backend": "fastembed"
+      },
+      "configurations": {
+        "dense + mmr": {
+          "recall_at_5": 0.7778,
+          "mrr": 0.5176,
+          "ndcg_at_5": 0.5815,
+          "source_page_precision_at_5": 0.1556,
+          "queries_with_no_result": 0
+        },
+        "dense, no mmr": {
+          "recall_at_5": 0.7222,
+          "mrr": 0.5065,
+          "ndcg_at_5": 0.56,
+          "source_page_precision_at_5": 0.1444,
+          "queries_with_no_result": 0
+        },
+        "fused + mmr, tuned dense weight": {
+          "recall_at_5": 0.7222,
+          "mrr": 0.5111,
+          "ndcg_at_5": 0.5634,
+          "source_page_precision_at_5": 0.1472,
+          "queries_with_no_result": 0
+        },
+        "fused + mmr, inherited weights": {
+          "recall_at_5": 0.6667,
+          "mrr": 0.488,
+          "ndcg_at_5": 0.5322,
+          "source_page_precision_at_5": 0.1361,
+          "queries_with_no_result": 0
+        },
+        "fused + mmr, relevance floor off": {
+          "recall_at_5": 0.7222,
+          "mrr": 0.5157,
+          "ndcg_at_5": 0.5672,
+          "source_page_precision_at_5": 0.1444,
+          "queries_with_no_result": 0
+        }
+      }
+    },
+    "1000/200": {
+      "index": {
+        "status": "built",
+        "chunks": 3041,
+        "uploads_reindexed": 0,
+        "embedding_backend": "fastembed"
+      },
+      "configurations": {
+        "dense + mmr": {
+          "recall_at_5": 0.6111,
+          "mrr": 0.4352,
+          "ndcg_at_5": 0.4795,
+          "source_page_precision_at_5": 0.1222,
+          "queries_with_no_result": 0
+        },
+        "dense, no mmr": {
+          "recall_at_5": 0.6111,
+          "mrr": 0.4352,
+          "ndcg_at_5": 0.4795,
+          "source_page_precision_at_5": 0.1222,
+          "queries_with_no_result": 0
+        },
+        "fused + mmr, tuned dense weight": {
+          "recall_at_5": 0.5556,
+          "mrr": 0.4093,
+          "ndcg_at_5": 0.4454,
+          "source_page_precision_at_5": 0.1111,
+          "queries_with_no_result": 0
+        },
+        "fused + mmr, inherited weights": {
+          "recall_at_5": 0.5556,
+          "mrr": 0.4,
+          "ndcg_at_5": 0.4382,
+          "source_page_precision_at_5": 0.1111,
+          "queries_with_no_result": 0
+        },
+        "fused + mmr, relevance floor off": {
+          "recall_at_5": 0.5556,
+          "mrr": 0.4093,
+          "ndcg_at_5": 0.4454,
+          "source_page_precision_at_5": 0.1111,
+          "queries_with_no_result": 0
+        }
+      }
+    },
+    "1200/250": {
+      "index": {
+        "status": "built",
+        "chunks": 2554,
+        "uploads_reindexed": 0,
+        "embedding_backend": "fastembed"
+      },
+      "configurations": {
+        "dense + mmr": {
+          "recall_at_5": 0.7778,
+          "mrr": 0.4435,
+          "ndcg_at_5": 0.5255,
+          "source_page_precision_at_5": 0.1556,
+          "queries_with_no_result": 0
+        },
+        "dense, no mmr": {
+          "recall_at_5": 0.7222,
+          "mrr": 0.4352,
+          "ndcg_at_5": 0.5064,
+          "source_page_precision_at_5": 0.1444,
+          "queries_with_no_result": 0
+        },
+        "fused + mmr, tuned dense weight": {
+          "recall_at_5": 0.7222,
+          "mrr": 0.4806,
+          "ndcg_at_5": 0.5387,
+          "source_page_precision_at_5": 0.1444,
+          "queries_with_no_result": 0
+        },
+        "fused + mmr, inherited weights": {
+          "recall_at_5": 0.7222,
+          "mrr": 0.4602,
+          "ndcg_at_5": 0.5245,
+          "source_page_precision_at_5": 0.1444,
+          "queries_with_no_result": 0
+        },
+        "fused + mmr, relevance floor off": {
+          "recall_at_5": 0.7222,
+          "mrr": 0.4806,
+          "ndcg_at_5": 0.5387,
+          "source_page_precision_at_5": 0.1444,
+          "queries_with_no_result": 0
+        }
+      }
+    }
+  }
+}

@@ -1,4 +1,25 @@
-"""Evaluate retrieval variants and the local URL-risk heuristic."""
+"""Evaluate retrieval variants and the local URL-risk heuristic.
+
+Retrieval arms and what each one is for:
+
+===================  =====================================================
+``bm25_only``        Lexical baseline. Unchanged formula.
+``hashed_vector_only``  Legacy lexical-hash embedding arm. Reproduces the
+                     pre-change baseline number and is embedded with
+                     :meth:`EmbeddingService.hash_vectors` on purpose, so it
+                     stays comparable after the index moved to a semantic
+                     encoder.
+``dense_vector_only``   Same formula as the arm above, but against the live
+                     encoder. The only difference between the two arms is the
+                     representation, which is what makes the comparison a
+                     measurement of the embedding change rather than of
+                     anything else.
+``hybrid_rrf``       Unchanged fusion formula over the live index.
+``production``       The retriever the application actually calls, so the
+                     headline number is the one users experience rather than a
+                     harness-only idealisation.
+===================  =====================================================
+"""
 
 import csv
 import json
@@ -13,6 +34,7 @@ from rank_bm25 import BM25Okapi
 
 from app.rag.bm25_store import BM25Store
 from app.rag.embeddings import EmbeddingService
+from app.rag.retriever import HybridRetriever
 from app.utils.url_utils import (
     calculate_url_risk,
     contains_ip,
@@ -27,6 +49,12 @@ from app.utils.url_utils import (
 BASE_DIR = Path(__file__).resolve().parent
 EVALUATION_DIR = BASE_DIR / "evaluation"
 INDEX_DIR = BASE_DIR / "vector_db"
+
+#: Restricts scoring to the public knowledge base. Historically this filter
+#: also hid a cross-tenant leak (a user's uploaded CV, indexed into the shared
+#: index and readable by everyone). Retrieval now enforces visibility itself,
+#: so this should exclude nothing; the harness asserts that rather than
+#: assuming it.
 ALLOWED_SOURCES = {
     "NIST-CSF-2.0.pdf",
     "NIST-SP-800-207-Zero-Trust.pdf",
@@ -103,10 +131,32 @@ def build_retrievers():
     vector_index = faiss.IndexFlatL2(stored_faiss.d)
     vector_index.add(safe_vectors)
 
+    # The legacy arm needs vectors from the encoder it was measured with, so
+    # they are rebuilt here rather than reused from the live index.
+    hash_vectors = EmbeddingService.hash_vectors(
+        [document.page_content for document in safe_documents]
+    )
+    hash_index = faiss.IndexFlatL2(hash_vectors.shape[1])
+    hash_index.add(hash_vectors)
+
     bm25 = BM25Okapi(
         [BM25Store.tokenize(document.page_content) for document in safe_documents]
     )
-    return safe_documents, vector_index, bm25, len(documents) - len(safe_documents)
+
+    excluded = [
+        document.metadata.get("filename")
+        for index, document in enumerate(documents)
+        if index not in set(selected_indices)
+    ]
+
+    return {
+        "documents": safe_documents,
+        "vector_index": vector_index,
+        "hash_index": hash_index,
+        "bm25": bm25,
+        "excluded_count": len(excluded),
+        "excluded_sources": sorted(set(excluded)),
+    }
 
 
 def retrieve_bm25(question, documents, bm25):
@@ -115,6 +165,21 @@ def retrieve_bm25(question, documents, bm25):
 
 
 def retrieve_hash_vector(question, documents, vector_index):
+    """Legacy arm: hashed query vectors against the stored index vectors.
+
+    Only meaningful when the index was itself built with the hashed encoder.
+    :func:`build_retrievers` therefore scores this arm against a hash-built
+    index of its own rather than against the live one.
+    """
+
+    query = np.asarray(EmbeddingService.hash_vectors([question]), dtype="float32")
+    _, indices = vector_index.search(query, len(documents))
+    return unique_pages(indices[0], documents)
+
+
+def retrieve_dense_vector(question, documents, vector_index):
+    """Same formula as above, live encoder."""
+
     query = np.asarray(EmbeddingService.embed_query(question), dtype="float32")
     _, indices = vector_index.search(query, len(documents))
     return unique_pages(indices[0], documents)
@@ -173,17 +238,51 @@ def retrieve_hybrid(question, documents, vector_index, bm25):
     return selected
 
 
+def retrieve_production(question):
+    """The retriever the API serves, scored through its own public method.
+
+    Run with ``user_id=None`` to measure the anonymous/public view, which is
+    the stricter case: scoped visibility must still surface the public
+    knowledge base in full.
+    """
+
+    results, _metrics = HybridRetriever.search_with_metrics(
+        query=question,
+        top_k=TOP_K,
+        user_id=None,
+        include_uploads=False,
+    )
+    pages = []
+    for document in results:
+        pages.append(
+            (
+                document.metadata.get("filename"),
+                int(document.metadata.get("page", 0)) + 1,
+            )
+        )
+    return pages
+
+
 def evaluate_retrieval():
     cases = json.loads((EVALUATION_DIR / "rag_cases.json").read_text(encoding="utf-8"))
-    documents, vector_index, bm25, excluded_count = build_retrievers()
+    bundle = build_retrievers()
+    documents = bundle["documents"]
+    vector_index = bundle["vector_index"]
+    hash_index = bundle["hash_index"]
+    bm25 = bundle["bm25"]
+
     methods = {
         "bm25_only": lambda question: retrieve_bm25(question, documents, bm25),
         "hashed_vector_only": lambda question: retrieve_hash_vector(
+            question, documents, hash_index
+        ),
+        "dense_vector_only": lambda question: retrieve_dense_vector(
             question, documents, vector_index
         ),
         "hybrid_rrf": lambda question: retrieve_hybrid(
             question, documents, vector_index, bm25
         ),
+        "production": retrieve_production,
     }
     per_question = []
     metric_values = {method: [] for method in methods}
@@ -229,9 +328,13 @@ def evaluate_retrieval():
     return {
         "sample_size": len(cases),
         "top_k": TOP_K,
+        "embedding_backend": EmbeddingService.backend_name(),
+        "embedding_model": EmbeddingService.model_name(),
+        "embedding_dimension": EmbeddingService.dimension(),
         "included_public_sources": sorted(ALLOWED_SOURCES),
         "safe_index_chunks": len(documents),
-        "excluded_non_kb_index_chunks": excluded_count,
+        "excluded_non_kb_index_chunks": bundle["excluded_count"],
+        "excluded_non_kb_sources": bundle["excluded_sources"],
         "metrics": summary,
         "per_question": per_question,
     }

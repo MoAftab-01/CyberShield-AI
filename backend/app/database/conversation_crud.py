@@ -1,3 +1,14 @@
+"""Conversation persistence.
+
+Ownership is filtered here rather than in the route handlers. Every read and
+write takes an optional ``user_id``; when it is supplied the query is scoped to
+that owner, so a conversation belonging to someone else is indistinguishable
+from one that does not exist. Filtering at this layer means a future endpoint
+cannot forget the check, which is how the original IDOR arose: the routes
+hard-coded ``user_id = 1``, so every authenticated user read and deleted the
+same account's conversations.
+"""
+
 from sqlalchemy.orm import Session
 
 from app.models.conversation import Conversation
@@ -28,32 +39,43 @@ class ConversationCRUD:
     def get_conversation(
         db: Session,
         conversation_id: int,
+        user_id: int | None = None,
     ):
 
-        return (
-            db.query(Conversation)
-            .filter(
-                Conversation.id == conversation_id
-            )
-            .first()
+        query = db.query(Conversation).filter(
+            Conversation.id == conversation_id
         )
+
+        if user_id is not None:
+            query = query.filter(Conversation.user_id == user_id)
+
+        return query.first()
 
     @staticmethod
     def get_messages(
         db: Session,
         conversation_id: int,
+        user_id: int | None = None,
     ):
 
-        return (
-            db.query(ChatMessage)
-            .filter(
-                ChatMessage.conversation_id == conversation_id
-            )
-            .order_by(
-                ChatMessage.created_at.asc()
-            )
-            .all()
+        query = db.query(ChatMessage).filter(
+            ChatMessage.conversation_id == conversation_id
         )
+
+        # Messages carry no owner of their own; ownership is inherited from the
+        # conversation, so it is enforced with an EXISTS subquery rather than a
+        # column filter.
+        if user_id is not None:
+            query = query.filter(
+                db.query(Conversation.id)
+                .filter(
+                    Conversation.id == ChatMessage.conversation_id,
+                    Conversation.user_id == user_id,
+                )
+                .exists()
+            )
+
+        return query.order_by(ChatMessage.created_at.asc()).all()
 
     @staticmethod
     def save_message(
@@ -97,14 +119,13 @@ class ConversationCRUD:
         db: Session,
         conversation_id: int,
         title: str,
+        user_id: int | None = None,
     ):
 
-        conversation = (
-            db.query(Conversation)
-            .filter(
-                Conversation.id == conversation_id
-            )
-            .first()
+        conversation = ConversationCRUD.get_conversation(
+            db=db,
+            conversation_id=conversation_id,
+            user_id=user_id,
         )
 
         if conversation is None:
@@ -121,17 +142,25 @@ class ConversationCRUD:
     def delete_conversation(
         db: Session,
         conversation_id: int,
-    ):
+        user_id: int | None = None,
+    ) -> bool:
+        """Delete a conversation. Returns whether anything was deleted.
 
-        conversation = (
-            db.query(Conversation)
-            .filter(
-                Conversation.id == conversation_id
-            )
-            .first()
+        The original returned nothing, so the route reported success even when
+        the id did not exist or belonged to another user. The caller now has a
+        real answer to act on.
+        """
+
+        conversation = ConversationCRUD.get_conversation(
+            db=db,
+            conversation_id=conversation_id,
+            user_id=user_id,
         )
 
-        if conversation:
+        if conversation is None:
+            return False
 
-            db.delete(conversation)
-            db.commit()
+        db.delete(conversation)
+        db.commit()
+
+        return True

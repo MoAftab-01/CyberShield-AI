@@ -25,8 +25,42 @@ app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
 )
-init_db()
-KnowledgeBaseService.ensure_index()
+
+# Creating the tables is unguarded in the sense that a failure is fatal to the
+# request path either way - but not to the process. Uncaught, an unreachable
+# database at import time kills the application before it can bind a port, so
+# the platform sees a crashed service and /health cannot report anything. The
+# message below names the host, which is the actual mistake nine times out of
+# ten: a DATABASE_URL still pointing at the compose service name (`postgres`)
+# on a machine where that name does not resolve.
+try:
+    init_db()
+except Exception as error:  # pragma: no cover - depends on the environment
+    print(
+        f"[startup] database not reachable ({type(error).__name__}). "
+        f"DATABASE_URL host is "
+        f"{settings.DATABASE_URL.rsplit('@', 1)[-1].split('/')[0]!r}. "
+        "The API will start, but every endpoint that touches the database "
+        "will fail until this is fixed. For local development, point "
+        "DATABASE_URL at SQLite: sqlite:///./local_dev.db"
+    )
+
+# The index build runs at startup and is the one step that can take a minute or
+# more on a cold free-tier instance: it loads the ONNX encoder and embeds every
+# knowledge-base chunk. It is wrapped because a failure here used to abort the
+# import and take the whole application down - including /health and every
+# endpoint that does not need retrieval. Degrading to "retrieval unavailable"
+# is strictly better than not booting, and the reason is logged so it is not
+# silent.
+try:
+    index_status = KnowledgeBaseService.ensure_index()
+    print(f"[startup] knowledge base index: {index_status}")
+except Exception as error:  # pragma: no cover - depends on the environment
+    print(
+        "[startup] knowledge base index could not be prepared "
+        f"({type(error).__name__}: {error}). The API will start, but "
+        "knowledge-base retrieval will report no results until it succeeds."
+    )
 # ==========================================
 # CORS Configuration
 # ==========================================

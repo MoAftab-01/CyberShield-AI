@@ -23,3 +23,10 @@ pypdf==5.1.0
 PyMuPDF==1.25.1
 python-docx==1.1.2
 attackcti==0.6.4
+
+# Semantic embeddings: ONNX runtime via fastembed, running
+# sentence-transformers/all-MiniLM-L6-v2 on CPU. 384-dimensional vectors,
+# ~90MB of model weights downloaded once and cached, no GPU and no torch.
+# Chosen over sentence-transformers because torch alone is several hundred MB
+# of image for a free-tier container that has 512MB of RAM.
+fastembed==0.8.1

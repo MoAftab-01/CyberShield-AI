@@ -81,7 +81,7 @@ DATABASE_URL=
 JWT_SECRET=
 LLM_PROVIDER=groq
 GROQ_API_KEY=
-GROQ_MODEL=llama-3.1-8b-instant
+GROQ_MODEL=openai/gpt-oss-20b
 GROQ_BASE_URL=https://api.groq.com/openai/v1
 ```
 
@@ -124,7 +124,7 @@ JWT_SECRET=<long random secret>
 JWT_ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 GROQ_API_KEY=<Groq API key>
-GROQ_MODEL=llama-3.1-8b-instant
+GROQ_MODEL=openai/gpt-oss-20b
 CORS_ORIGINS=https://<your-vercel-domain>
 ```
 

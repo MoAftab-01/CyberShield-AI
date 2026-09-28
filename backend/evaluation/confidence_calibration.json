@@ -1,0 +1,249 @@
+{
+  "metric": "top semantic similarity of the best retrieved passage",
+  "groups": [
+    {
+      "group": "in_knowledge_base",
+      "sample_size": 18,
+      "min": 0.5644,
+      "median": 0.6917,
+      "max": 0.7878,
+      "rows": [
+        {
+          "question": "How should developers prevent SQL injection attacks?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.6905,
+          "mean_similarity": 0.531
+        },
+        {
+          "question": "What is an example of an injection vulnerability in a SQL query?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.6385,
+          "mean_similarity": 0.5689
+        },
+        {
+          "question": "What are common broken access control vulnerabilities?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.7069,
+          "mean_similarity": 0.5756
+        },
+        {
+          "question": "How can an application prevent broken access control?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.7372,
+          "mean_similarity": 0.6338
+        },
+        {
+          "question": "What does zero trust mean, and why is trust never implicit?",
+          "status": "ok",
+          "returned": 3,
+          "top_similarity": 0.6567,
+          "mean_similarity": 0.5695
+        },
+        {
+          "question": "How does least privilege restrict access in a zero trust architecture?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.689,
+          "mean_similarity": 0.6421
+        },
+        {
+          "question": "What are the responsibilities of policy decision and policy enforcement points?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.5644,
+          "mean_similarity": 0.2261
+        },
+        {
+          "question": "What are the six functions in the NIST Cybersecurity Framework 2.0?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.7441,
+          "mean_similarity": 0.6972
+        },
+        {
+          "question": "What is a NIST CSF organizational profile used for?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.6931,
+          "mean_similarity": 0.6929
+        },
+        {
+          "question": "How should an organization coordinate the six CSF functions during incidents?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.693,
+          "mean_similarity": 0.6175
+        },
+        {
+          "question": "How does NIST integrate incident response into cybersecurity risk management?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.7878,
+          "mean_similarity": 0.7584
+        },
+        {
+          "question": "How is the incident response life cycle mapped to the CSF functions?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.78,
+          "mean_similarity": 0.7026
+        },
+        {
+          "question": "Which roles and responsibilities should be defined for incident response?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.7649,
+          "mean_similarity": 0.7596
+        },
+        {
+          "question": "What does NIST control AC-2 require for account management?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.6342,
+          "mean_similarity": 0.5601
+        },
+        {
+          "question": "What does control AC-6 require about least privilege?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.7733,
+          "mean_similarity": 0.6712
+        },
+        {
+          "question": "What should organizations consider when selecting audit events under AU-2?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.6298,
+          "mean_similarity": 0.5969
+        },
+        {
+          "question": "What protections are required when constructing URLs from untrusted input?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.5887,
+          "mean_similarity": 0.4707
+        },
+        {
+          "question": "What does OWASP ASVS require for multifactor authentication?",
+          "status": "ok",
+          "returned": 3,
+          "top_similarity": 0.5879,
+          "mean_similarity": 0.196
+        }
+      ]
+    },
+    {
+      "group": "security_not_in_kb",
+      "sample_size": 6,
+      "min": 0.3082,
+      "median": 0.3603,
+      "max": 0.6109,
+      "rows": [
+        {
+          "question": "What is the difference between AES-128 and AES-256?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.3717,
+          "mean_similarity": 0.2193
+        },
+        {
+          "question": "How does a Kerberoasting attack work?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.349,
+          "mean_similarity": 0.2024
+        },
+        {
+          "question": "How do I configure a NAT rule on a Palo Alto firewall?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.3322,
+          "mean_similarity": 0.2673
+        },
+        {
+          "question": "What is the difference between SAST and DAST?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.3082,
+          "mean_similarity": 0.1713
+        },
+        {
+          "question": "How does certificate pinning protect a mobile app?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.4946,
+          "mean_similarity": 0.3956
+        },
+        {
+          "question": "What is the CVSS score of a vulnerability with high integrity impact only?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.6109,
+          "mean_similarity": 0.5186
+        }
+      ]
+    },
+    {
+      "group": "unrelated",
+      "sample_size": 6,
+      "min": 0.1033,
+      "median": 0.1311,
+      "max": 0.2046,
+      "rows": [
+        {
+          "question": "What is the capital of France?",
+          "status": "ok",
+          "returned": 2,
+          "top_similarity": 0.1262,
+          "mean_similarity": 0.0631
+        },
+        {
+          "question": "Write a poem about the ocean.",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.1247,
+          "mean_similarity": 0.0466
+        },
+        {
+          "question": "How do I bake sourdough bread?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.136,
+          "mean_similarity": 0.1224
+        },
+        {
+          "question": "Who won the 2018 FIFA World Cup?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.1033,
+          "mean_similarity": 0.0412
+        },
+        {
+          "question": "Convert 15 US dollars into euros.",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.1552,
+          "mean_similarity": 0.147
+        },
+        {
+          "question": "What is the weather in Tokyo tomorrow?",
+          "status": "ok",
+          "returned": 5,
+          "top_similarity": 0.2046,
+          "mean_similarity": 0.1811
+        }
+      ]
+    }
+  ],
+  "separation": {
+    "in_kb_min": 0.5644,
+    "security_not_in_kb_max": 0.6109,
+    "unrelated_max": 0.2046,
+    "in_kb_vs_security_not_in_kb_overlap": 1,
+    "note": "Similarity is a ranking signal, not a calibrated probability, so it separates these groups imperfectly. The value of the measurement is knowing the size of the overlap, which is why the gate combines the score with the retrieved count and labels every non-document answer instead of hiding it."
+  }
+}

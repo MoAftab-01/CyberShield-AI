@@ -14,7 +14,22 @@ class DocumentIndexService:
     def index_document(
         file_path: str,
         filename: str,
+        user_id: int | None = None,
     ):
+        """Chunk and index an uploaded document.
+
+        ``user_id`` is stamped into every chunk's metadata. Retrieval uses it
+        to show a chunk only to its owner; without it an upload would be
+        readable by every other user, because all uploads share one index.
+        """
+
+        shared_metadata = {
+            "filename": filename,
+            "scope": "user_upload",
+            "source_folder": "uploads",
+            "user_id": user_id,
+            "document_title": filename,
+        }
 
         if file_path.lower().endswith(".pdf"):
             pdf = fitz.open(file_path)
@@ -22,9 +37,8 @@ class DocumentIndexService:
                 Document(
                     page_content=page.get_text(),
                     metadata={
-                        "filename": filename,
+                        **shared_metadata,
                         "page": page_number,
-                        "source_folder": "uploads",
                     },
                 )
                 for page_number, page in enumerate(pdf)
@@ -36,9 +50,8 @@ class DocumentIndexService:
                 Document(
                     page_content=DocumentExtractor.extract_text(file_path),
                     metadata={
-                        "filename": filename,
+                        **shared_metadata,
                         "page": 0,
-                        "source_folder": "uploads",
                     },
                 )
             ]

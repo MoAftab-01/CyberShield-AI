@@ -1,14 +1,96 @@
+"""Knowledge-base answering.
+
+This is where the assistant decides what kind of question it is answering and
+says so. Three behaviours, each labelled in the response:
+
+* **document** - retrieval found passages that answer the question; the model
+  writes from them and cites them.
+* **general_knowledge** - retrieval found nothing relevant; the model answers
+  from its own knowledge, cites nothing, and the response says the answer does
+  not come from the documents.
+* **conversation** - a greeting or a "what can you do" message; no retrieval,
+  no long answer.
+
+The previous implementation had only the first path, with a prompt that
+forbade using anything but the supplied context and prescribed a six-section
+report format. Every question was therefore forced through the knowledge base:
+a greeting, a CVE lookup and a question about a topic the corpus does not cover
+all got the same treatment, which is why the assistant behaved like a search
+box over a handful of PDFs.
+
+The confidence gate is calibrated rather than guessed. ``confidence_calibration
+.json`` measures the top semantic similarity of the best retrieved passage
+across three question groups:
+
+=========================  ======  =======  ========  =======
+group                      n       min      median    max
+=========================  ======  =======  ========  =======
+in the knowledge base      18      0.5644   0.6917    0.7878
+security, not in the KB    6       0.3082   0.3603    0.6109
+unrelated to security      6       0.1033   0.1311    0.2046
+=========================  ======  =======  ========  =======
+
+:data:`IRRELEVANT_BELOW` sits in the wide, empty gap between the unrelated
+group and the other two. :data:`DOCUMENT_AT_LEAST` separates the two security
+groups imperfectly - a security question the corpus does not cover can score
+above a covered one - so the fallback is designed to be safe under that
+overlap: it never claims document support it does not have, and the passages
+retrieved are still returned to the user as related reading.
+"""
+
+import os
+
 from sqlalchemy.orm import Session
 
-from app.prompts import SECURITY_SYSTEM_PROMPT
+from app.prompts import (
+    ASSISTANT_PERSONA,
+    COMPARE_PROMPT,
+    CONVERSATION_PROMPT,
+    DOCUMENT_ANSWER_PROMPT,
+    GENERAL_ANSWER_PROMPT,
+    SUMMARIZE_PROMPT,
+)
 
 from app.rag.retriever import HybridRetriever
 
+from app.agents.intents import (
+    BASIS_CONVERSATION,
+    BASIS_DOCUMENT,
+    BASIS_GENERAL,
+    DOCUMENT_BOUND_INTENTS,
+)
+
+from app.services.llm.base import LLMError
 from app.services.llm.provider_factory import ProviderFactory
 from app.services.conversation_service import ConversationService
 
+#: Below this top similarity the knowledge base has nothing to do with the
+#: question. Measured: unrelated questions peak at 0.2046, security questions
+#: start at 0.3082.
+IRRELEVANT_BELOW = 0.30
+
+#: At or above this, the retrieved passages are treated as answering the
+#: question. Measured: knowledge-base questions start at 0.5644.
+DOCUMENT_AT_LEAST = 0.55
+
+#: How much of the answer the fallback paths may produce.
+GENERAL_MAX_TOKENS = 900
+CONVERSATION_MAX_TOKENS = 200
+DOCUMENT_MAX_TOKENS = 900
+
+
+def _threshold(name: str, default: float) -> float:
+    try:
+        return float(os.getenv(name, default))
+    except (TypeError, ValueError):
+        return default
+
 
 class RAGService:
+
+    # ------------------------------------------------------------------
+    # Public entry point
+    # ------------------------------------------------------------------
 
     @staticmethod
     def ask(
@@ -16,25 +98,21 @@ class RAGService:
         db: Session,
         user_id: int,
         conversation_id: int | None = None,
+        template=None,
     ):
+        """Answer a question, creating or continuing a conversation.
 
-        # ---------------------------------------
-        # Create Conversation (First Message)
-        # ---------------------------------------
+        Kept with its original signature and response shape so existing callers
+        keep working; the orchestrator uses :meth:`answer` directly because it
+        has already resolved the conversation.
+        """
 
-        if conversation_id is None:
-
-            conversation = ConversationService.start_chat(
-                db=db,
-                user_id=user_id,
-                first_question=question,
-            )
-
-            conversation_id = conversation.id
-
-        # ---------------------------------------
-        # Save User Message
-        # ---------------------------------------
+        conversation_id = RAGService._resolve_conversation(
+            db=db,
+            user_id=user_id,
+            conversation_id=conversation_id,
+            question=question,
+        )
 
         ConversationService.add_user_message(
             db=db,
@@ -42,122 +120,368 @@ class RAGService:
             message=question,
         )
 
-        # ---------------------------------------
-        # Load Chat History
-        # ---------------------------------------
+        return RAGService.answer(
+            question=question,
+            db=db,
+            user_id=user_id,
+            conversation_id=conversation_id,
+            persist=True,
+            template=template,
+        )
+
+    # ------------------------------------------------------------------
+    # Conversation handling
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def _resolve_conversation(
+        db: Session,
+        user_id: int,
+        conversation_id: int | None,
+        question: str,
+    ) -> int:
+        """Return a usable conversation id owned by ``user_id``.
+
+        A supplied id is verified against the caller before it is written to.
+        Without that check, knowing a conversation id would be enough to append
+        messages to another user's thread.
+        """
+
+        if conversation_id is not None:
+
+            owned = ConversationService.get_conversation(
+                db=db,
+                conversation_id=conversation_id,
+                user_id=user_id,
+            )
+
+            if owned is None:
+                raise PermissionError(
+                    "That conversation does not belong to you."
+                )
+
+            return conversation_id
+
+        conversation = ConversationService.start_chat(
+            db=db,
+            user_id=user_id,
+            first_question=question,
+        )
+
+        return conversation.id
+
+    @staticmethod
+    def _history(db: Session, conversation_id: int, user_id: int) -> str:
+        """Render recent turns for pronoun resolution.
+
+        Bounded in length: the whole thread would grow the prompt without
+        bound, and on a free-tier quota an unbounded prompt is a cost and a
+        latency problem.
+        """
 
         history = ConversationService.load_history(
             db=db,
             conversation_id=conversation_id,
+            user_id=user_id,
         )
 
-        conversation_history = ""
+        lines = []
 
-        for msg in history:
+        for message in history[-8:]:
+            role = "Assistant" if message.role == "assistant" else "User"
+            lines.append(f"{role}: {message.content[:600]}")
 
-            role = "User"
+        return "\n".join(lines)
 
-            if msg.role == "assistant":
-                role = "Assistant"
+    # ------------------------------------------------------------------
+    # Answering
+    # ------------------------------------------------------------------
 
-            conversation_history += (
-                f"{role}: {msg.content}\n"
-            )
+    @staticmethod
+    def answer(
+        question: str,
+        db: Session,
+        user_id: int,
+        conversation_id: int,
+        intent=None,
+        persist: bool = True,
+        template=None,
+    ) -> dict:
+        """Route one question to the right answering path.
 
-        # ---------------------------------------
-        # Hybrid Retrieval
-        # ---------------------------------------
+        The decision is driven by what retrieval actually found, not by what
+        the question looked like. A question the corpus answers is answered
+        from the corpus; one it does not is answered from general knowledge and
+        says so. A question the user aimed at their own documents, which the
+        documents do not cover, is told exactly that.
+        """
 
-        documents, retrieval_metrics = HybridRetriever.search_with_metrics(
+        documents, metrics = HybridRetriever.search_with_metrics(
             query=question,
             top_k=5,
+            user_id=user_id,
+            include_uploads=True,
         )
 
-        knowledge = "\n\n".join(
-            f"[Source {index}: {doc.metadata.get('filename', 'unknown')} "
-            f"page {int(doc.metadata.get('page', 0)) + 1}]\n{doc.page_content}"
-            for index, doc in enumerate(documents, start=1)
-        )
-        if not knowledge:
-            knowledge = "[No matching knowledge-base passages were found.]"
+        relevance = RAGService._relevance(documents, metrics)
 
-        # ---------------------------------------
-        # Prompt
-        # ---------------------------------------
+        if relevance == "document":
+            return RAGService._document_answer(
+                question=question,
+                db=db,
+                user_id=user_id,
+                conversation_id=conversation_id,
+                documents=documents,
+                metrics=metrics,
+                relevance=relevance,
+                persist=persist,
+                template=template,
+            )
 
-        prompt = f"""
-{SECURITY_SYSTEM_PROMPT}
+        document_scoped = intent in DOCUMENT_BOUND_INTENTS
 
-================================================
-
-Conversation History
-
-================================================
-
-{conversation_history}
-
-================================================
-
-Knowledge Base
-
-================================================
-
-{knowledge}
-
-================================================
-
-Current User Question
-
-================================================
-
-{question}
-
-================================================
-
-Rules
-
-================================================
-
-1. Use conversation history only to resolve references such as "it" or "that document".
-   Do not treat previous assistant messages as evidence.
-
-2. Use only facts supported by the Knowledge Base. If the passages do not answer
-   the question, explicitly say that the uploaded documents do not contain enough
-   information and explain what information is missing. Do not guess.
-
-3. Never invent information, document content, or citations.
-
-4. Cite every document-derived claim inline as [Source N]. Do not cite a source
-   that does not support the claim.
-
-5. Answer the user's actual question directly. Do not invoke, imitate, or redirect
-   to the password analyzer, URL scanner, CVE tools, or any other application feature.
-
-6. If the question is unrelated to cybersecurity or the uploaded documents, say so
-   briefly instead of fabricating a document-based answer.
-
-7. Separate "From the documents" from "Additional general guidance". Only include
-   additional guidance when it is clearly labeled as general guidance.
-"""
-
-        provider = ProviderFactory.get_provider()
-
-        answer = provider.chat(prompt)
-
-        ConversationService.add_ai_message(
+        return RAGService._general_answer(
+            question=question,
             db=db,
             conversation_id=conversation_id,
-            message=answer,
+            documents=documents,
+            metrics=metrics,
+            persist=persist,
+            relevance=relevance,
+            document_scoped=document_scoped,
+            template=template,
         )
 
+    @staticmethod
+    def _relevance(documents, metrics) -> str:
+        """Classify retrieval as answering, related, or irrelevant."""
+
+        if not documents or metrics.get("status") != "ok":
+            return "irrelevant"
+
+        top = max(
+            (
+                float(document.metadata.get("semantic_similarity") or 0.0)
+                for document in documents
+            ),
+            default=0.0,
+        )
+
+        if top < _threshold("RAG_IRRELEVANT_BELOW", IRRELEVANT_BELOW):
+            return "irrelevant"
+
+        if top >= _threshold("RAG_DOCUMENT_AT_LEAST", DOCUMENT_AT_LEAST):
+            return "document"
+
+        # Between the two: the corpus has something adjacent, but not an
+        # answer. Treated as general knowledge so the assistant never presents
+        # a near-miss as document support, while the passages still travel back
+        # to the user as related reading.
+        return "related"
+
+    # -- document path ---------------------------------------------------
+
+    @staticmethod
+    def _document_answer(
+        question,
+        db,
+        user_id,
+        conversation_id,
+        documents,
+        metrics,
+        relevance,
+        persist,
+        template=None,
+    ) -> dict:
+
+        context = RAGService._render_context(documents)
+        history = RAGService._history(db, conversation_id, user_id)
+
+        prompt = (template or DOCUMENT_ANSWER_PROMPT).format(
+            persona=ASSISTANT_PERSONA,
+            context=context,
+            question=question,
+        )
+
+        if history:
+            prompt = (
+                f"Conversation so far (use only to resolve references such as "
+                f"'it' or 'that document'; it is not evidence):\n{history}\n\n"
+                f"{prompt}"
+            )
+
+        answer = RAGService._generate(prompt, DOCUMENT_MAX_TOKENS)
+
+        if persist:
+            RAGService._persist(db, conversation_id, answer)
+
+        return {
+            "answer": answer,
+            "sources": RAGService._sources(documents),
+            "retrieval_metrics": metrics,
+            "answer_basis": BASIS_DOCUMENT,
+            "relevance": relevance,
+            "conversation_id": conversation_id,
+            "related_sources": [],
+            "suggestions": RAGService._suggestions(question),
+        }
+
+    # -- general path ----------------------------------------------------
+
+    @staticmethod
+    def _general_answer(
+        question,
+        db,
+        conversation_id,
+        documents,
+        metrics,
+        persist,
+        relevance="irrelevant",
+        document_scoped=False,
+        template=None,
+    ) -> dict:
+        """Answer from model knowledge, labelled as such.
+
+        The label is the point. The user is told, in the response itself, that
+        the answer did not come from the indexed documents - so a general
+        answer can never be mistaken for a sourced one.
+        """
+
+        if document_scoped:
+            notice = (
+                "> **Not from your documents.** Nothing in the indexed "
+                "documents answers this question, so the answer below comes "
+                "from general cybersecurity knowledge and carries no document "
+                "citations.\n\n"
+            )
+        else:
+            notice = (
+                "> **Not from the knowledge base.** No passage in the indexed "
+                "documents answers this question, so the answer below comes "
+                "from general cybersecurity knowledge and carries no document "
+                "citations.\n\n"
+            )
+
+        if template is not None and documents:
+            # Summarise/compare requests keep their document grounding even
+            # when the similarity gate is unsure, because the user named their
+            # own material; the notice still says the coverage is partial.
+            prompt = template.format(
+                persona=ASSISTANT_PERSONA,
+                context=RAGService._render_context(documents),
+                question=question,
+            )
+            notice = (
+                "> **Partial document coverage.** The indexed documents only "
+                "partly cover this request; the answer below is grounded in "
+                "the passages that were found and says what is missing.\n\n"
+            )
+        else:
+            prompt = (
+                f"{GENERAL_ANSWER_PROMPT.format(persona=ASSISTANT_PERSONA)}"
+                f"\n\nQuestion: {question}"
+            )
+
+        answer = RAGService._generate(prompt, GENERAL_MAX_TOKENS)
+
+        if persist:
+            RAGService._persist(db, conversation_id, notice + answer)
+
+        # This is the honesty case the calibration measured: a security
+        # question the corpus does not cover can score close to one it does.
+        # Returning the passages as *related reading* gives the user the
+        # benefit of the near-miss without attaching it to the answer.
+        related = RAGService._sources(documents) if documents else []
+
+        return {
+            "answer": notice + answer,
+            "sources": [],
+            "retrieval_metrics": metrics,
+            "answer_basis": BASIS_GENERAL,
+            "relevance": relevance,
+            "conversation_id": conversation_id,
+            "related_sources": related,
+            "suggestions": RAGService._suggestions(question),
+        }
+
+    # -- conversation path -----------------------------------------------
+
+    @staticmethod
+    def converse(
+        question: str,
+        db: Session,
+        user_id: int,
+        conversation_id: int,
+        persist: bool = True,
+    ) -> dict:
+        """Reply to a greeting or a capability question."""
+
+        prompt = CONVERSATION_PROMPT.format(
+            persona=ASSISTANT_PERSONA,
+            question=question,
+        )
+
+        answer = RAGService._generate(prompt, CONVERSATION_MAX_TOKENS)
+
+        if persist:
+            RAGService._persist(db, conversation_id, answer)
+
+        return {
+            "answer": answer,
+            "sources": [],
+            "retrieval_metrics": {
+                "status": "skipped",
+                "retrieved_count": 0,
+                "reason": "Conversational message; retrieval not attempted.",
+            },
+            "answer_basis": BASIS_CONVERSATION,
+            "relevance": "not_applicable",
+            "conversation_id": conversation_id,
+            "related_sources": [],
+            "suggestions": RAGService._suggestions(question),
+        }
+
+    # ------------------------------------------------------------------
+    # Helpers
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def _generate(prompt: str, max_tokens: int) -> str:
+        """Call the model, degrading to an explanation rather than a 500."""
+
+        try:
+            return ProviderFactory.get_provider().chat(
+                prompt,
+                max_tokens=max_tokens,
+            )
+        except LLMError as error:
+            return (
+                "The language model is temporarily unavailable, so this "
+                "answer could not be generated. Retrieval itself succeeded - "
+                "the sources listed with this message are the passages that "
+                "matched your question.\n\n"
+                f"_(provider error: {error})_"
+            )
+
+    @staticmethod
+    def _render_context(documents) -> str:
+        return "\n\n".join(
+            f"[Source {index}: {document.metadata.get('filename', 'unknown')} "
+            f"page {int(document.metadata.get('page', 0)) + 1}]\n"
+            f"{document.page_content}"
+            for index, document in enumerate(documents, start=1)
+        ) or "[No matching knowledge-base passages were found.]"
+
+    @staticmethod
+    def _sources(documents) -> list[dict]:
         sources = []
         seen = set()
 
-        for doc in documents:
+        for document in documents:
 
             key = (
-                doc.metadata.get("filename"),
-                doc.metadata.get("page"),
+                document.metadata.get("filename"),
+                document.metadata.get("page"),
             )
 
             if key in seen:
@@ -167,18 +491,72 @@ Rules
 
             sources.append(
                 {
-                    "filename": doc.metadata.get("filename"),
-                    "page": int(doc.metadata.get("page", 0)) + 1,
-                    "folder": doc.metadata.get("source_folder"),
+                    "filename": document.metadata.get("filename"),
+                    "page": int(document.metadata.get("page", 0)) + 1,
+                    "folder": document.metadata.get("source_folder"),
                 }
             )
 
-        return {
-            "conversation_id": conversation_id,
-            "answer": answer,
-            "sources": sources,
-            "retrieval_metrics": retrieval_metrics,
-        }
+        return sources
+
+    @staticmethod
+    def _persist(db: Session, conversation_id: int, answer: str) -> None:
+        ConversationService.add_ai_message(
+            db=db,
+            conversation_id=conversation_id,
+            message=answer,
+        )
+
+    #: Follow-up prompts, chosen by what the question was about. Static text
+    #: rather than a generated list, because generating them costs an extra
+    #: model call per turn for something the user rarely acts on.
+    SUGGESTION_SETS = (
+        (
+            ("password", "passphrase", "credential", "mfa", "2fa"),
+            [
+                "How should I store these credentials?",
+                "What makes a password resistant to cracking?",
+            ],
+        ),
+        (
+            ("url", "link", "phishing", "domain"),
+            [
+                "What are the signs of a phishing domain?",
+                "How does a homograph attack work?",
+            ],
+        ),
+        (
+            ("cve", "vulnerability", "exploit", "patch"),
+            [
+                "Which of these are being exploited in the wild?",
+                "What is the recommended mitigation?",
+            ],
+        ),
+        (
+            ("incident", "breach", "response", "containment"),
+            [
+                "What should the first hour of response look like?",
+                "How do we preserve evidence while containing?",
+            ],
+        ),
+    )
+
+    @staticmethod
+    def _suggestions(question: str) -> list[str]:
+        lowered = question.lower()
+
+        for keywords, suggestions in RAGService.SUGGESTION_SETS:
+            if any(keyword in lowered for keyword in keywords):
+                return suggestions
+
+        return [
+            "Which NIST control covers this?",
+            "What does OWASP recommend here?",
+        ]
+
+    # ------------------------------------------------------------------
+    # Document-scoped requests
+    # ------------------------------------------------------------------
 
     @staticmethod
     def summarize(
@@ -189,16 +567,11 @@ Rules
     ):
 
         return RAGService.ask(
-            question=f"""
-Summarize the uploaded document(s).
-
-User Request:
-
-{question}
-""",
+            question=question or "Summarise the uploaded documents.",
             db=db,
             user_id=user_id,
             conversation_id=conversation_id,
+            template=SUMMARIZE_PROMPT,
         )
 
     @staticmethod
@@ -210,41 +583,33 @@ User Request:
     ):
 
         return RAGService.ask(
-            question=f"""
-Compare the uploaded document(s).
-
-User Request:
-
-{question}
-""",
+            question=question or "Compare the uploaded documents.",
             db=db,
             user_id=user_id,
             conversation_id=conversation_id,
+            template=COMPARE_PROMPT,
         )
 
     @staticmethod
     def general(
         question: str,
     ):
+        """Answer without a conversation. Retained for backwards compatibility.
 
-        provider = ProviderFactory.get_provider()
+        The orchestrator does not use this: it always has a conversation to
+        persist to, which is why the original ``general`` path - which returned
+        ``conversation_id: None`` and stored nothing - is no longer reachable
+        from the API.
+        """
 
-        answer = provider.chat(
-            f"""
-You are CyberGPT, an enterprise cybersecurity assistant.
-
-Answer the following question using your cybersecurity knowledge.
-
-Question:
-{question}
-
-Rules:
-- Be accurate.
-- Use markdown.
-- Keep the answer concise.
-- Include security best practices when appropriate.
-"""
-        )
+        try:
+            answer = ProviderFactory.get_provider().chat(
+                f"{GENERAL_ANSWER_PROMPT.format(persona=ASSISTANT_PERSONA)}"
+                f"\n\nQuestion: {question}",
+                max_tokens=GENERAL_MAX_TOKENS,
+            )
+        except LLMError as error:
+            answer = f"The language model is temporarily unavailable. _{error}_"
 
         return {
             "conversation_id": None,

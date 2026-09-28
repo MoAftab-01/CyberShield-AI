@@ -29,9 +29,14 @@ async def upload_document(
             user_id=current_user.id,
         )
 
+        # ``user_id`` is what scopes the chunks to their owner. Without it the
+        # upload lands in the shared index untagged and any authenticated user
+        # can retrieve it - which is exactly how a user's CV ended up readable
+        # from the public evaluation harness.
         DocumentIndexService.index_document(
             file_path=document["path"],
-            filename=document["original_filename"],
+            filename=document["filename"],
+            user_id=current_user.id,
         )
 
         return {

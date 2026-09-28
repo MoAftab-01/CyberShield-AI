@@ -1,3 +1,11 @@
+# Keep the build context small and the image free of local state.
+#
+# Two of these matter for correctness rather than size:
+#   uploads/    - user documents. Shipping them would put one deployment's
+#                 private files inside every image built from this context.
+#   vector_db/  - the retrieval index. It is stamped with the embedding backend
+#                 that built it, but the safest thing is not to ship a stale
+#                 index at all: the container builds its own on first boot.
 .venv
 __pycache__
 .pytest_cache
@@ -6,11 +14,10 @@ uploads
 vector_db
 temp_vector_db
 upload_vector_db
+.model_cache
 .git
 *.pyc
 *.pyo
 *.pyd
 tests
 test_*.py
-vector_db
-uploads

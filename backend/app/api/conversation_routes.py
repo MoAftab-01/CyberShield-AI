@@ -1,3 +1,13 @@
+"""Conversation endpoints.
+
+Every route is scoped to the authenticated user. Previously they ran as a
+hard-coded ``user_id = 1``, which meant any logged-in account could list, read,
+rename and delete the same account's conversations - a textbook IDOR. Ownership
+is enforced in :class:`ConversationCRUD`, so a conversation belonging to
+someone else answers exactly as a missing one does and the routes cannot leak
+its existence.
+"""
+
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
@@ -5,6 +15,8 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
+from app.database.models import User
+from app.dependencies.auth import get_current_user
 
 from app.schemas.conversation_schema import (
     ConversationItem,
@@ -21,6 +33,8 @@ router = APIRouter(
     tags=["Conversations"],
 )
 
+NOT_FOUND = "Conversation not found"
+
 
 @router.get(
     "",
@@ -28,14 +42,12 @@ router = APIRouter(
 )
 def list_conversations(
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
-
-    # Temporary user
-    user_id = 1
 
     return ConversationService.list_conversations(
         db=db,
-        user_id=user_id,
+        user_id=current_user.id,
     )
 
 
@@ -46,17 +58,19 @@ def list_conversations(
 def get_conversation(
     conversation_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
 
     conversation = ConversationService.get_conversation(
         db=db,
         conversation_id=conversation_id,
+        user_id=current_user.id,
     )
 
     if not conversation:
         raise HTTPException(
             status_code=404,
-            detail="Conversation not found",
+            detail=NOT_FOUND,
         )
 
     return conversation
@@ -69,18 +83,20 @@ def rename_conversation(
     conversation_id: int,
     request: RenameConversationRequest,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
 
     conversation = ConversationService.rename(
         db=db,
         conversation_id=conversation_id,
         title=request.title,
+        user_id=current_user.id,
     )
 
     if not conversation:
         raise HTTPException(
             status_code=404,
-            detail="Conversation not found",
+            detail=NOT_FOUND,
         )
 
     return {
@@ -94,12 +110,22 @@ def rename_conversation(
 def delete_conversation(
     conversation_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
 
-    ConversationService.delete(
+    deleted = ConversationService.delete(
         db=db,
         conversation_id=conversation_id,
+        user_id=current_user.id,
     )
+
+    # Deleting someone else's conversation must not report success, and must
+    # not report 403 either - that would confirm the id exists.
+    if not deleted:
+        raise HTTPException(
+            status_code=404,
+            detail=NOT_FOUND,
+        )
 
     return {
         "message": "Conversation deleted."

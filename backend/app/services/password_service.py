@@ -80,14 +80,39 @@ class PasswordService:
             recommendations=risk["recommendations"],
         )
 
-    @staticmethod
-    def generate(length: int = 16):
+    #: Characters excluded on purpose: look-alike glyphs (0/O, 1/l/I) and
+    #: characters that shells and config files frequently mangle.
+    GENERATOR_ALPHABET = (
+        "abcdefghijkmnopqrstuvwxyz"
+        "ABCDEFGHJKLMNPQRSTUVWXYZ"
+        "23456789"
+        "!@#$%^&*()-_=+[]{}?"
+    )
 
-        alphabet = (
-            string.ascii_letters
-            + string.digits
-            + "!@#$%^&*()-_=+"
+    MIN_GENERATED_LENGTH = 8
+    MAX_GENERATED_LENGTH = 128
+
+    @staticmethod
+    def generate_secure(length: int = 16) -> dict:
+        """Generate a password and report its measured strength.
+
+        Returns structured data (rather than presentation text) so both the
+        REST endpoint and the CyberGPT tool can use it - the chat UI needs the
+        raw value to offer a copy button, which a markdown blob cannot give it.
+        """
+
+        length = max(
+            PasswordService.MIN_GENERATED_LENGTH,
+            min(int(length or 16), PasswordService.MAX_GENERATED_LENGTH),
         )
+
+        alphabet = PasswordService.GENERATOR_ALPHABET
+        required_classes = [
+            set(string.ascii_uppercase),
+            set(string.ascii_lowercase),
+            set(string.digits),
+            set("!@#$%^&*()-_=+[]{}?"),
+        ]
 
         while True:
 
@@ -96,13 +121,31 @@ class PasswordService:
                 for _ in range(length)
             )
 
-            if (
-                any(c.isupper() for c in password)
-                and any(c.islower() for c in password)
-                and any(c.isdigit() for c in password)
-                and any(c in "!@#$%^&*()-_=+" for c in password)
+            if all(
+                any(character in password_class for character in password)
+                for password_class in required_classes
             ):
                 break
+
+        score = calculate_score(password)
+        entropy = calculate_entropy(password)
+
+        return {
+            "password": password,
+            "length": length,
+            "score": score,
+            "strength": password_strength(score),
+            "entropy": entropy,
+            "entropy_rating": entropy_rating(entropy),
+            "symbol_space": len(alphabet),
+        }
+
+    @staticmethod
+    def generate(length: int = 16):
+
+        result = PasswordService.generate_secure(length)
+
+        password = result["password"]
 
         return {
             "answer": f"""
@@ -110,7 +153,11 @@ class PasswordService:
 
 **{password}**
 
-Length: {length}
+Length: {result["length"]}
+
+Estimated strength: **{result["strength"]}** (score {result["score"]}/100)
+
+Entropy: {result["entropy"]:.2f} bits ({result["entropy_rating"]})
 
 ✅ Uppercase
 

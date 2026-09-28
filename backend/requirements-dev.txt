@@ -1,0 +1,12 @@
+# Test and evaluation dependencies.
+#
+# Kept out of requirements.txt so the deployed image does not carry a test
+# runner it never invokes; the free-tier container has 512MB of RAM and a slow
+# cold start, and every unnecessary package costs both.
+#
+#   pip install -r requirements-dev.txt
+#   python -m pytest tests/ -q
+
+-r requirements.txt
+
+pytest==9.1.1

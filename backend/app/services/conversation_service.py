@@ -22,11 +22,13 @@ class ConversationService:
     def load_history(
         db: Session,
         conversation_id: int,
+        user_id: int | None = None,
     ):
 
         return ConversationCRUD.get_messages(
             db=db,
             conversation_id=conversation_id,
+            user_id=user_id,
         )
 
     @staticmethod
@@ -73,16 +75,28 @@ class ConversationService:
     def get_conversation(
         db: Session,
         conversation_id: int,
+        user_id: int | None = None,
     ):
+        """Load one conversation with its messages.
+
+        Returns ``None`` when the conversation does not exist *or* belongs to
+        another user, so the route cannot leak the existence of someone else's
+        conversation through a different status code.
+        """
 
         conversation = ConversationCRUD.get_conversation(
             db=db,
             conversation_id=conversation_id,
+            user_id=user_id,
         )
+
+        if conversation is None:
+            return None
 
         messages = ConversationCRUD.get_messages(
             db=db,
             conversation_id=conversation_id,
+            user_id=user_id,
         )
 
         return {
@@ -100,21 +114,25 @@ class ConversationService:
     def delete(
         db: Session,
         conversation_id: int,
+        user_id: int | None = None,
     ):
 
-        ConversationCRUD.delete_conversation(
+        return ConversationCRUD.delete_conversation(
             db=db,
             conversation_id=conversation_id,
+            user_id=user_id,
         )
 
     @staticmethod
     def rename(
-    db: Session,
-    conversation_id: int,
-    title: str,
-):
+        db: Session,
+        conversation_id: int,
+        title: str,
+        user_id: int | None = None,
+    ):
         return ConversationCRUD.rename_conversation(
-        db=db,
-        conversation_id=conversation_id,
-        title=title,
-    )
+            db=db,
+            conversation_id=conversation_id,
+            title=title,
+            user_id=user_id,
+        )
