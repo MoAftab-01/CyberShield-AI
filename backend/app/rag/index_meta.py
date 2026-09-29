@@ -12,20 +12,38 @@ the configuration that produced it, and startup rebuilds the index when the
 stamp does not match the running configuration.
 """
 
+import hashlib
 import json
+import os
 from pathlib import Path
 
 STAMP_PATH = Path("vector_db/index_meta.json")
 
 #: Bumped when chunking or indexing logic changes in a way that invalidates
 #: previously built indexes.
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 
 
 def expected_stamp(vector_dimension: int, backend: str, model: str | None) -> dict:
     """Describe the configuration the running process would build."""
 
     from app.rag.chunker import DocumentChunker
+
+    knowledge_base = Path("knowledge_base")
+    source_inventory = []
+    if knowledge_base.exists():
+        for path in sorted(knowledge_base.rglob("*")):
+            if path.is_file() and path.suffix.lower() in {".pdf", ".txt", ".md"}:
+                stat = path.stat()
+                with path.open("rb") as source:
+                    digest = hashlib.file_digest(source, "sha256").hexdigest()
+                source_inventory.append(
+                    {
+                        "path": path.relative_to(knowledge_base).as_posix(),
+                        "size": stat.st_size,
+                        "sha256": digest,
+                    }
+                )
 
     return {
         "schema_version": SCHEMA_VERSION,
@@ -34,6 +52,9 @@ def expected_stamp(vector_dimension: int, backend: str, model: str | None) -> di
         "vector_dimension": vector_dimension,
         "chunk_size": DocumentChunker.chunk_size(),
         "chunk_overlap": DocumentChunker.chunk_overlap(),
+        "deduplicate_chunks": os.getenv("RAG_DEDUPE_CHUNKS", "true").lower()
+        not in {"0", "false", "no"},
+        "knowledge_base_sources": source_inventory,
     }
 
 

@@ -38,6 +38,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 DEFAULT_CHUNK_SIZE = 600
 DEFAULT_CHUNK_OVERLAP = 100
+DEFAULT_DEDUPE_CHUNKS = True
 
 SEPARATORS = [
     "\n\n",
@@ -101,7 +102,51 @@ class DocumentChunker:
             )
             chunk.metadata = metadata
 
+        if os.getenv("RAG_DEDUPE_CHUNKS", str(DEFAULT_DEDUPE_CHUNKS)).lower() not in {
+            "0", "false", "no"
+        }:
+            chunks = DocumentChunker._deduplicate_chunks(chunks)
+
         return chunks
+
+    @staticmethod
+    def _normalise_for_dedupe(text: str) -> str:
+        normalised = " ".join(text.lower().split())
+        return "".join(ch for ch in normalised if ch.isalnum() or ch.isspace())
+
+    @staticmethod
+    def _deduplicate_chunks(chunks):
+        """Drop repeated sections before they crowd the index.
+
+        This is a free-tier-friendly improvement: repeated boilerplate, scanned
+        headers or copied policy blocks do not take up retrieval slots while
+        distinct pages remain searchable.
+        """
+        seen: set[str] = set()
+        unique: list = []
+
+        for chunk in chunks:
+            key = (
+                chunk.metadata.get("filename"),
+                chunk.metadata.get("page"),
+                DocumentChunker._normalise_for_dedupe(chunk.page_content),
+            )
+            if not key:
+                continue
+            if key in seen:
+                continue
+            seen.add(key)
+            unique.append(chunk)
+
+        for index, chunk in enumerate(unique):
+            metadata = dict(chunk.metadata)
+            metadata["chunk_index"] = index
+            metadata["chunk_id"] = (
+                f"{metadata.get('filename', 'document')}:{index}"
+            )
+            chunk.metadata = metadata
+
+        return unique
 
     @staticmethod
     def _section_hint(text: str, limit: int = 90) -> str:

@@ -4,7 +4,7 @@
 
         page: number;
 
-        folder: string;
+        folder?: string | null;
     }
 
     export interface CopilotRequest {
@@ -21,4 +21,6 @@
         answer: string;
 
         sources: Source[];
+
+        related_sources?: Source[];
     }

@@ -30,19 +30,21 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BASE_DIR))
 
-from evaluate_benchmarks import EVALUATION_DIR  # noqa: E402
+from evaluate_benchmarks import EVALUATION_DIR, load_rag_cases  # noqa: E402
 
+from app.rag.embeddings import EmbeddingService  # noqa: E402
 from app.rag.retriever import HybridRetriever  # noqa: E402
+from app.services.rag_service import RAGService  # noqa: E402
 
 #: Security questions the curated set genuinely does not cover. These are the
 #: interesting cases: a keyword matcher would answer them from the documents.
 OFF_KB_SECURITY = [
-    "What is the difference between AES-128 and AES-256?",
     "How does a Kerberoasting attack work?",
     "How do I configure a NAT rule on a Palo Alto firewall?",
     "What is the difference between SAST and DAST?",
     "How does certificate pinning protect a mobile app?",
     "What is the CVSS score of a vulnerability with high integrity impact only?",
+    "How can I configure an EDR exclusion policy in Microsoft Defender for Endpoint?",
 ]
 
 #: Nothing to do with security or the knowledge base.
@@ -69,33 +71,51 @@ def probe(question: str) -> dict:
         float(document.metadata.get("semantic_similarity") or 0.0)
         for document in documents
     ]
+    coverages = [
+        float(document.metadata.get("query_term_coverage") or 0.0)
+        for document in documents
+    ]
+    lexical_ranks = [
+        int(document.metadata["lexical_rank"])
+        for document in documents
+        if document.metadata.get("lexical_rank") is not None
+    ]
+    backend = metrics.get("embedding_backend", EmbeddingService.backend_name())
     return {
         "question": question,
         "status": metrics.get("status"),
         "returned": len(documents),
-        "top_similarity": round(similarities[0], 4) if similarities else 0.0,
-        "mean_similarity": (
-            round(statistics.fmean(similarities), 4) if similarities else 0.0
+        "embedding_backend": backend,
+        "top_semantic_similarity": (
+            round(similarities[0], 4)
+            if similarities and backend == "fastembed"
+            else None
         ),
+        "top_term_coverage": round(max(coverages), 4) if coverages else 0.0,
+        "best_lexical_rank": min(lexical_ranks) if lexical_ranks else None,
+        "relevance": RAGService._relevance(documents, metrics, question),
     }
 
 
-def summarise(label: str, rows: list[dict]) -> dict:
-    tops = [row["top_similarity"] for row in rows]
+def summarise(label: str, rows: list[dict], score_field: str) -> dict:
+    scores = [row[score_field] for row in rows if row[score_field] is not None]
     return {
         "group": label,
         "sample_size": len(rows),
-        "min": round(min(tops), 4),
-        "median": round(statistics.median(tops), 4),
-        "max": round(max(tops), 4),
+        "score_field": score_field,
+        "min": round(min(scores), 4) if scores else None,
+        "median": round(statistics.median(scores), 4) if scores else None,
+        "max": round(max(scores), 4) if scores else None,
+        "gate_results": {
+            decision: sum(row["relevance"] == decision for row in rows)
+            for decision in ("document", "related", "irrelevant")
+        },
         "rows": rows,
     }
 
 
 def main():
-    cases = json.loads(
-        (EVALUATION_DIR / "rag_cases.json").read_text(encoding="utf-8")
-    )
+    cases = load_rag_cases()
 
     groups = [
         ("in_knowledge_base", [probe(case["question"]) for case in cases]),
@@ -103,32 +123,44 @@ def main():
         ("unrelated", [probe(q) for q in UNRELATED]),
     ]
 
-    summary = [summarise(label, rows) for label, rows in groups]
+    backend = EmbeddingService.backend_name()
+    score_field = (
+        "top_semantic_similarity"
+        if backend == "fastembed"
+        else "top_term_coverage"
+    )
+    summary = [
+        summarise(label, rows, score_field)
+        for label, rows in groups
+    ]
 
-    # A threshold is only defensible if the groups actually separate. Report
-    # the overlap explicitly instead of asserting a clean split.
-    in_kb = [row["top_similarity"] for row in groups[0][1]]
-    off_kb = [row["top_similarity"] for row in groups[1][1]]
-    unrelated = [row["top_similarity"] for row in groups[2][1]]
-
-    results = {
-        "metric": "top semantic similarity of the best retrieved passage",
-        "groups": summary,
-        "separation": {
+    if backend == "fastembed":
+        in_kb = [row[score_field] for row in groups[0][1]]
+        off_kb = [row[score_field] for row in groups[1][1]]
+        unrelated = [row[score_field] for row in groups[2][1]]
+        separation = {
             "in_kb_min": round(min(in_kb), 4),
             "security_not_in_kb_max": round(max(off_kb), 4),
             "unrelated_max": round(max(unrelated), 4),
-            "in_kb_vs_security_not_in_kb_overlap": round(
-                min(in_kb) <= max(off_kb), 4
+            "in_kb_vs_security_not_in_kb_overlap": min(in_kb) <= max(off_kb),
+        }
+    else:
+        separation = {
+            "metric": "gate classification counts",
+            "false_document_classifications": {
+                label: sum(row["relevance"] == "document" for row in rows)
+                for label, rows in groups[1:]
+            },
+            "knowledge_base_questions_classified_document": sum(
+                row["relevance"] == "document" for row in groups[0][1]
             ),
-            "note": (
-                "Similarity is a ranking signal, not a calibrated probability, "
-                "so it separates these groups imperfectly. The value of the "
-                "measurement is knowing the size of the overlap, which is why "
-                "the gate combines the score with the retrieved count and "
-                "labels every non-document answer instead of hiding it."
-            ),
-        },
+        }
+
+    results = {
+        "metric": score_field,
+        "embedding_backend": backend,
+        "groups": summary,
+        "separation": separation,
     }
 
     output = EVALUATION_DIR / "confidence_calibration.json"
@@ -139,8 +171,9 @@ def main():
     print("-" * len(header))
     for row in summary:
         print(
-            f"{row['group']:22} {row['sample_size']:3d} {row['min']:7.4f} "
-            f"{row['median']:7.4f} {row['max']:7.4f}"
+            f"{row['group']:22} {row['sample_size']:3d} "
+            f"{str(row['min']):>7} {str(row['median']):>7} "
+            f"{str(row['max']):>7} {row['gate_results']}"
         )
 
     print(f"\nWrote {output}")

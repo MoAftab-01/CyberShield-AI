@@ -9,6 +9,7 @@ interface Message {
     content: string;
 
     sources?: Source[];
+    relatedSources?: Source[];
 
 }
 
@@ -49,6 +50,8 @@ export default function MessageList({
                             content={message.content}
 
                             sources={message.sources}
+
+                            relatedSources={message.relatedSources}
 
                         />
 

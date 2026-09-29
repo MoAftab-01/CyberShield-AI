@@ -1,3 +1,6 @@
+import asyncio
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -21,9 +24,32 @@ from app.api.upload_routes import (
 from app.core.config import settings
 from app.services.knowledge_base_service import KnowledgeBaseService
 
+
+def _prepare_knowledge_base() -> None:
+    try:
+        index_status = KnowledgeBaseService.ensure_index()
+        print(f"[startup] knowledge base index: {index_status}")
+    except Exception as error:  # pragma: no cover - environment dependent
+        print(
+            "[startup] knowledge base index could not be prepared "
+            f"({type(error).__name__}: {error}). The API will start, but "
+            "knowledge-base retrieval will report no results until it succeeds."
+        )
+
+
+@asynccontextmanager
+async def lifespan(application: FastAPI):
+    # Building embeddings for the full PDF corpus can take minutes on a free
+    # instance. Let Uvicorn begin serving health and account routes first.
+    application.state.knowledge_base_task = asyncio.create_task(
+        asyncio.to_thread(_prepare_knowledge_base)
+    )
+    yield
+
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
+    lifespan=lifespan,
 )
 
 # Creating the tables is unguarded in the sense that a failure is fatal to the
@@ -45,22 +71,6 @@ except Exception as error:  # pragma: no cover - depends on the environment
         "DATABASE_URL at SQLite: sqlite:///./local_dev.db"
     )
 
-# The index build runs at startup and is the one step that can take a minute or
-# more on a cold free-tier instance: it loads the ONNX encoder and embeds every
-# knowledge-base chunk. It is wrapped because a failure here used to abort the
-# import and take the whole application down - including /health and every
-# endpoint that does not need retrieval. Degrading to "retrieval unavailable"
-# is strictly better than not booting, and the reason is logged so it is not
-# silent.
-try:
-    index_status = KnowledgeBaseService.ensure_index()
-    print(f"[startup] knowledge base index: {index_status}")
-except Exception as error:  # pragma: no cover - depends on the environment
-    print(
-        "[startup] knowledge base index could not be prepared "
-        f"({type(error).__name__}: {error}). The API will start, but "
-        "knowledge-base retrieval will report no results until it succeeds."
-    )
 # ==========================================
 # CORS Configuration
 # ==========================================

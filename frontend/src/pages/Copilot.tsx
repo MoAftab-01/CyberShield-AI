@@ -38,6 +38,7 @@ interface ChatMessage {
   role: "user" | "assistant";
   content: string;
   sources?: Source[];
+  relatedSources?: Source[];
 }
 
 
@@ -114,6 +115,7 @@ export default function Copilot() {
           role: "assistant",
           content: response.answer,
           sources: response.sources,
+          relatedSources: response.related_sources,
         },
       ]);
     } finally {

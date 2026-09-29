@@ -39,6 +39,12 @@ class TestToolRouting:
     def test_generate_password_routes_to_generation(self):
         assert route("Generate a strong password") == Intent.PASSWORD_GENERATION
 
+    def test_weak_password_requests_are_not_generation(self):
+        assert route("give me a weak password") == Intent.PASSWORD_ADVICE
+
+    def test_password_strength_explanations_are_not_generation(self):
+        assert route("what makes a password strong") == Intent.PASSWORD_ADVICE
+
     def test_requested_password_length_is_extracted(self):
         decision = IntentRouter.classify(
             "generate a 24 character password", allow_llm=False

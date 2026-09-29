@@ -19,12 +19,14 @@ interface Props {
   role: "user" | "assistant";
   content: string;
   sources?: Source[];
+  relatedSources?: Source[];
 }
 
 export default function ChatMessage({
   role,
   content,
   sources = [],
+  relatedSources = [],
 }: Props) {
 
   const isUser = role === "user";
@@ -501,6 +503,31 @@ text-slate-200
 
           )
 
+        }
+
+        {/* Related reading is not cited as support for this answer. */}
+        {
+          !isUser &&
+          relatedSources.length > 0 && (
+            <div className="border-t border-amber-400/10 px-6 py-5">
+              <div className="mb-4">
+                <h3 className="text-base font-semibold text-amber-100">
+                  Related reading
+                </h3>
+                <p className="mt-1 text-sm text-slate-400">
+                  Retrieved for context, but not cited as support for this answer.
+                </p>
+              </div>
+              <div className="space-y-3">
+                {relatedSources.map((source, index) => (
+                  <SourceCard
+                    key={`${source.filename}-${source.page}-${index}`}
+                    source={source}
+                  />
+                ))}
+              </div>
+            </div>
+          )
         }
 
         {/* Footer */}

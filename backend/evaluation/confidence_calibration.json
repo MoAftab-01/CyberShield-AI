@@ -1,249 +1,469 @@
 {
-  "metric": "top semantic similarity of the best retrieved passage",
+  "metric": "top_term_coverage",
+  "embedding_backend": "hash",
   "groups": [
     {
       "group": "in_knowledge_base",
-      "sample_size": 18,
-      "min": 0.5644,
-      "median": 0.6917,
-      "max": 0.7878,
+      "sample_size": 29,
+      "score_field": "top_term_coverage",
+      "min": 0.333,
+      "median": 0.75,
+      "max": 1.0,
+      "gate_results": {
+        "document": 20,
+        "related": 6,
+        "irrelevant": 3
+      },
       "rows": [
         {
           "question": "How should developers prevent SQL injection attacks?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.6905,
-          "mean_similarity": 0.531
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.8,
+          "best_lexical_rank": 1,
+          "relevance": "document"
         },
         {
           "question": "What is an example of an injection vulnerability in a SQL query?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.6385,
-          "mean_similarity": 0.5689
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.8,
+          "best_lexical_rank": 1,
+          "relevance": "irrelevant"
         },
         {
           "question": "What are common broken access control vulnerabilities?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.7069,
-          "mean_similarity": 0.5756
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.8,
+          "best_lexical_rank": 1,
+          "relevance": "document"
         },
         {
           "question": "How can an application prevent broken access control?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.7372,
-          "mean_similarity": 0.6338
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.8,
+          "best_lexical_rank": 1,
+          "relevance": "document"
         },
         {
           "question": "What does zero trust mean, and why is trust never implicit?",
           "status": "ok",
-          "returned": 3,
-          "top_similarity": 0.6567,
-          "mean_similarity": 0.5695
+          "returned": 2,
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.5,
+          "best_lexical_rank": 1,
+          "relevance": "related"
         },
         {
           "question": "How does least privilege restrict access in a zero trust architecture?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.689,
-          "mean_similarity": 0.6421
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.875,
+          "best_lexical_rank": 1,
+          "relevance": "document"
         },
         {
           "question": "What are the responsibilities of policy decision and policy enforcement points?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.5644,
-          "mean_similarity": 0.2261
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.6,
+          "best_lexical_rank": 1,
+          "relevance": "document"
         },
         {
           "question": "What are the six functions in the NIST Cybersecurity Framework 2.0?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.7441,
-          "mean_similarity": 0.6972
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 1.0,
+          "best_lexical_rank": 1,
+          "relevance": "document"
         },
         {
           "question": "What is a NIST CSF organizational profile used for?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.6931,
-          "mean_similarity": 0.6929
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 1.0,
+          "best_lexical_rank": 2,
+          "relevance": "document"
         },
         {
           "question": "How should an organization coordinate the six CSF functions during incidents?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.693,
-          "mean_similarity": 0.6175
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.571,
+          "best_lexical_rank": 1,
+          "relevance": "related"
         },
         {
           "question": "How does NIST integrate incident response into cybersecurity risk management?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.7878,
-          "mean_similarity": 0.7584
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.667,
+          "best_lexical_rank": 3,
+          "relevance": "document"
         },
         {
           "question": "How is the incident response life cycle mapped to the CSF functions?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.78,
-          "mean_similarity": 0.7026
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.857,
+          "best_lexical_rank": 1,
+          "relevance": "document"
         },
         {
           "question": "Which roles and responsibilities should be defined for incident response?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.7649,
-          "mean_similarity": 0.7596
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 1.0,
+          "best_lexical_rank": 1,
+          "relevance": "document"
         },
         {
           "question": "What does NIST control AC-2 require for account management?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.6342,
-          "mean_similarity": 0.5601
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.75,
+          "best_lexical_rank": 1,
+          "relevance": "document"
         },
         {
           "question": "What does control AC-6 require about least privilege?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.7733,
-          "mean_similarity": 0.6712
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.625,
+          "best_lexical_rank": 1,
+          "relevance": "document"
         },
         {
           "question": "What should organizations consider when selecting audit events under AU-2?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.6298,
-          "mean_similarity": 0.5969
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.625,
+          "best_lexical_rank": 1,
+          "relevance": "document"
         },
         {
           "question": "What protections are required when constructing URLs from untrusted input?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.5887,
-          "mean_similarity": 0.4707
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.333,
+          "best_lexical_rank": 1,
+          "relevance": "related"
         },
         {
           "question": "What does OWASP ASVS require for multifactor authentication?",
           "status": "ok",
-          "returned": 3,
-          "top_similarity": 0.5879,
-          "mean_similarity": 0.196
+          "returned": 5,
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.5,
+          "best_lexical_rank": 5,
+          "relevance": "irrelevant"
+        },
+        {
+          "question": "How should a verifier handle a password that is commonly used, expected, or compromised?",
+          "status": "ok",
+          "returned": 5,
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.857,
+          "best_lexical_rank": 1,
+          "relevance": "document"
+        },
+        {
+          "question": "What does NIST recommend to help users enter passwords accurately?",
+          "status": "ok",
+          "returned": 5,
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.5,
+          "best_lexical_rank": 1,
+          "relevance": "related"
+        },
+        {
+          "question": "Why should an organization define software-development security requirements across the SDLC?",
+          "status": "ok",
+          "returned": 5,
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.875,
+          "best_lexical_rank": 1,
+          "relevance": "document"
+        },
+        {
+          "question": "What does the SSDF practice PW.1 require teams to consider during software design?",
+          "status": "ok",
+          "returned": 5,
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.545,
+          "best_lexical_rank": 3,
+          "relevance": "document"
+        },
+        {
+          "question": "What are microservices in an application container architecture?",
+          "status": "ok",
+          "returned": 5,
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.75,
+          "best_lexical_rank": 1,
+          "relevance": "document"
+        },
+        {
+          "question": "How can container registries automate image delivery and deployment workflows?",
+          "status": "ok",
+          "returned": 5,
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.714,
+          "best_lexical_rank": 1,
+          "relevance": "irrelevant"
+        },
+        {
+          "question": "How should privileged accounts be restricted under least-privilege guidance?",
+          "status": "ok",
+          "returned": 5,
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.571,
+          "best_lexical_rank": 1,
+          "relevance": "related"
+        },
+        {
+          "question": "Which phases should an incident-handling capability include?",
+          "status": "ok",
+          "returned": 5,
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.8,
+          "best_lexical_rank": 1,
+          "relevance": "document"
+        },
+        {
+          "question": "What should organizations examine during supplier due diligence for cybersecurity supply-chain risk?",
+          "status": "ok",
+          "returned": 5,
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.8,
+          "best_lexical_rank": 1,
+          "relevance": "document"
+        },
+        {
+          "question": "What analyses should inform supplier risk assessments after an impact level is defined?",
+          "status": "ok",
+          "returned": 5,
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.556,
+          "best_lexical_rank": 1,
+          "relevance": "related"
+        },
+        {
+          "question": "What is the security-strength difference between AES-128 and AES-256?",
+          "status": "ok",
+          "returned": 5,
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.429,
+          "best_lexical_rank": 1,
+          "relevance": "document"
         }
       ]
     },
     {
       "group": "security_not_in_kb",
       "sample_size": 6,
-      "min": 0.3082,
-      "median": 0.3603,
-      "max": 0.6109,
+      "score_field": "top_term_coverage",
+      "min": 0.333,
+      "median": 0.5,
+      "max": 0.571,
+      "gate_results": {
+        "document": 0,
+        "related": 1,
+        "irrelevant": 5
+      },
       "rows": [
-        {
-          "question": "What is the difference between AES-128 and AES-256?",
-          "status": "ok",
-          "returned": 5,
-          "top_similarity": 0.3717,
-          "mean_similarity": 0.2193
-        },
         {
           "question": "How does a Kerberoasting attack work?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.349,
-          "mean_similarity": 0.2024
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.5,
+          "best_lexical_rank": 2,
+          "relevance": "irrelevant"
         },
         {
           "question": "How do I configure a NAT rule on a Palo Alto firewall?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.3322,
-          "mean_similarity": 0.2673
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.333,
+          "best_lexical_rank": 1,
+          "relevance": "irrelevant"
         },
         {
           "question": "What is the difference between SAST and DAST?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.3082,
-          "mean_similarity": 0.1713
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.5,
+          "best_lexical_rank": 1,
+          "relevance": "irrelevant"
         },
         {
           "question": "How does certificate pinning protect a mobile app?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.4946,
-          "mean_similarity": 0.3956
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.5,
+          "best_lexical_rank": 1,
+          "relevance": "irrelevant"
         },
         {
           "question": "What is the CVSS score of a vulnerability with high integrity impact only?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.6109,
-          "mean_similarity": 0.5186
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.571,
+          "best_lexical_rank": 2,
+          "relevance": "related"
+        },
+        {
+          "question": "How can I configure an EDR exclusion policy in Microsoft Defender for Endpoint?",
+          "status": "ok",
+          "returned": 5,
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.429,
+          "best_lexical_rank": 4,
+          "relevance": "irrelevant"
         }
       ]
     },
     {
       "group": "unrelated",
       "sample_size": 6,
-      "min": 0.1033,
-      "median": 0.1311,
-      "max": 0.2046,
+      "score_field": "top_term_coverage",
+      "min": 0.0,
+      "median": 0.225,
+      "max": 0.5,
+      "gate_results": {
+        "document": 0,
+        "related": 0,
+        "irrelevant": 6
+      },
       "rows": [
         {
           "question": "What is the capital of France?",
           "status": "ok",
-          "returned": 2,
-          "top_similarity": 0.1262,
-          "mean_similarity": 0.0631
+          "returned": 5,
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.5,
+          "best_lexical_rank": 1,
+          "relevance": "irrelevant"
         },
         {
           "question": "Write a poem about the ocean.",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.1247,
-          "mean_similarity": 0.0466
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.25,
+          "best_lexical_rank": 1,
+          "relevance": "irrelevant"
         },
         {
           "question": "How do I bake sourdough bread?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.136,
-          "mean_similarity": 0.1224
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.0,
+          "best_lexical_rank": null,
+          "relevance": "irrelevant"
         },
         {
           "question": "Who won the 2018 FIFA World Cup?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.1033,
-          "mean_similarity": 0.0412
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.2,
+          "best_lexical_rank": 1,
+          "relevance": "irrelevant"
         },
         {
           "question": "Convert 15 US dollars into euros.",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.1552,
-          "mean_similarity": 0.147
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.333,
+          "best_lexical_rank": 1,
+          "relevance": "irrelevant"
         },
         {
           "question": "What is the weather in Tokyo tomorrow?",
           "status": "ok",
           "returned": 5,
-          "top_similarity": 0.2046,
-          "mean_similarity": 0.1811
+          "embedding_backend": "hash",
+          "top_semantic_similarity": null,
+          "top_term_coverage": 0.0,
+          "best_lexical_rank": null,
+          "relevance": "irrelevant"
         }
       ]
     }
   ],
   "separation": {
-    "in_kb_min": 0.5644,
-    "security_not_in_kb_max": 0.6109,
-    "unrelated_max": 0.2046,
-    "in_kb_vs_security_not_in_kb_overlap": 1,
-    "note": "Similarity is a ranking signal, not a calibrated probability, so it separates these groups imperfectly. The value of the measurement is knowing the size of the overlap, which is why the gate combines the score with the retrieved count and labels every non-document answer instead of hiding it."
+    "metric": "gate classification counts",
+    "false_document_classifications": {
+      "security_not_in_kb": 0,
+      "unrelated": 0
+    },
+    "knowledge_base_questions_classified_document": 20
   }
 }

@@ -55,13 +55,11 @@ INDEX_DIR = BASE_DIR / "vector_db"
 #: index and readable by everyone). Retrieval now enforces visibility itself,
 #: so this should exclude nothing; the harness asserts that rather than
 #: assuming it.
+KNOWLEDGE_BASE_DIR = BASE_DIR / "knowledge_base"
 ALLOWED_SOURCES = {
-    "NIST-CSF-2.0.pdf",
-    "NIST-SP-800-207-Zero-Trust.pdf",
-    "NIST-SP-800-53r5.pdf",
-    "NIST-SP-800-61r3.pdf",
-    "OWASP-ASVS-5.0.0.pdf",
-    "owasp-top-10.pdf",
+    path.name
+    for path in KNOWLEDGE_BASE_DIR.rglob("*")
+    if path.is_file() and path.suffix.lower() in {".pdf", ".txt", ".md"}
 }
 TOP_K = 5
 
@@ -263,10 +261,55 @@ def retrieve_production(question):
     return pages
 
 
+def load_rag_cases():
+    """Load the base benchmark plus any expanded cases contributed later.
+
+    A file named ``rag_cases_expanded.json`` is treated as additive. That keeps
+    the current benchmark stable while making it easy to grow the gold set with
+    more curated pages without editing the original minimal baseline by hand.
+    """
+    base_path = EVALUATION_DIR / "rag_cases.json"
+    expanded_path = EVALUATION_DIR / "rag_cases_expanded.json"
+
+    cases = json.loads(base_path.read_text(encoding="utf-8"))
+
+    if expanded_path.exists():
+        expanded = json.loads(expanded_path.read_text(encoding="utf-8"))
+        cases.extend(expanded)
+
+    identifiers = [case["id"] for case in cases]
+    if len(identifiers) != len(set(identifiers)):
+        raise ValueError("RAG benchmark case IDs must be unique across both files.")
+
+    return cases
+
+
+def validate_gold_pages(cases, indexed_pages):
+    """Reject benchmark labels that cannot be retrieved from this KB index."""
+    missing = sorted(
+        {
+            (item["source"], int(item["page"]))
+            for case in cases
+            for item in case["relevant_pages"]
+            if (item["source"], int(item["page"])) not in indexed_pages
+        }
+    )
+    if missing:
+        raise ValueError(
+            "Gold labels reference pages absent from the indexed knowledge base: "
+            + ", ".join(f"{source} p.{page}" for source, page in missing)
+        )
+
+
 def evaluate_retrieval():
-    cases = json.loads((EVALUATION_DIR / "rag_cases.json").read_text(encoding="utf-8"))
+    cases = load_rag_cases()
     bundle = build_retrievers()
     documents = bundle["documents"]
+    indexed_pages = {
+        (document.metadata.get("filename"), int(document.metadata.get("page", 0)) + 1)
+        for document in documents
+    }
+    validate_gold_pages(cases, indexed_pages)
     vector_index = bundle["vector_index"]
     hash_index = bundle["hash_index"]
     bm25 = bundle["bm25"]

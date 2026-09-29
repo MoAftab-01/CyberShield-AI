@@ -36,10 +36,35 @@ export default function Register() {
 
       navigate("/login");
     } catch (err: any) {
-      setError(
-        err.response?.data?.detail ??
-          "Registration failed."
-      );
+      const response = err.response as
+        | { status?: number; data?: { detail?: unknown } }
+        | undefined;
+      const detail = response?.data?.detail;
+
+      if (!response || (response.status ?? 0) >= 500) {
+        setError(
+          "The registration service is temporarily unavailable. Please try again shortly."
+        );
+      } else if (typeof detail === "string") {
+        setError(detail);
+      } else if (Array.isArray(detail)) {
+        const messages = detail.flatMap((issue: unknown) => {
+          if (
+            typeof issue === "object" &&
+            issue !== null &&
+            "msg" in issue &&
+            typeof issue.msg === "string"
+          ) {
+            return [issue.msg];
+          }
+
+          return [];
+        });
+
+        setError(messages.join(" ") || "Please check the submitted details.");
+      } else {
+        setError("Registration failed.");
+      }
     }
 
     setLoading(false);
@@ -130,6 +155,8 @@ export default function Register() {
                 setName(e.target.value)
               }
               placeholder="Enter your name"
+              minLength={2}
+              maxLength={100}
               required
             />
 
@@ -152,6 +179,7 @@ export default function Register() {
                 setPassword(e.target.value)
               }
               placeholder="Create a password"
+              minLength={8}
               required
             />
 

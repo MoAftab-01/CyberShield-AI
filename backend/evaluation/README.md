@@ -11,18 +11,25 @@ the terminal.
 
 ## Retrieval
 
-`rag_cases.json` contains 18 manually labeled questions with relevant source
-PDF pages. The runner compares BM25-only, the production 384-dimensional
-hashed-vector representation with FAISS, and the production-style BM25/vector
-Reciprocal Rank Fusion pipeline. It reports macro Recall@5, MRR, nDCG@5, and
-exact source-page precision/recall at 5. Only the six public knowledge-base
-PDFs are included; other indexed documents are excluded from both rankings and
-the report.
+`rag_cases.json` contains the stable 18-question baseline. The additive
+`rag_cases_expanded.json` contains eleven additional manually labeled questions
+from the expanded public knowledge base. The evaluator verifies every gold source page is
+present in the indexed knowledge base before scoring. The runner compares
+BM25-only, legacy hashed vectors, the active 384-dimensional embedding backend,
+hybrid retrieval, and the production retriever. It reports macro Recall@5,
+MRR, nDCG@5, and exact source-page precision/recall at 5. Only public
+knowledge-base documents are included; user uploads are excluded.
 
 The gold labels are page-level and hand-curated, so they are useful for a
 baseline comparison but are not a broad, independently adjudicated benchmark.
 Expand and independently review the question set before making generalizable
-quality claims.
+quality claims. New PDFs are listed in `docs/RAG_INGESTION_CHECKLIST.md` and can
+be downloaded with `backend/download_knowledge_base.py`.
+
+The latest 28-question result is summarized in `expanded_report.md`. The
+production number is the relevant user-facing result; the separate `hybrid_rrf`
+arm is an evaluator implementation and can score differently from production's
+reranking and diversity stages.
 
 ## URL Detection
 
@@ -49,3 +56,22 @@ answers, run the questions through the application, paste each answer into
 
 Rerun the evaluator to calculate those annotation rates. Empty annotations are
 reported as pending, not as zero or 100%.
+
+## Growing the benchmark safely
+
+The benchmark is intentionally small enough to reason about by hand, but it can
+be grown without destabilising evaluation or the app itself. The safest pattern
+is:
+
+1. Keep the original `rag_cases.json` as the stable baseline.
+2. Add cases to `rag_cases_expanded.json` with page labels checked against the
+  actual PDF text.
+3. Re-run `backend/evaluate_benchmarks.py` and compare before/after numbers.
+4. Only update the default benchmark once the new questions are reviewed, not
+   while the doc set is still changing.
+
+This preserves a clean baseline while allowing measurements to improve as the
+knowledge base expands. The project also includes a curated ingestion checklist in
+`docs/RAG_INGESTION_CHECKLIST.md`, which lists the categories and quality gates
+for adding 5–15 high-quality cybersecurity PDFs without overloading a free-tier
+Render instance.

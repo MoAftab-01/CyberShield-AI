@@ -39,9 +39,11 @@ retrieved are still returned to the user as related reading.
 """
 
 import os
+import re
 
 from sqlalchemy.orm import Session
 
+from app.rag.bm25_store import BM25Store
 from app.prompts import (
     ASSISTANT_PERSONA,
     COMPARE_PROMPT,
@@ -77,6 +79,40 @@ DOCUMENT_AT_LEAST = 0.55
 GENERAL_MAX_TOKENS = 900
 CONVERSATION_MAX_TOKENS = 200
 DOCUMENT_MAX_TOKENS = 900
+
+HASH_DOCUMENT_MIN_COVERAGE = 0.60
+HASH_DOCUMENT_MAX_LEXICAL_RANK = 5
+HASH_CONTROL_MIN_COVERAGE = 0.50
+HASH_RELATED_MIN_COVERAGE = 0.25
+HASH_RELATED_MAX_LEXICAL_RANK = 20
+
+CONTROL_IDENTIFIER_PATTERN = re.compile(
+    r"\b(?:AC|AU|CA|CM|CP|IA|IR|MA|MP|PE|PL|PM|PS|RA|SA|SC|SI|SR)-"
+    r"\d{1,2}(?:\(\d+\))?\b|\b(?:PO|PS|PW|RV)\.\d+\b",
+    re.IGNORECASE,
+)
+VERSIONED_REFERENCE_PATTERN = re.compile(
+    r"\b([A-Z][A-Z0-9]*)[-\u2010-\u2015](\d+(?:\.\d+)*)\b",
+    re.IGNORECASE,
+)
+STANDARD_REFERENCE_PATTERN = re.compile(
+    r"\bNIST\s+(?:(?:SP)\s*)?800[- ]\d+[A-Z0-9.-]*\b"
+    r"|\bNIST\s+(?:CSF|Cybersecurity Framework)(?:\s*2\.0)?\b"
+    r"|\bOWASP\s+(?:ASVS|Top\s+10|API\s+Security|API\s+Top\s+10)\b"
+    r"|\bCIS\s+Controls?(?:\s+v?\d+)?\b"
+    r"|\bISO(?:/IEC)?\s*2700[12]\b"
+    r"|\bPCI\s+DSS\b|\bMITRE\s+ATT&CK\b"
+    r"|\bCVSS(?:\s+v?3(?:\.\d)?)?\b",
+    re.IGNORECASE,
+)
+
+NONINFORMATIVE_PHRASE_TERMS = BM25Store.STOP_WORDS | {
+    "about", "according", "between", "consider", "difference", "describe",
+    "developer", "developers", "during", "example", "explain", "handle",
+    "organization", "organizations", "prevent", "provide", "require",
+    "requirements", "requires", "team", "teams", "tell", "use", "using",
+    "work", "nist", "sp",
+}
 
 
 def _threshold(name: str, default: float) -> float:
@@ -223,7 +259,7 @@ class RAGService:
             include_uploads=True,
         )
 
-        relevance = RAGService._relevance(documents, metrics)
+        relevance = RAGService._relevance(documents, metrics, question)
 
         if relevance == "document":
             return RAGService._document_answer(
@@ -253,11 +289,14 @@ class RAGService:
         )
 
     @staticmethod
-    def _relevance(documents, metrics) -> str:
-        """Classify retrieval as answering, related, or irrelevant."""
+    def _relevance(documents, metrics, question: str = "") -> str:
+        """Classify retrieval with a signal appropriate to its embedding space."""
 
         if not documents or metrics.get("status") != "ok":
             return "irrelevant"
+
+        if metrics.get("embedding_backend") == "hash":
+            return RAGService._hash_relevance(question, documents)
 
         top = max(
             (
@@ -278,6 +317,85 @@ class RAGService:
         # a near-miss as document support, while the passages still travel back
         # to the user as related reading.
         return "related"
+
+    @staticmethod
+    def _hash_relevance(question: str, documents) -> str:
+        """Use lexical evidence; hash-vector cosine is not semantic confidence."""
+
+        query_phrases = {
+            token
+            for token in BM25Store.tokenize(question)
+            if token.startswith("phrase:")
+            and not any(
+                term in NONINFORMATIVE_PHRASE_TERMS
+                for term in token[len("phrase:"):].split("_")
+            )
+        }
+        control_identifiers = CONTROL_IDENTIFIER_PATTERN.findall(question)
+        versioned_references = RAGService._versioned_references(question)
+        related_evidence = False
+
+        for document in documents:
+            metadata = document.metadata
+            try:
+                lexical_rank = int(metadata.get("lexical_rank"))
+                term_coverage = float(metadata.get("query_term_coverage") or 0.0)
+            except (TypeError, ValueError):
+                continue
+
+            document_tokens = set(BM25Store.tokenize(document.page_content))
+            phrase_match = bool(query_phrases & document_tokens)
+            control_match = any(
+                phrase in document_tokens
+                for identifier in control_identifiers
+                for phrase in BM25Store.tokenize(identifier)
+                if phrase.startswith("phrase:")
+            )
+            versioned_match = (
+                len(versioned_references) >= 2
+                and versioned_references.issubset(
+                    RAGService._versioned_references(document.page_content)
+                )
+            )
+
+            if lexical_rank <= HASH_DOCUMENT_MAX_LEXICAL_RANK:
+                if (
+                    term_coverage >= HASH_DOCUMENT_MIN_COVERAGE
+                    and phrase_match
+                ) or (
+                    term_coverage >= HASH_CONTROL_MIN_COVERAGE
+                    and control_match
+                ) or (
+                    term_coverage >= 0.40
+                    and versioned_match
+                ):
+                    return "document"
+
+            if (
+                lexical_rank <= HASH_RELATED_MAX_LEXICAL_RANK
+                and term_coverage >= HASH_RELATED_MIN_COVERAGE
+                and (phrase_match or control_match)
+            ):
+                related_evidence = True
+
+        return "related" if related_evidence else "irrelevant"
+
+    @staticmethod
+    def _versioned_references(text: str) -> set[tuple[str, str]]:
+        return {
+            (prefix.upper(), number)
+            for prefix, number in VERSIONED_REFERENCE_PATTERN.findall(text)
+        }
+
+    @staticmethod
+    def _specific_reference(question: str) -> str | None:
+        """Return a named standard/control whose exact requirements need proof."""
+        match = CONTROL_IDENTIFIER_PATTERN.search(question)
+        if match:
+            return match.group(0)
+
+        match = STANDARD_REFERENCE_PATTERN.search(question)
+        return match.group(0) if match else None
 
     # -- document path ---------------------------------------------------
 
@@ -362,6 +480,35 @@ class RAGService:
                 "citations.\n\n"
             )
 
+        related = RAGService._sources(documents) if documents else []
+        specific_reference = RAGService._specific_reference(question)
+
+        if specific_reference:
+            source_scope = "your documents" if document_scoped else "the knowledge base"
+            answer = (
+                f"> **Specific reference not verified.** I couldn't retrieve a "
+                f"passage from {source_scope} that supports an exact answer about "
+                f"`{specific_reference}`. I won't guess its requirements or scoring."
+            )
+            if related:
+                answer += " Potentially related passages are listed separately; they are not evidence for this answer."
+            else:
+                answer += " Provide the relevant passage or ask a broader question."
+
+            if persist:
+                RAGService._persist(db, conversation_id, answer)
+
+            return {
+                "answer": answer,
+                "sources": [],
+                "retrieval_metrics": metrics,
+                "answer_basis": BASIS_GENERAL,
+                "relevance": relevance,
+                "conversation_id": conversation_id,
+                "related_sources": related,
+                "suggestions": RAGService._suggestions(question),
+            }
+
         if template is not None and documents:
             # Summarise/compare requests keep their document grounding even
             # when the similarity gate is unsure, because the user named their
@@ -391,8 +538,6 @@ class RAGService:
         # question the corpus does not cover can score close to one it does.
         # Returning the passages as *related reading* gives the user the
         # benefit of the near-miss without attaching it to the answer.
-        related = RAGService._sources(documents) if documents else []
-
         return {
             "answer": notice + answer,
             "sources": [],

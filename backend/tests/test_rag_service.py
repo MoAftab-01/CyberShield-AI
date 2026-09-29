@@ -40,6 +40,26 @@ def ok_metrics(top: float):
     }
 
 
+def lexical_passage(
+    text: str,
+    lexical_rank: int,
+    term_coverage: float,
+    filename: str = "nist.pdf",
+    page: int = 0,
+):
+    return Document(
+        page_content=text,
+        metadata={
+            "filename": filename,
+            "page": page,
+            "source_folder": "knowledge_base",
+            "semantic_similarity": 0.1,
+            "lexical_rank": lexical_rank,
+            "query_term_coverage": term_coverage,
+        },
+    )
+
+
 class TestRelevanceGate:
     """The gate separates three measured groups of questions."""
 
@@ -99,6 +119,71 @@ class TestRelevanceGate:
         bare = Document(page_content="x", metadata={"filename": "a.pdf"})
 
         assert RAGService._relevance([bare], ok_metrics(0.0)) == "irrelevant"
+
+    def test_hash_mode_uses_exact_phrase_and_lexical_evidence(self):
+        document = lexical_passage(
+            "Use parameterized queries to prevent SQL injection attacks.",
+            lexical_rank=1,
+            term_coverage=0.75,
+        )
+
+        assert RAGService._relevance(
+            [document],
+            {"status": "ok", "embedding_backend": "hash"},
+            "How can developers prevent SQL injection?",
+        ) == "document"
+
+    def test_hash_mode_recognizes_an_exact_standard_control_id(self):
+        document = lexical_passage(
+            "PW.1 Design Software to Meet Security Requirements and Mitigate Security Risks.",
+            lexical_rank=4,
+            term_coverage=0.583,
+            filename="NIST-SP-800-218.pdf",
+            page=19,
+        )
+
+        assert RAGService._relevance(
+            [document],
+            {"status": "ok", "embedding_backend": "hash"},
+            "What does NIST SSDF practice PW.1 require teams to consider during software design?",
+        ) == "document"
+
+    def test_hash_mode_promotes_a_supported_aes_strength_comparison(self):
+        document = lexical_passage(
+            "AES-128 provides 128 bits of security strength, while AES-256 provides 256 bits.",
+            lexical_rank=1,
+            term_coverage=0.429,
+            filename="OWASP-ASVS-5.0.0.pdf",
+            page=104,
+        )
+
+        assert RAGService._relevance(
+            [document],
+            {"status": "ok", "embedding_backend": "hash"},
+            "What is the security-strength difference between AES-128 and AES-256?",
+        ) == "document"
+
+    def test_hash_mode_does_not_promote_generic_token_overlap(self):
+        document = lexical_passage(
+            "Adversaries must overcome multiple layers of security safeguards.",
+            lexical_rank=1,
+            term_coverage=0.75,
+        )
+
+        assert RAGService._relevance(
+            [document],
+            {"status": "ok", "embedding_backend": "hash"},
+            "How does a Kerberoasting attack work?",
+        ) == "irrelevant"
+
+    def test_hash_mode_never_treats_hash_cosine_as_semantic_evidence(self):
+        document = passage(0.95)
+
+        assert RAGService._relevance(
+            [document],
+            {"status": "ok", "embedding_backend": "hash"},
+            "Explain this topic",
+        ) == "irrelevant"
 
 
 class TestAnsweringPaths:
@@ -178,6 +263,23 @@ class TestAnsweringPaths:
         )
 
         assert "Not from your documents" in result["answer"]
+
+    def test_unsupported_standard_reference_does_not_call_the_model(
+        self, stub_llm
+    ):
+        result = RAGService._general_answer(
+            question="What does NIST SP 800-999 control AC-99 require?",
+            db=None,
+            conversation_id=1,
+            documents=[],
+            metrics={"status": "no_match", "embedding_backend": "hash"},
+            persist=False,
+        )
+
+        assert "Specific reference not verified" in result["answer"]
+        assert "AC-99" in result["answer"]
+        assert result["sources"] == []
+        assert stub_llm == []
 
     def test_the_general_answer_is_stored_with_its_label(
         self, db_session, conversation, monkeypatch

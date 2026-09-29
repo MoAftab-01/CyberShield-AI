@@ -31,7 +31,12 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BASE_DIR))
 
-from evaluate_benchmarks import EVALUATION_DIR, TOP_K, query_metrics  # noqa: E402
+from evaluate_benchmarks import (  # noqa: E402
+    EVALUATION_DIR,
+    TOP_K,
+    load_rag_cases,
+    query_metrics,
+)
 
 from app.rag.retriever import HybridRetriever  # noqa: E402
 from app.services.knowledge_base_service import KnowledgeBaseService  # noqa: E402
@@ -126,9 +131,7 @@ def score(cases) -> dict:
 
 
 def main():
-    cases = json.loads(
-        (EVALUATION_DIR / "rag_cases.json").read_text(encoding="utf-8")
-    )
+    cases = load_rag_cases()
 
     grid: dict[str, dict] = {}
 

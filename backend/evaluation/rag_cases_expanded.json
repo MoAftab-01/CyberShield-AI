@@ -1,0 +1,80 @@
+[
+  {
+    "id": "RAG-EXP-01",
+    "question": "How should a verifier handle a password that is commonly used, expected, or compromised?",
+    "relevant_pages": [
+      {"source": "NIST-SP-800-63B-4.pdf", "page": 25}
+    ]
+  },
+  {
+    "id": "RAG-EXP-02",
+    "question": "What does NIST recommend to help users enter passwords accurately?",
+    "relevant_pages": [
+      {"source": "NIST-SP-800-63B-4.pdf", "page": 27}
+    ]
+  },
+  {
+    "id": "RAG-EXP-03",
+    "question": "Why should an organization define software-development security requirements across the SDLC?",
+    "relevant_pages": [
+      {"source": "NIST-SP-800-218.pdf", "page": 14}
+    ]
+  },
+  {
+    "id": "RAG-EXP-04",
+    "question": "What does the SSDF practice PW.1 require teams to consider during software design?",
+    "relevant_pages": [
+      {"source": "NIST-SP-800-218.pdf", "page": 20}
+    ]
+  },
+  {
+    "id": "RAG-EXP-05",
+    "question": "What are microservices in an application container architecture?",
+    "relevant_pages": [
+      {"source": "NIST-SP-800-190.pdf", "page": 16}
+    ]
+  },
+  {
+    "id": "RAG-EXP-06",
+    "question": "How can container registries automate image delivery and deployment workflows?",
+    "relevant_pages": [
+      {"source": "NIST-SP-800-190.pdf", "page": 22}
+    ]
+  },
+  {
+    "id": "RAG-EXP-07",
+    "question": "How should privileged accounts be restricted under least-privilege guidance?",
+    "relevant_pages": [
+      {"source": "NIST-SP-800-171r3.pdf", "page": 21}
+    ]
+  },
+  {
+    "id": "RAG-EXP-08",
+    "question": "Which phases should an incident-handling capability include?",
+    "relevant_pages": [
+      {"source": "NIST-SP-800-171r3.pdf", "page": 49}
+    ]
+  },
+  {
+    "id": "RAG-EXP-09",
+    "question": "What should organizations examine during supplier due diligence for cybersecurity supply-chain risk?",
+    "relevant_pages": [
+      {"source": "NIST-SP-800-161r1-upd1.pdf", "page": 55}
+    ]
+  },
+  {
+    "id": "RAG-EXP-10",
+    "question": "What analyses should inform supplier risk assessments after an impact level is defined?",
+    "relevant_pages": [
+      {"source": "NIST-SP-800-161r1-upd1.pdf", "page": 61}
+    ]
+  },
+  {
+    "id": "RAG-EXP-11",
+    "question": "What is the security-strength difference between AES-128 and AES-256?",
+    "relevant_pages": [
+      {"source": "OWASP-ASVS-5.0.0.pdf", "page": 105},
+      {"source": "OWASP-ASVS-5.0.0.pdf", "page": 106}
+    ]
+  }
+]

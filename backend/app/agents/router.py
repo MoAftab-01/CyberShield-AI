@@ -261,9 +261,16 @@ def extract_password_length(question: str) -> int | None:
 
 
 def _contains_any(question: str, needles) -> str | None:
+    """Match keyword phrases by word boundaries instead of loose substrings.
+
+    This keeps phrases such as "make" from matching the word "makes" and
+    ensures a request like "what makes a password strong" is treated as
+    explanatory advice rather than as a password-generation instruction.
+    """
     lowered = question.lower()
     for needle in needles:
-        if needle in lowered:
+        pattern = rf"\b{re.escape(needle.lower())}\b"
+        if re.search(pattern, lowered):
             return needle
     return None
 
@@ -352,7 +359,24 @@ class IntentRouter:
             )
 
         # 3. Password generation - an action, checked before analysis.
+        #    Explicit weak/insecure requests are *not* generation requests; they
+        #    are security advice and should never produce a fresh password.
         if PASSWORD_TOPIC_PATTERN.search(question):
+            weak_password_request = bool(
+                re.search(
+                    r"\b(?:weak|insecure|easy|guessable|simple|bad|vulnerable)\b"
+                    r".*\bpassword\b|\bpassword\b.*\b(?:weak|insecure|easy|"
+                    r"guessable|simple|bad|vulnerable)\b",
+                    lowered,
+                )
+            )
+            if weak_password_request:
+                return RoutingDecision(
+                    intent=Intent.PASSWORD_ADVICE,
+                    confidence=0.93,
+                    source="rule",
+                    reason="weak or insecure password request",
+                )
             if _contains_any(question, GENERATE_VERBS):
                 return RoutingDecision(
                     intent=Intent.PASSWORD_GENERATION,
