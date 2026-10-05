@@ -17,11 +17,18 @@ import json
 import os
 from pathlib import Path
 
-STAMP_PATH = Path("vector_db/index_meta.json")
+_BASE_DIR = Path(__file__).resolve().parent.parent.parent
+_VECTOR_DB_DIR = (
+    Path(os.getenv("VECTOR_DB_DIR"))
+    if os.getenv("VECTOR_DB_DIR")
+    else (Path("vector_db") if Path("vector_db").exists() else _BASE_DIR / "vector_db")
+)
+
+STAMP_PATH = _VECTOR_DB_DIR / "index_meta.json"
 
 #: Bumped when chunking or indexing logic changes in a way that invalidates
 #: previously built indexes.
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 
 
 def expected_stamp(vector_dimension: int, backend: str, model: str | None) -> dict:
@@ -29,8 +36,13 @@ def expected_stamp(vector_dimension: int, backend: str, model: str | None) -> di
 
     from app.rag.chunker import DocumentChunker
 
-    knowledge_base = Path("knowledge_base")
+    knowledge_base = (
+        Path("knowledge_base")
+        if Path("knowledge_base").exists()
+        else _BASE_DIR / "knowledge_base"
+    )
     source_inventory = []
+
     if knowledge_base.exists():
         for path in sorted(knowledge_base.rglob("*")):
             if path.is_file() and path.suffix.lower() in {".pdf", ".txt", ".md"}:

@@ -65,15 +65,16 @@ RRF_K = 60
 COVERAGE_WEIGHT = 0.05
 
 #: Blend weights for the reranking stage (must sum to 1.0). Used only when
-#: fusion is on. The weighting of the dense signal was raised from the
-#: inherited 0.30 to 0.55 after the sweep measured 0.7222 against 0.6667 -
-#: once the encoder became semantic, the fused ranking was under-using it.
-RERANK_RRF_WEIGHT = 0.30
-RERANK_SEMANTIC_WEIGHT = 0.55
+#: fusion is on. Balanced to ensure strong lexical/RRF hits are not demoted
+#: by noisy semantic bi-encoder scores on technical/control terminology.
+RERANK_RRF_WEIGHT = 0.45
+RERANK_SEMANTIC_WEIGHT = 0.40
 RERANK_COVERAGE_WEIGHT = 0.15
 
 #: MMR trade-off: 1.0 is pure relevance, 0.0 is pure diversity.
-MMR_LAMBDA = 0.72
+#: 0.85 prioritises relevance while preventing near-duplicate passage redundancy.
+MMR_LAMBDA = 0.85
+
 
 #: How many fused candidates to rerank before selecting the final top-k.
 RERANK_POOL = 20

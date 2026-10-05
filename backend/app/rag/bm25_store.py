@@ -1,14 +1,22 @@
+import os
 import pickle
 import re
 from pathlib import Path
 
 from rank_bm25 import BM25Okapi
 
+_BASE_DIR = Path(__file__).resolve().parent.parent.parent
+_VECTOR_DB_DIR = (
+    Path(os.getenv("VECTOR_DB_DIR"))
+    if os.getenv("VECTOR_DB_DIR")
+    else (Path("vector_db") if Path("vector_db").exists() else _BASE_DIR / "vector_db")
+)
+
 
 class BM25Store:
 
-    INDEX_PATH = Path("vector_db/bm25.pkl")
-    DOCS_PATH = Path("vector_db/bm25_documents.pkl")
+    INDEX_PATH = _VECTOR_DB_DIR / "bm25.pkl"
+    DOCS_PATH = _VECTOR_DB_DIR / "bm25_documents.pkl"
 
     _bm25 = None
     _documents = None
@@ -102,7 +110,9 @@ class BM25Store:
             cls._bm25 = pickle.load(f)
 
         return cls._bm25
+    DASH_PATTERN = re.compile(r"[\u2010\u2011\u2012\u2013\u2014\u2015\u2212]")
     TOKEN_PATTERN = re.compile(r"[a-z0-9_]+")
+    COMPOUND_PATTERN = re.compile(r"\b[a-z0-9]+(?:[-_][a-z0-9]+)+\b")
     STOP_WORDS = {
         "a", "an", "and", "are", "as", "at", "be", "by", "can", "could",
         "do", "for", "from", "how", "i", "in", "is", "it", "of", "on",
@@ -112,13 +122,19 @@ class BM25Store:
 
     @classmethod
     def tokenize(cls, text: str) -> list[str]:
+        normalised_text = cls.DASH_PATTERN.sub("-", (text or "").lower())
         tokens = [
             token
-            for token in cls.TOKEN_PATTERN.findall(text.lower())
+            for token in cls.TOKEN_PATTERN.findall(normalised_text)
             if token not in cls.STOP_WORDS
+        ]
+        compounds = [
+            f"compound:{compound.replace('-', '_')}"
+            for compound in cls.COMPOUND_PATTERN.findall(normalised_text)
         ]
         bigrams = [
             f"phrase:{left}_{right}"
             for left, right in zip(tokens, tokens[1:])
         ]
-        return tokens + bigrams
+        return tokens + compounds + bigrams
+

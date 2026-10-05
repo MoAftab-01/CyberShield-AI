@@ -1,14 +1,22 @@
+import os
 import pickle
 from pathlib import Path
 
 import faiss
 import numpy as np
 
+_BASE_DIR = Path(__file__).resolve().parent.parent.parent
+_VECTOR_DB_DIR = (
+    Path(os.getenv("VECTOR_DB_DIR"))
+    if os.getenv("VECTOR_DB_DIR")
+    else (Path("vector_db") if Path("vector_db").exists() else _BASE_DIR / "vector_db")
+)
+
 
 class FAISSStore:
 
-    INDEX_PATH = Path("vector_db/faiss.index")
-    META_PATH = Path("vector_db/documents.pkl")
+    INDEX_PATH = _VECTOR_DB_DIR / "faiss.index"
+    META_PATH = _VECTOR_DB_DIR / "documents.pkl"
 
     _index = None
     _documents = None

@@ -1,10 +1,12 @@
+import re
 from pathlib import Path
 
+import fitz
 from langchain_core.documents import Document
-from langchain_community.document_loaders import (
-    PyPDFLoader,
-    TextLoader,
-)
+from langchain_community.document_loaders import TextLoader
+
+DASH_NORMALIZATION = re.compile(r"[\u2010\u2011\u2012\u2013\u2014\u2015\u2212]")
+SPACE_NORMALIZATION = re.compile(r"[ \t\u00a0\u200b]+")
 
 
 class DocumentLoader:
@@ -36,8 +38,21 @@ class DocumentLoader:
             try:
 
                 if file.suffix.lower() == ".pdf":
-
-                    loader = PyPDFLoader(str(file))
+                    doc_pdf = fitz.open(str(file))
+                    docs = []
+                    for page_num, page in enumerate(doc_pdf):
+                        text = page.get_text()
+                        if not text or not text.strip():
+                            continue
+                        text = DASH_NORMALIZATION.sub("-", text)
+                        text = SPACE_NORMALIZATION.sub(" ", text)
+                        docs.append(
+                            Document(
+                                page_content=text,
+                                metadata={"page": page_num},
+                            )
+                        )
+                    doc_pdf.close()
 
                 else:
 
@@ -45,8 +60,7 @@ class DocumentLoader:
                         str(file),
                         encoding="utf-8",
                     )
-
-                docs = loader.load()
+                    docs = loader.load()
 
                 for doc in docs:
 
@@ -73,4 +87,4 @@ class DocumentLoader:
                     f"Failed to load {file}: {e}"
                 )
 
-        return documents
+        return documents

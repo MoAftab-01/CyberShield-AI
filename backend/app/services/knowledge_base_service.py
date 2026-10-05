@@ -26,11 +26,23 @@ from app.rag.faiss_store import FAISSStore
 from app.rag.loader import DocumentLoader
 
 
+_BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+
 class KnowledgeBaseService:
-    KNOWLEDGE_BASE_PATH = Path("knowledge_base")
-    UPLOAD_PATH = Path("uploads")
+    KNOWLEDGE_BASE_PATH = (
+        Path("knowledge_base")
+        if Path("knowledge_base").exists()
+        else _BASE_DIR / "knowledge_base"
+    )
+    UPLOAD_PATH = (
+        Path("uploads")
+        if Path("uploads").exists()
+        else _BASE_DIR / "uploads"
+    )
 
     _lock = threading.Lock()
+
 
     @classmethod
     def ensure_index(cls, force: bool = False) -> dict[str, int | str]:

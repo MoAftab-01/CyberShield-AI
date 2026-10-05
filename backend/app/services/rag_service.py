@@ -312,11 +312,24 @@ class RAGService:
         if top >= _threshold("RAG_DOCUMENT_AT_LEAST", DOCUMENT_AT_LEAST):
             return "document"
 
+        # Multi-signal verification: if semantic similarity is moderate (>= 0.35)
+        # and there is strong lexical evidence (top BM25 rank + good term coverage),
+        # treat as document-supported so technical terms and control queries are grounded.
+        for document in documents:
+            try:
+                lrank = document.metadata.get("lexical_rank")
+                cov = float(document.metadata.get("query_term_coverage") or 0.0)
+                if lrank is not None and int(lrank) <= 3 and cov >= 0.40:
+                    return "document"
+            except (TypeError, ValueError):
+                continue
+
         # Between the two: the corpus has something adjacent, but not an
         # answer. Treated as general knowledge so the assistant never presents
         # a near-miss as document support, while the passages still travel back
         # to the user as related reading.
         return "related"
+
 
     @staticmethod
     def _hash_relevance(question: str, documents) -> str:
