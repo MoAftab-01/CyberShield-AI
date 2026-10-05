@@ -50,23 +50,24 @@ The default hosted model is **Llama 3.1 8B Instant through Groq's OpenAI-compati
 
 For document retrieval, the application extracts text, chunks it at 800 characters with 150-character overlap, and preserves source/page metadata. It combines:
 
-- BM25 keyword retrieval.
-- A deterministic, normalized 384-dimensional feature-hashing representation searched with FAISS L2. This is **not** a pretrained semantic embedding model.
-- Reciprocal Rank Fusion, a query-term coverage adjustment, duplicate-page removal, and up to five returned passages.
+- BM25 keyword retrieval with domain-aware acronym/phrase expansion (e.g., ZTA, PDP/PEP, MFA, RBAC).
+- A deterministic, normalized 384-dimensional feature-hashing representation searched with FAISS L2 (or optional dense semantic embeddings).
+- Reciprocal Rank Fusion, query-term coverage adjustment, MMR diversity re-ranking, and context-aware follow-up augmentation.
 
-The six bundled public references are OWASP Top 10, OWASP ASVS 5.0, NIST CSF 2.0, NIST SP 800-53 Rev. 5, NIST SP 800-61r3, and NIST SP 800-207. The current evaluation index contains 3,662 chunks from those references.
+The six bundled public references are OWASP Top 10, OWASP ASVS 5.0, NIST CSF 2.0, NIST SP 800-53 Rev. 5, NIST SP 800-61r3, and NIST SP 800-207. The evaluation index contains 3,662 chunks from those references.
 
 ## Evaluation
 
-An 18-question, manually page-labeled benchmark compares the retrieval methods over the six public references. Metrics are macro averages; a hit means the exact labeled source page was returned in the top five.
+A 29-question, manually page-labeled benchmark compares the retrieval methods over the public references. Metrics are macro averages; a hit means the exact labeled source page was returned in the top five.
 
 | Method | Recall@5 | MRR | nDCG@5 |
 | --- | ---: | ---: | ---: |
-| BM25 | 66.67% | 0.4648 | 0.5155 |
-| Feature-hashed vectors | 38.89% | 0.1963 | 0.2433 |
-| Hybrid BM25 + FAISS + RRF | **72.22%** | **0.4713** | **0.5314** |
+| BM25 (expanded) | 79.31% | 0.5155 | 0.5842 |
+| Feature-hashed vectors | 27.59% | 0.1707 | 0.1958 |
+| Hybrid BM25 + FAISS + RRF | **79.31%** | **0.6287** | **0.6689** |
+| Production pipeline | 62.07% | 0.4782 | 0.5142 |
 
-These are **small internal retrieval-benchmark results**, not answer accuracy or a general quality guarantee. The URL heuristic was separately checked on 24 synthetic fixtures: accuracy 87.50%, precision 100%, recall 75%, and F1 85.71%. That fixture set is not a real-world phishing dataset, and the measurement excludes VirusTotal. Generated-answer citation correctness and faithfulness still require manual review.
+These are **internal retrieval-benchmark results**, not answer accuracy or a general quality guarantee. The URL heuristic was separately checked on 24 synthetic fixtures: accuracy 87.50%, precision 100%, recall 75%, and F1 85.71%. That fixture set is not a real-world phishing dataset, and the measurement excludes VirusTotal. Generated-answer citation correctness and faithfulness still require manual review.
 
 See [the evaluation guide](backend/evaluation/README.md) for the methodology, per-question rankings, datasets, and rerun command. Results are saved in [backend/evaluation/results.json](backend/evaluation/results.json).
 

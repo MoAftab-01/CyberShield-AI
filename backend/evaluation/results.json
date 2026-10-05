@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-10-05T22:08:42.396726+00:00",
+  "generated_at_utc": "2026-10-05T22:43:52.621758+00:00",
   "retrieval": {
     "sample_size": 29,
     "top_k": 5,
@@ -38,25 +38,25 @@
         "source_page_recall_at_5": 0.2759
       },
       "dense_vector_only": {
-        "recall_at_5": 0.7069,
-        "mrr": 0.5471,
-        "ndcg_at_5": 0.5853,
-        "source_page_precision_at_5": 0.1448,
-        "source_page_recall_at_5": 0.7069
+        "recall_at_5": 0.0,
+        "mrr": 0.0,
+        "ndcg_at_5": 0.0,
+        "source_page_precision_at_5": 0.0,
+        "source_page_recall_at_5": 0.0
       },
       "hybrid_rrf": {
-        "recall_at_5": 0.8621,
-        "mrr": 0.5799,
-        "ndcg_at_5": 0.649,
-        "source_page_precision_at_5": 0.1885,
-        "source_page_recall_at_5": 0.8621
+        "recall_at_5": 0.7931,
+        "mrr": 0.6287,
+        "ndcg_at_5": 0.6689,
+        "source_page_precision_at_5": 0.1747,
+        "source_page_recall_at_5": 0.7931
       },
       "production": {
-        "recall_at_5": 0.8276,
-        "mrr": 0.581,
-        "ndcg_at_5": 0.6416,
-        "source_page_precision_at_5": 0.1862,
-        "source_page_recall_at_5": 0.8276
+        "recall_at_5": 0.6207,
+        "mrr": 0.4782,
+        "ndcg_at_5": 0.5142,
+        "source_page_precision_at_5": 0.1402,
+        "source_page_recall_at_5": 0.6207
       }
     },
     "per_question": [
@@ -134,40 +134,40 @@
           },
           "dense_vector_only": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 1.0,
-              "ndcg_at_5": 1.0,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
-                "source": "owasp-top-10.pdf",
-                "page": 15
+                "source": "NIST-SP-800-218.pdf",
+                "page": 18
               },
               {
-                "source": "owasp-top-10.pdf",
-                "page": 13
+                "source": "NIST-SP-800-63B-4.pdf",
+                "page": 41
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 388
-              },
-              {
-                "source": "owasp-top-10.pdf",
-                "page": 14
+                "page": 272
               },
               {
                 "source": "NIST-SP-800-190.pdf",
-                "page": 29
+                "page": 24
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 92
               }
             ]
           },
           "hybrid_rrf": {
             "metrics": {
               "recall_at_5": 1.0,
-              "mrr": 0.5,
-              "ndcg_at_5": 0.6309297535714575,
+              "mrr": 0.25,
+              "ndcg_at_5": 0.43067655807339306,
               "source_page_precision_at_5": 0.2,
               "source_page_recall_at_5": 1.0
             },
@@ -177,28 +177,28 @@
                 "page": 29
               },
               {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 26
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 40
+              },
+              {
                 "source": "owasp-top-10.pdf",
                 "page": 15
               },
               {
                 "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 26
-              },
-              {
-                "source": "owasp-top-10.pdf",
-                "page": 13
-              },
-              {
-                "source": "owasp-top-10.pdf",
-                "page": 14
+                "page": 27
               }
             ]
           },
           "production": {
             "metrics": {
               "recall_at_5": 1.0,
-              "mrr": 0.5,
-              "ndcg_at_5": 0.6309297535714575,
+              "mrr": 0.3333333333333333,
+              "ndcg_at_5": 0.5,
               "source_page_precision_at_5": 0.2,
               "source_page_recall_at_5": 1.0
             },
@@ -208,20 +208,20 @@
                 "page": 29
               },
               {
-                "source": "owasp-top-10.pdf",
-                "page": 15
-              },
-              {
                 "source": "OWASP-ASVS-5.0.0.pdf",
                 "page": 26
               },
               {
                 "source": "owasp-top-10.pdf",
-                "page": 13
+                "page": 15
               },
               {
-                "source": "owasp-top-10.pdf",
-                "page": 14
+                "source": "NIST-SP-800-63B-4.pdf",
+                "page": 99
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 40
               }
             ]
           }
@@ -301,40 +301,40 @@
           },
           "dense_vector_only": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 1.0,
-              "ndcg_at_5": 1.0,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
-                "source": "owasp-top-10.pdf",
-                "page": 14
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 211
               },
               {
-                "source": "owasp-top-10.pdf",
-                "page": 13
+                "source": "NIST-SP-800-218.pdf",
+                "page": 18
               },
               {
-                "source": "owasp-top-10.pdf",
-                "page": 15
+                "source": "NIST-SP-800-171r3.pdf",
+                "page": 74
               },
               {
-                "source": "NIST-SP-800-190.pdf",
-                "page": 29
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 272
               },
               {
                 "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 26
+                "page": 25
               }
             ]
           },
           "hybrid_rrf": {
             "metrics": {
               "recall_at_5": 1.0,
-              "mrr": 0.25,
-              "ndcg_at_5": 0.43067655807339306,
+              "mrr": 0.2,
+              "ndcg_at_5": 0.38685280723454163,
               "source_page_precision_at_5": 0.2,
               "source_page_recall_at_5": 1.0
             },
@@ -344,39 +344,39 @@
                 "page": 13
               },
               {
-                "source": "owasp-top-10.pdf",
-                "page": 10
-              },
-              {
                 "source": "NIST-SP-800-190.pdf",
                 "page": 29
               },
               {
                 "source": "owasp-top-10.pdf",
-                "page": 14
+                "page": 10
               },
               {
                 "source": "OWASP-ASVS-5.0.0.pdf",
                 "page": 26
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 14
               }
             ]
           },
           "production": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 0.25,
-              "ndcg_at_5": 0.43067655807339306,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
-                "source": "owasp-top-10.pdf",
-                "page": 13
+                "source": "NIST-SP-800-63B-4.pdf",
+                "page": 120
               },
               {
                 "source": "owasp-top-10.pdf",
-                "page": 10
+                "page": 13
               },
               {
                 "source": "NIST-SP-800-190.pdf",
@@ -384,7 +384,7 @@
               },
               {
                 "source": "owasp-top-10.pdf",
-                "page": 14
+                "page": 10
               },
               {
                 "source": "OWASP-ASVS-5.0.0.pdf",
@@ -468,32 +468,32 @@
           },
           "dense_vector_only": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 1.0,
-              "ndcg_at_5": 1.0,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
-                "source": "owasp-top-10.pdf",
-                "page": 8
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 83
               },
               {
                 "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 115
+                "page": 7
               },
               {
-                "source": "owasp-top-10.pdf",
-                "page": 36
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 30
               },
               {
-                "source": "owasp-top-10.pdf",
-                "page": 9
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 187
               },
               {
-                "source": "owasp-top-10.pdf",
-                "page": 4
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 148
               }
             ]
           },
@@ -523,8 +523,8 @@
                 "page": 36
               },
               {
-                "source": "NIST-SP-800-171r3.pdf",
-                "page": 64
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 84
               }
             ]
           },
@@ -546,16 +546,16 @@
                 "page": 7
               },
               {
-                "source": "owasp-top-10.pdf",
-                "page": 36
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 89
               },
               {
                 "source": "owasp-top-10.pdf",
                 "page": 9
               },
               {
-                "source": "NIST-SP-800-171r3.pdf",
-                "page": 64
+                "source": "owasp-top-10.pdf",
+                "page": 36
               }
             ]
           }
@@ -635,32 +635,32 @@
           },
           "dense_vector_only": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 1.0,
-              "ndcg_at_5": 1.0,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
-                "source": "owasp-top-10.pdf",
-                "page": 9
+                "source": "NIST-SP-800-171r3.pdf",
+                "page": 38
               },
               {
-                "source": "owasp-top-10.pdf",
-                "page": 8
+                "source": "NIST-SP-800-218.pdf",
+                "page": 15
+              },
+              {
+                "source": "NIST-SP-800-171r3.pdf",
+                "page": 53
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 133
+                "page": 404
               },
               {
-                "source": "NIST-SP-800-171r3.pdf",
-                "page": 18
-              },
-              {
-                "source": "NIST-SP-800-171r3.pdf",
-                "page": 20
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 83
               }
             ]
           },
@@ -682,28 +682,32 @@
                 "page": 8
               },
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 54
-              },
-              {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 456
+                "source": "owasp-top-10.pdf",
+                "page": 7
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
                 "page": 50
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 13
               }
             ]
           },
           "production": {
             "metrics": {
               "recall_at_5": 1.0,
-              "mrr": 1.0,
-              "ndcg_at_5": 1.0,
+              "mrr": 0.5,
+              "ndcg_at_5": 0.6309297535714575,
               "source_page_precision_at_5": 0.2,
               "source_page_recall_at_5": 1.0
             },
             "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 63
+              },
               {
                 "source": "owasp-top-10.pdf",
                 "page": 9
@@ -713,16 +717,12 @@
                 "page": 8
               },
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 54
+                "source": "owasp-top-10.pdf",
+                "page": 7
               },
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 456
-              },
-              {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 50
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 13
               }
             ]
           }
@@ -802,6 +802,37 @@
           },
           "dense_vector_only": {
             "metrics": {
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
+            },
+            "retrieved_pages": [
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 166
+              },
+              {
+                "source": "NIST-SP-800-63B-4.pdf",
+                "page": 58
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 406
+              },
+              {
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 82
+              },
+              {
+                "source": "owasp-top-10.pdf",
+                "page": 22
+              }
+            ]
+          },
+          "hybrid_rrf": {
+            "metrics": {
               "recall_at_5": 1.0,
               "mrr": 1.0,
               "ndcg_at_5": 1.0,
@@ -823,15 +854,15 @@
               },
               {
                 "source": "NIST-SP-800-207-Zero-Trust.pdf",
-                "page": 32
+                "page": 10
               },
               {
                 "source": "NIST-SP-800-207-Zero-Trust.pdf",
-                "page": 5
+                "page": 14
               }
             ]
           },
-          "hybrid_rrf": {
+          "production": {
             "metrics": {
               "recall_at_5": 1.0,
               "mrr": 0.5,
@@ -854,34 +885,11 @@
               },
               {
                 "source": "NIST-SP-800-207-Zero-Trust.pdf",
-                "page": 11
-              },
-              {
-                "source": "NIST-SP-800-207-Zero-Trust.pdf",
                 "page": 14
-              }
-            ]
-          },
-          "production": {
-            "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 0.5,
-              "ndcg_at_5": 0.6309297535714575,
-              "source_page_precision_at_5": 0.3333333333333333,
-              "source_page_recall_at_5": 1.0
-            },
-            "retrieved_pages": [
-              {
-                "source": "NIST-SP-800-207-Zero-Trust.pdf",
-                "page": 4
               },
               {
                 "source": "NIST-SP-800-207-Zero-Trust.pdf",
-                "page": 13
-              },
-              {
-                "source": "NIST-SP-800-207-Zero-Trust.pdf",
-                "page": 10
+                "page": 11
               }
             ]
           }
@@ -961,32 +969,32 @@
           },
           "dense_vector_only": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 1.0,
-              "ndcg_at_5": 1.0,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
-                "source": "NIST-SP-800-207-Zero-Trust.pdf",
-                "page": 16
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 38
               },
               {
-                "source": "NIST-SP-800-207-Zero-Trust.pdf",
-                "page": 14
+                "source": "NIST-SP-800-171r3.pdf",
+                "page": 53
               },
               {
-                "source": "NIST-SP-800-207-Zero-Trust.pdf",
-                "page": 10
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 243
               },
               {
-                "source": "NIST-SP-800-207-Zero-Trust.pdf",
-                "page": 4
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 256
               },
               {
-                "source": "NIST-SP-800-207-Zero-Trust.pdf",
-                "page": 13
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 108
               }
             ]
           },
@@ -1009,15 +1017,15 @@
               },
               {
                 "source": "NIST-SP-800-207-Zero-Trust.pdf",
-                "page": 10
-              },
-              {
-                "source": "NIST-SP-800-207-Zero-Trust.pdf",
-                "page": 14
+                "page": 27
               },
               {
                 "source": "NIST-SP-800-207-Zero-Trust.pdf",
                 "page": 29
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 11
               }
             ]
           },
@@ -1040,15 +1048,15 @@
               },
               {
                 "source": "NIST-SP-800-207-Zero-Trust.pdf",
-                "page": 14
-              },
-              {
-                "source": "NIST-SP-800-207-Zero-Trust.pdf",
                 "page": 10
               },
               {
                 "source": "NIST-SP-800-207-Zero-Trust.pdf",
-                "page": 29
+                "page": 8
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 320
               }
             ]
           }
@@ -1137,23 +1145,23 @@
             "retrieved_pages": [
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 176
+                "page": 99
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 206
+                "page": 329
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 13
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 221
+                "page": 107
               },
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 110
-              },
-              {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 256
+                "source": "NIST-SP-800-190.pdf",
+                "page": 48
               }
             ]
           },
@@ -1199,15 +1207,11 @@
             "retrieved_pages": [
               {
                 "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 43
+              },
+              {
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
                 "page": 54
-              },
-              {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 55
-              },
-              {
-                "source": "NIST-SP-800-171r3.pdf",
-                "page": 19
               },
               {
                 "source": "NIST-SP-800-207-Zero-Trust.pdf",
@@ -1216,6 +1220,10 @@
               {
                 "source": "NIST-SP-800-207-Zero-Trust.pdf",
                 "page": 42
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 55
               }
             ]
           }
@@ -1295,42 +1303,42 @@
           },
           "dense_vector_only": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 1.0,
-              "ndcg_at_5": 1.0,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
-                "source": "NIST-CSF-2.0.pdf",
-                "page": 10
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 157
               },
               {
-                "source": "NIST-CSF-2.0.pdf",
-                "page": 20
+                "source": "NIST-SP-800-63B-4.pdf",
+                "page": 45
               },
               {
-                "source": "NIST-CSF-2.0.pdf",
-                "page": 6
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 88
               },
               {
-                "source": "NIST-CSF-2.0.pdf",
-                "page": 8
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 71
               },
               {
-                "source": "NIST-CSF-2.0.pdf",
-                "page": 1
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 89
               }
             ]
           },
           "hybrid_rrf": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 0.25,
-              "ndcg_at_5": 0.43067655807339306,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
@@ -1346,8 +1354,8 @@
                 "page": 6
               },
               {
-                "source": "NIST-CSF-2.0.pdf",
-                "page": 10
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 11
               },
               {
                 "source": "NIST-CSF-2.0.pdf",
@@ -1357,11 +1365,11 @@
           },
           "production": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 0.5,
-              "ndcg_at_5": 0.6309297535714575,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
@@ -1369,20 +1377,20 @@
                 "page": 9
               },
               {
-                "source": "NIST-CSF-2.0.pdf",
-                "page": 10
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 9
               },
               {
                 "source": "NIST-CSF-2.0.pdf",
                 "page": 6
               },
               {
-                "source": "NIST-CSF-2.0.pdf",
-                "page": 20
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 11
               },
               {
                 "source": "NIST-CSF-2.0.pdf",
-                "page": 8
+                "page": 20
               }
             ]
           }
@@ -1462,32 +1470,32 @@
           },
           "dense_vector_only": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 0.25,
-              "ndcg_at_5": 0.43067655807339306,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
-                "source": "NIST-CSF-2.0.pdf",
-                "page": 12
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 270
               },
               {
                 "source": "NIST-CSF-2.0.pdf",
-                "page": 16
+                "page": 28
               },
               {
-                "source": "NIST-CSF-2.0.pdf",
-                "page": 31
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 153
               },
               {
-                "source": "NIST-CSF-2.0.pdf",
-                "page": 11
-              },
-              {
-                "source": "NIST-CSF-2.0.pdf",
+                "source": "NIST-SP-800-218.pdf",
                 "page": 5
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 25
               }
             ]
           },
@@ -1506,11 +1514,11 @@
               },
               {
                 "source": "NIST-CSF-2.0.pdf",
-                "page": 12
+                "page": 13
               },
               {
                 "source": "NIST-CSF-2.0.pdf",
-                "page": 13
+                "page": 12
               },
               {
                 "source": "NIST-SP-800-61r3.pdf",
@@ -1518,22 +1526,30 @@
               },
               {
                 "source": "NIST-CSF-2.0.pdf",
-                "page": 31
+                "page": 4
               }
             ]
           },
           "production": {
             "metrics": {
               "recall_at_5": 1.0,
-              "mrr": 1.0,
-              "ndcg_at_5": 1.0,
+              "mrr": 0.5,
+              "ndcg_at_5": 0.6309297535714575,
               "source_page_precision_at_5": 0.2,
               "source_page_recall_at_5": 1.0
             },
             "retrieved_pages": [
               {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 25
+              },
+              {
                 "source": "NIST-CSF-2.0.pdf",
                 "page": 11
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 41
               },
               {
                 "source": "NIST-CSF-2.0.pdf",
@@ -1541,15 +1557,7 @@
               },
               {
                 "source": "NIST-CSF-2.0.pdf",
-                "page": 13
-              },
-              {
-                "source": "NIST-SP-800-61r3.pdf",
-                "page": 9
-              },
-              {
-                "source": "NIST-CSF-2.0.pdf",
-                "page": 31
+                "page": 32
               }
             ]
           }
@@ -1637,24 +1645,24 @@
             },
             "retrieved_pages": [
               {
-                "source": "NIST-CSF-2.0.pdf",
-                "page": 31
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 44
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 386
+              },
+              {
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 35
               },
               {
                 "source": "NIST-SP-800-61r3.pdf",
-                "page": 14
+                "page": 39
               },
               {
                 "source": "NIST-SP-800-61r3.pdf",
-                "page": 13
-              },
-              {
-                "source": "NIST-CSF-2.0.pdf",
-                "page": 5
-              },
-              {
-                "source": "NIST-SP-800-61r3.pdf",
-                "page": 9
+                "page": 6
               }
             ]
           },
@@ -1691,16 +1699,24 @@
           },
           "production": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 0.2,
-              "ndcg_at_5": 0.38685280723454163,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
                 "source": "NIST-CSF-2.0.pdf",
                 "page": 31
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 9
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 41
               },
               {
                 "source": "NIST-CSF-2.0.pdf",
@@ -1709,14 +1725,6 @@
               {
                 "source": "NIST-SP-800-61r3.pdf",
                 "page": 13
-              },
-              {
-                "source": "NIST-SP-800-61r3.pdf",
-                "page": 9
-              },
-              {
-                "source": "NIST-CSF-2.0.pdf",
-                "page": 10
               }
             ]
           }
@@ -1805,42 +1813,38 @@
             "retrieved_pages": [
               {
                 "source": "NIST-SP-800-61r3.pdf",
-                "page": 9
+                "page": 42
+              },
+              {
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 27
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 185
               },
               {
                 "source": "NIST-SP-800-61r3.pdf",
-                "page": 5
+                "page": 38
               },
               {
-                "source": "NIST-SP-800-61r3.pdf",
-                "page": 11
-              },
-              {
-                "source": "NIST-SP-800-61r3.pdf",
-                "page": 15
-              },
-              {
-                "source": "NIST-SP-800-61r3.pdf",
-                "page": 17
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 117
               }
             ]
           },
           "hybrid_rrf": {
             "metrics": {
               "recall_at_5": 1.0,
-              "mrr": 0.3333333333333333,
-              "ndcg_at_5": 0.5,
+              "mrr": 0.5,
+              "ndcg_at_5": 0.6309297535714575,
               "source_page_precision_at_5": 0.2,
               "source_page_recall_at_5": 1.0
             },
             "retrieved_pages": [
               {
                 "source": "NIST-SP-800-61r3.pdf",
-                "page": 9
-              },
-              {
-                "source": "NIST-SP-800-61r3.pdf",
-                "page": 5
+                "page": 18
               },
               {
                 "source": "NIST-SP-800-61r3.pdf",
@@ -1848,42 +1852,46 @@
               },
               {
                 "source": "NIST-SP-800-61r3.pdf",
-                "page": 11
+                "page": 9
               },
               {
                 "source": "NIST-SP-800-61r3.pdf",
-                "page": 28
+                "page": 14
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 23
               }
             ]
           },
           "production": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 0.25,
-              "ndcg_at_5": 0.43067655807339306,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
-              {
-                "source": "NIST-SP-800-61r3.pdf",
-                "page": 9
-              },
-              {
-                "source": "NIST-SP-800-61r3.pdf",
-                "page": 5
-              },
               {
                 "source": "NIST-SP-800-61r3.pdf",
                 "page": 11
               },
               {
                 "source": "NIST-SP-800-61r3.pdf",
-                "page": 12
+                "page": 3
+              },
+              {
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 15
+              },
+              {
+                "source": "NIST-SP-800-171r3.pdf",
+                "page": 87
               },
               {
                 "source": "NIST-SP-800-61r3.pdf",
-                "page": 28
+                "page": 45
               }
             ]
           }
@@ -1963,59 +1971,59 @@
           },
           "dense_vector_only": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 1.0,
-              "ndcg_at_5": 1.0,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
-                "source": "NIST-SP-800-61r3.pdf",
-                "page": 13
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 230
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 138
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 341
               },
               {
                 "source": "NIST-SP-800-61r3.pdf",
-                "page": 14
+                "page": 31
               },
               {
-                "source": "NIST-SP-800-61r3.pdf",
-                "page": 8
-              },
-              {
-                "source": "NIST-SP-800-61r3.pdf",
-                "page": 9
-              },
-              {
-                "source": "NIST-SP-800-61r3.pdf",
-                "page": 12
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 342
               }
             ]
           },
           "hybrid_rrf": {
             "metrics": {
               "recall_at_5": 1.0,
-              "mrr": 0.3333333333333333,
-              "ndcg_at_5": 0.5,
+              "mrr": 0.25,
+              "ndcg_at_5": 0.43067655807339306,
               "source_page_precision_at_5": 0.2,
               "source_page_recall_at_5": 1.0
             },
             "retrieved_pages": [
               {
                 "source": "NIST-SP-800-61r3.pdf",
-                "page": 14
-              },
-              {
-                "source": "NIST-SP-800-61r3.pdf",
                 "page": 8
               },
               {
                 "source": "NIST-SP-800-61r3.pdf",
-                "page": 13
+                "page": 14
               },
               {
                 "source": "NIST-SP-800-61r3.pdf",
                 "page": 12
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 13
               },
               {
                 "source": "NIST-SP-800-61r3.pdf",
@@ -2026,19 +2034,19 @@
           "production": {
             "metrics": {
               "recall_at_5": 1.0,
-              "mrr": 0.5,
-              "ndcg_at_5": 0.6309297535714575,
+              "mrr": 0.2,
+              "ndcg_at_5": 0.38685280723454163,
               "source_page_precision_at_5": 0.2,
               "source_page_recall_at_5": 1.0
             },
             "retrieved_pages": [
               {
                 "source": "NIST-SP-800-61r3.pdf",
-                "page": 14
+                "page": 18
               },
               {
                 "source": "NIST-SP-800-61r3.pdf",
-                "page": 13
+                "page": 14
               },
               {
                 "source": "NIST-SP-800-61r3.pdf",
@@ -2050,7 +2058,7 @@
               },
               {
                 "source": "NIST-SP-800-61r3.pdf",
-                "page": 9
+                "page": 13
               }
             ]
           }
@@ -2138,24 +2146,24 @@
             },
             "retrieved_pages": [
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 176
-              },
-              {
-                "source": "NIST-SP-800-61r3.pdf",
-                "page": 14
-              },
-              {
                 "source": "NIST-SP-800-171r3.pdf",
-                "page": 51
+                "page": 21
               },
               {
-                "source": "NIST-SP-800-61r3.pdf",
-                "page": 12
+                "source": "NIST-SP-800-63B-4.pdf",
+                "page": 104
               },
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 179
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 32
+              },
+              {
+                "source": "NIST-SP-800-63B-4.pdf",
+                "page": 37
+              },
+              {
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 256
               }
             ]
           },
@@ -2169,24 +2177,24 @@
             },
             "retrieved_pages": [
               {
+                "source": "NIST-SP-800-171r3.pdf",
+                "page": 50
+              },
+              {
                 "source": "NIST-SP-800-61r3.pdf",
                 "page": 12
               },
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 176
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 38
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
                 "page": 177
               },
               {
-                "source": "NIST-SP-800-171r3.pdf",
-                "page": 50
-              },
-              {
-                "source": "NIST-SP-800-61r3.pdf",
-                "page": 14
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 187
               }
             ]
           },
@@ -2201,23 +2209,23 @@
             "retrieved_pages": [
               {
                 "source": "NIST-SP-800-61r3.pdf",
+                "page": 38
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 187
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
                 "page": 12
-              },
-              {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 176
-              },
-              {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 177
               },
               {
                 "source": "NIST-SP-800-171r3.pdf",
                 "page": 50
               },
               {
-                "source": "NIST-SP-800-61r3.pdf",
-                "page": 14
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 177
               }
             ]
           }
@@ -2297,32 +2305,32 @@
           },
           "dense_vector_only": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 0.3333333333333333,
-              "ndcg_at_5": 0.5,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
-                "source": "NIST-SP-800-171r3.pdf",
-                "page": 103
-              },
-              {
-                "source": "NIST-SP-800-190.pdf",
-                "page": 51
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 12
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 46
+                "page": 342
               },
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 456
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 28
               },
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 48
+                "source": "NIST-SP-800-218.pdf",
+                "page": 16
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 56
               }
             ]
           },
@@ -2344,12 +2352,12 @@
                 "page": 456
               },
               {
-                "source": "NIST-SP-800-190.pdf",
-                "page": 51
-              },
-              {
                 "source": "NIST-SP-800-161r1-upd1.pdf",
                 "page": 84
+              },
+              {
+                "source": "NIST-SP-800-190.pdf",
+                "page": 51
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
@@ -2359,32 +2367,28 @@
           },
           "production": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 1.0,
-              "ndcg_at_5": 1.0,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 46
-              },
-              {
-                "source": "NIST-SP-800-190.pdf",
-                "page": 51
+                "source": "NIST-SP-800-171r3.pdf",
+                "page": 103
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 456
+                "page": 414
               },
               {
-                "source": "NIST-SP-800-161r1-upd1.pdf",
-                "page": 84
+                "source": "NIST-SP-800-171r3.pdf",
+                "page": 88
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 63
+                "page": 417
               }
             ]
           }
@@ -2464,32 +2468,32 @@
           },
           "dense_vector_only": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 1.0,
-              "ndcg_at_5": 1.0,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 63
+                "page": 191
+              },
+              {
+                "source": "NIST-SP-800-171r3.pdf",
+                "page": 9
+              },
+              {
+                "source": "NIST-SP-800-218.pdf",
+                "page": 16
+              },
+              {
+                "source": "NIST-SP-800-190.pdf",
+                "page": 6
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 51
-              },
-              {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 65
-              },
-              {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 48
-              },
-              {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 457
+                "page": 342
               }
             ]
           },
@@ -2515,12 +2519,12 @@
                 "page": 87
               },
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 457
+                "source": "NIST-SP-800-190.pdf",
+                "page": 51
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 290
+                "page": 457
               }
             ]
           },
@@ -2546,12 +2550,12 @@
                 "page": 87
               },
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 457
+                "source": "NIST-SP-800-190.pdf",
+                "page": 51
               },
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 290
+                "source": "NIST-SP-800-190.pdf",
+                "page": 53
               }
             ]
           }
@@ -2639,24 +2643,24 @@
             },
             "retrieved_pages": [
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 105
+                "source": "owasp-top-10.pdf",
+                "page": 33
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 110
+              },
+              {
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 119
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 97
+                "page": 266
               },
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 461
-              },
-              {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 98
-              },
-              {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 94
+                "source": "NIST-SP-800-63B-4.pdf",
+                "page": 116
               }
             ]
           },
@@ -2671,11 +2675,11 @@
             "retrieved_pages": [
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 54
+                "page": 96
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 36
+                "page": 54
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
@@ -2687,7 +2691,7 @@
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 94
+                "page": 36
               }
             ]
           },
@@ -2702,7 +2706,11 @@
             "retrieved_pages": [
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 54
+                "page": 108
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 193
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
@@ -2710,15 +2718,11 @@
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
+                "page": 54
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
                 "page": 76
-              },
-              {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 94
-              },
-              {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 193
               }
             ]
           }
@@ -2798,94 +2802,62 @@
           },
           "dense_vector_only": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 1.0,
-              "ndcg_at_5": 1.0,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
-                "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 26
+                "source": "NIST-SP-800-190.pdf",
+                "page": 21
               },
               {
-                "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 24
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 404
               },
               {
-                "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 44
+                "source": "NIST-SP-800-63B-4.pdf",
+                "page": 111
               },
               {
-                "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 27
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 32
               },
               {
-                "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 115
+                "source": "NIST-SP-800-63B-4.pdf",
+                "page": 124
               }
             ]
           },
           "hybrid_rrf": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 1.0,
-              "ndcg_at_5": 1.0,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
                 "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 26
-              },
-              {
-                "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 44
-              },
-              {
-                "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 24
-              },
-              {
-                "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 29
-              },
-              {
-                "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 27
+                "page": 28
               }
             ]
           },
           "production": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 1.0,
-              "ndcg_at_5": 1.0,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
                 "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 26
-              },
-              {
-                "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 24
-              },
-              {
-                "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 44
-              },
-              {
-                "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 27
-              },
-              {
-                "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 29
+                "page": 28
               }
             ]
           }
@@ -2973,24 +2945,24 @@
             },
             "retrieved_pages": [
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 159
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 42
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 468
+                "page": 281
               },
               {
-                "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 85
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 102
               },
               {
-                "source": "NIST-SP-800-63B-4.pdf",
-                "page": 16
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 380
               },
               {
-                "source": "NIST-SP-800-63B-4.pdf",
-                "page": 13
+                "source": "NIST-SP-800-190.pdf",
+                "page": 18
               }
             ]
           },
@@ -3005,23 +2977,23 @@
             "retrieved_pages": [
               {
                 "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 85
+                "page": 107
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 102
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 97
               },
               {
                 "source": "OWASP-ASVS-5.0.0.pdf",
                 "page": 19
               },
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 173
-              },
-              {
                 "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 107
-              },
-              {
-                "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 102
+                "page": 63
               }
             ]
           },
@@ -3036,23 +3008,23 @@
             "retrieved_pages": [
               {
                 "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 85
-              },
-              {
-                "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 19
-              },
-              {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 173
-              },
-              {
-                "source": "OWASP-ASVS-5.0.0.pdf",
                 "page": 107
               },
               {
                 "source": "OWASP-ASVS-5.0.0.pdf",
                 "page": 102
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 97
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 63
+              },
+              {
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 19
               }
             ]
           }
@@ -3132,47 +3104,47 @@
           },
           "dense_vector_only": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 0.3333333333333333,
-              "ndcg_at_5": 0.5,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
-                "source": "NIST-SP-800-63B-4.pdf",
-                "page": 100
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 102
               },
               {
-                "source": "NIST-SP-800-63B-4.pdf",
-                "page": 69
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 438
               },
               {
-                "source": "NIST-SP-800-63B-4.pdf",
-                "page": 25
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 43
               },
               {
                 "source": "NIST-SP-800-63B-4.pdf",
                 "page": 27
               },
               {
-                "source": "NIST-SP-800-63B-4.pdf",
-                "page": 28
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 17
               }
             ]
           },
           "hybrid_rrf": {
             "metrics": {
               "recall_at_5": 1.0,
-              "mrr": 0.25,
-              "ndcg_at_5": 0.43067655807339306,
+              "mrr": 1.0,
+              "ndcg_at_5": 1.0,
               "source_page_precision_at_5": 0.2,
               "source_page_recall_at_5": 1.0
             },
             "retrieved_pages": [
               {
                 "source": "NIST-SP-800-63B-4.pdf",
-                "page": 26
+                "page": 25
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
@@ -3184,26 +3156,26 @@
               },
               {
                 "source": "NIST-SP-800-63B-4.pdf",
-                "page": 25
+                "page": 26
               },
               {
-                "source": "NIST-SP-800-63B-4.pdf",
-                "page": 27
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 323
               }
             ]
           },
           "production": {
             "metrics": {
               "recall_at_5": 1.0,
-              "mrr": 0.25,
-              "ndcg_at_5": 0.43067655807339306,
+              "mrr": 1.0,
+              "ndcg_at_5": 1.0,
               "source_page_precision_at_5": 0.2,
               "source_page_recall_at_5": 1.0
             },
             "retrieved_pages": [
               {
                 "source": "NIST-SP-800-63B-4.pdf",
-                "page": 26
+                "page": 25
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
@@ -3215,11 +3187,11 @@
               },
               {
                 "source": "NIST-SP-800-63B-4.pdf",
-                "page": 25
+                "page": 26
               },
               {
-                "source": "NIST-SP-800-63B-4.pdf",
-                "page": 69
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 323
               }
             ]
           }
@@ -3299,32 +3271,32 @@
           },
           "dense_vector_only": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 0.2,
-              "ndcg_at_5": 0.38685280723454163,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
-                "source": "NIST-SP-800-63B-4.pdf",
-                "page": 83
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 38
               },
               {
-                "source": "NIST-SP-800-63B-4.pdf",
-                "page": 98
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 13
               },
               {
-                "source": "NIST-SP-800-63B-4.pdf",
-                "page": 84
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 97
               },
               {
-                "source": "owasp-top-10.pdf",
-                "page": 26
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 122
               },
               {
-                "source": "NIST-SP-800-63B-4.pdf",
-                "page": 27
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 185
               }
             ]
           },
@@ -3343,50 +3315,50 @@
               },
               {
                 "source": "NIST-SP-800-63B-4.pdf",
-                "page": 83
+                "page": 81
+              },
+              {
+                "source": "NIST-SP-800-63B-4.pdf",
+                "page": 76
+              },
+              {
+                "source": "NIST-SP-800-63B-4.pdf",
+                "page": 85
               },
               {
                 "source": "NIST-SP-800-63B-4.pdf",
                 "page": 99
-              },
-              {
-                "source": "NIST-SP-800-63B-4.pdf",
-                "page": 100
-              },
-              {
-                "source": "NIST-SP-800-63B-4.pdf",
-                "page": 101
               }
             ]
           },
           "production": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 1.0,
-              "ndcg_at_5": 1.0,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
-              {
-                "source": "NIST-SP-800-63B-4.pdf",
-                "page": 27
-              },
-              {
-                "source": "NIST-SP-800-63B-4.pdf",
-                "page": 83
-              },
               {
                 "source": "NIST-SP-800-63B-4.pdf",
                 "page": 99
               },
               {
-                "source": "NIST-SP-800-63B-4.pdf",
-                "page": 100
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 13
               },
               {
-                "source": "NIST-SP-800-63B-4.pdf",
-                "page": 101
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 14
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 419
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 3
               }
             ]
           }
@@ -3466,32 +3438,32 @@
           },
           "dense_vector_only": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 1.0,
-              "ndcg_at_5": 1.0,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
-                "source": "NIST-SP-800-218.pdf",
-                "page": 14
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 37
               },
               {
-                "source": "NIST-SP-800-218.pdf",
-                "page": 10
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 107
+              },
+              {
+                "source": "NIST-SP-800-63B-4.pdf",
+                "page": 41
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 34
+                "page": 308
               },
               {
-                "source": "NIST-SP-800-218.pdf",
-                "page": 17
-              },
-              {
-                "source": "NIST-SP-800-218.pdf",
-                "page": 4
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 404
               }
             ]
           },
@@ -3510,19 +3482,19 @@
               },
               {
                 "source": "NIST-SP-800-218.pdf",
-                "page": 17
+                "page": 15
               },
               {
                 "source": "NIST-SP-800-218.pdf",
                 "page": 21
               },
               {
-                "source": "NIST-SP-800-218.pdf",
-                "page": 10
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 222
               },
               {
                 "source": "NIST-SP-800-218.pdf",
-                "page": 11
+                "page": 17
               }
             ]
           },
@@ -3541,19 +3513,19 @@
               },
               {
                 "source": "NIST-SP-800-218.pdf",
-                "page": 17
+                "page": 15
               },
               {
                 "source": "NIST-SP-800-218.pdf",
                 "page": 21
               },
               {
-                "source": "NIST-SP-800-218.pdf",
-                "page": 10
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 222
               },
               {
                 "source": "NIST-SP-800-218.pdf",
-                "page": 11
+                "page": 17
               }
             ]
           }
@@ -3633,32 +3605,32 @@
           },
           "dense_vector_only": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 0.5,
-              "ndcg_at_5": 0.6309297535714575,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
-                "source": "NIST-SP-800-218.pdf",
-                "page": 8
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 101
               },
               {
-                "source": "NIST-SP-800-218.pdf",
-                "page": 20
+                "source": "NIST-SP-800-63B-4.pdf",
+                "page": 25
               },
               {
-                "source": "NIST-SP-800-218.pdf",
-                "page": 21
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 199
               },
               {
-                "source": "NIST-SP-800-218.pdf",
-                "page": 14
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 5
               },
               {
-                "source": "NIST-SP-800-218.pdf",
-                "page": 10
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 157
               }
             ]
           },
@@ -3685,11 +3657,11 @@
               },
               {
                 "source": "NIST-SP-800-218.pdf",
-                "page": 10
+                "page": 25
               },
               {
                 "source": "NIST-SP-800-218.pdf",
-                "page": 13
+                "page": 10
               }
             ]
           },
@@ -3712,15 +3684,15 @@
               },
               {
                 "source": "NIST-SP-800-218.pdf",
-                "page": 8
-              },
-              {
-                "source": "NIST-SP-800-218.pdf",
-                "page": 10
+                "page": 25
               },
               {
                 "source": "NIST-SP-800-218.pdf",
                 "page": 13
+              },
+              {
+                "source": "NIST-SP-800-218.pdf",
+                "page": 23
               }
             ]
           }
@@ -3800,32 +3772,32 @@
           },
           "dense_vector_only": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 1.0,
-              "ndcg_at_5": 1.0,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
-                "source": "NIST-SP-800-190.pdf",
-                "page": 16
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 43
+              },
+              {
+                "source": "NIST-SP-800-63B-4.pdf",
+                "page": 99
               },
               {
                 "source": "NIST-SP-800-190.pdf",
-                "page": 60
+                "page": 39
               },
               {
-                "source": "NIST-SP-800-190.pdf",
-                "page": 15
+                "source": "NIST-SP-800-218.pdf",
+                "page": 20
               },
               {
-                "source": "NIST-SP-800-190.pdf",
+                "source": "NIST-SP-800-218.pdf",
                 "page": 19
-              },
-              {
-                "source": "NIST-SP-800-190.pdf",
-                "page": 24
               }
             ]
           },
@@ -3852,7 +3824,7 @@
               },
               {
                 "source": "NIST-SP-800-190.pdf",
-                "page": 60
+                "page": 9
               },
               {
                 "source": "NIST-SP-800-190.pdf",
@@ -3883,7 +3855,7 @@
               },
               {
                 "source": "NIST-SP-800-190.pdf",
-                "page": 60
+                "page": 9
               },
               {
                 "source": "NIST-SP-800-190.pdf",
@@ -3967,32 +3939,32 @@
           },
           "dense_vector_only": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 1.0,
-              "ndcg_at_5": 1.0,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
-                "source": "NIST-SP-800-190.pdf",
-                "page": 22
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 34
               },
               {
                 "source": "NIST-SP-800-190.pdf",
-                "page": 23
+                "page": 54
               },
               {
-                "source": "NIST-SP-800-190.pdf",
-                "page": 48
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 73
               },
               {
-                "source": "NIST-SP-800-190.pdf",
-                "page": 33
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 119
               },
               {
-                "source": "NIST-SP-800-190.pdf",
-                "page": 20
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 159
               }
             ]
           },
@@ -4011,7 +3983,7 @@
               },
               {
                 "source": "NIST-SP-800-190.pdf",
-                "page": 48
+                "page": 9
               },
               {
                 "source": "NIST-SP-800-190.pdf",
@@ -4019,7 +3991,7 @@
               },
               {
                 "source": "NIST-SP-800-190.pdf",
-                "page": 38
+                "page": 48
               },
               {
                 "source": "NIST-SP-800-190.pdf",
@@ -4042,7 +4014,7 @@
               },
               {
                 "source": "NIST-SP-800-190.pdf",
-                "page": 48
+                "page": 9
               },
               {
                 "source": "NIST-SP-800-190.pdf",
@@ -4050,11 +4022,11 @@
               },
               {
                 "source": "NIST-SP-800-190.pdf",
-                "page": 38
+                "page": 48
               },
               {
                 "source": "NIST-SP-800-190.pdf",
-                "page": 23
+                "page": 43
               }
             ]
           }
@@ -4134,32 +4106,32 @@
           },
           "dense_vector_only": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 0.5,
-              "ndcg_at_5": 0.6309297535714575,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 64
+                "page": 38
               },
               {
-                "source": "NIST-SP-800-171r3.pdf",
-                "page": 21
+                "source": "NIST-SP-800-218.pdf",
+                "page": 18
               },
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 63
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 309
               },
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 48
+                "source": "NIST-SP-800-218.pdf",
+                "page": 16
               },
               {
-                "source": "NIST-SP-800-171r3.pdf",
-                "page": 17
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 3
               }
             ]
           },
@@ -4181,12 +4153,12 @@
                 "page": 21
               },
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 65
+                "source": "NIST-SP-800-171r3.pdf",
+                "page": 104
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 63
+                "page": 457
               },
               {
                 "source": "NIST-SP-800-161r1-upd1.pdf",
@@ -4212,12 +4184,12 @@
                 "page": 21
               },
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 65
+                "source": "NIST-SP-800-171r3.pdf",
+                "page": 104
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 63
+                "page": 457
               },
               {
                 "source": "NIST-SP-800-161r1-upd1.pdf",
@@ -4301,47 +4273,47 @@
           },
           "dense_vector_only": {
             "metrics": {
-              "recall_at_5": 1.0,
-              "mrr": 0.5,
-              "ndcg_at_5": 0.6309297535714575,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 1.0
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 179
-              },
-              {
-                "source": "NIST-SP-800-171r3.pdf",
-                "page": 49
+                "source": "NIST-CSF-2.0.pdf",
+                "page": 32
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 181
+                "page": 73
               },
               {
-                "source": "NIST-SP-800-61r3.pdf",
-                "page": 15
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 168
               },
               {
-                "source": "NIST-SP-800-61r3.pdf",
+                "source": "NIST-CSF-2.0.pdf",
                 "page": 14
+              },
+              {
+                "source": "NIST-SP-800-218.pdf",
+                "page": 3
               }
             ]
           },
           "hybrid_rrf": {
             "metrics": {
               "recall_at_5": 1.0,
-              "mrr": 0.2,
-              "ndcg_at_5": 0.38685280723454163,
+              "mrr": 1.0,
+              "ndcg_at_5": 1.0,
               "source_page_precision_at_5": 0.2,
               "source_page_recall_at_5": 1.0
             },
             "retrieved_pages": [
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 179
+                "source": "NIST-SP-800-171r3.pdf",
+                "page": 49
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
@@ -4349,30 +4321,30 @@
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 181
+                "page": 179
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 180
+                "page": 181
               },
               {
-                "source": "NIST-SP-800-171r3.pdf",
-                "page": 49
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 122
               }
             ]
           },
           "production": {
             "metrics": {
               "recall_at_5": 1.0,
-              "mrr": 0.2,
-              "ndcg_at_5": 0.38685280723454163,
+              "mrr": 1.0,
+              "ndcg_at_5": 1.0,
               "source_page_precision_at_5": 0.2,
               "source_page_recall_at_5": 1.0
             },
             "retrieved_pages": [
               {
-                "source": "NIST-SP-800-53r5.pdf",
-                "page": 179
+                "source": "NIST-SP-800-171r3.pdf",
+                "page": 49
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
@@ -4380,15 +4352,15 @@
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 181
+                "page": 179
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 180
+                "page": 181
               },
               {
-                "source": "NIST-SP-800-171r3.pdf",
-                "page": 49
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 122
               }
             ]
           }
@@ -4476,86 +4448,86 @@
             },
             "retrieved_pages": [
               {
-                "source": "NIST-SP-800-161r1-upd1.pdf",
-                "page": 24
+                "source": "OWASP-ASVS-5.0.0.pdf",
+                "page": 117
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 38
               },
               {
                 "source": "NIST-SP-800-161r1-upd1.pdf",
-                "page": 35
+                "page": 68
+              },
+              {
+                "source": "NIST-SP-800-61r3.pdf",
+                "page": 23
               },
               {
                 "source": "NIST-SP-800-161r1-upd1.pdf",
-                "page": 214
-              },
-              {
-                "source": "NIST-SP-800-161r1-upd1.pdf",
-                "page": 79
-              },
-              {
-                "source": "NIST-SP-800-161r1-upd1.pdf",
-                "page": 64
+                "page": 313
               }
             ]
           },
           "hybrid_rrf": {
             "metrics": {
               "recall_at_5": 1.0,
-              "mrr": 0.25,
-              "ndcg_at_5": 0.43067655807339306,
+              "mrr": 1.0,
+              "ndcg_at_5": 1.0,
               "source_page_precision_at_5": 0.2,
               "source_page_recall_at_5": 1.0
             },
             "retrieved_pages": [
               {
                 "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 55
+              },
+              {
+                "source": "NIST-SP-800-161r1-upd1.pdf",
                 "page": 276
               },
               {
                 "source": "NIST-SP-800-161r1-upd1.pdf",
-                "page": 277
+                "page": 278
               },
               {
                 "source": "NIST-SP-800-161r1-upd1.pdf",
                 "page": 270
               },
+              {
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 277
+              }
+            ]
+          },
+          "production": {
+            "metrics": {
+              "recall_at_5": 1.0,
+              "mrr": 1.0,
+              "ndcg_at_5": 1.0,
+              "source_page_precision_at_5": 0.2,
+              "source_page_recall_at_5": 1.0
+            },
+            "retrieved_pages": [
               {
                 "source": "NIST-SP-800-161r1-upd1.pdf",
                 "page": 55
               },
               {
                 "source": "NIST-SP-800-161r1-upd1.pdf",
-                "page": 236
-              }
-            ]
-          },
-          "production": {
-            "metrics": {
-              "recall_at_5": 0.0,
-              "mrr": 0.0,
-              "ndcg_at_5": 0.0,
-              "source_page_precision_at_5": 0.0,
-              "source_page_recall_at_5": 0.0
-            },
-            "retrieved_pages": [
+                "page": 101
+              },
               {
                 "source": "NIST-SP-800-161r1-upd1.pdf",
                 "page": 276
               },
               {
                 "source": "NIST-SP-800-161r1-upd1.pdf",
-                "page": 270
+                "page": 316
               },
               {
                 "source": "NIST-SP-800-161r1-upd1.pdf",
-                "page": 277
-              },
-              {
-                "source": "NIST-SP-800-161r1-upd1.pdf",
-                "page": 236
-              },
-              {
-                "source": "NIST-SP-800-161r1-upd1.pdf",
-                "page": 274
+                "page": 278
               }
             ]
           }
@@ -4643,32 +4615,32 @@
             },
             "retrieved_pages": [
               {
-                "source": "NIST-SP-800-161r1-upd1.pdf",
-                "page": 191
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 434
+              },
+              {
+                "source": "NIST-SP-800-53r5.pdf",
+                "page": 490
               },
               {
                 "source": "NIST-SP-800-161r1-upd1.pdf",
-                "page": 241
+                "page": 143
               },
               {
-                "source": "NIST-SP-800-161r1-upd1.pdf",
-                "page": 247
+                "source": "NIST-SP-800-207-Zero-Trust.pdf",
+                "page": 8
               },
               {
-                "source": "NIST-SP-800-161r1-upd1.pdf",
-                "page": 259
-              },
-              {
-                "source": "NIST-SP-800-161r1-upd1.pdf",
-                "page": 277
+                "source": "NIST-SP-800-171r3.pdf",
+                "page": 59
               }
             ]
           },
           "hybrid_rrf": {
             "metrics": {
               "recall_at_5": 1.0,
-              "mrr": 0.25,
-              "ndcg_at_5": 0.43067655807339306,
+              "mrr": 0.3333333333333333,
+              "ndcg_at_5": 0.5,
               "source_page_precision_at_5": 0.2,
               "source_page_recall_at_5": 1.0
             },
@@ -4680,10 +4652,6 @@
               {
                 "source": "NIST-SP-800-161r1-upd1.pdf",
                 "page": 194
-              },
-              {
-                "source": "NIST-SP-800-171r3.pdf",
-                "page": 39
               },
               {
                 "source": "NIST-SP-800-161r1-upd1.pdf",
@@ -4692,14 +4660,18 @@
               {
                 "source": "NIST-SP-800-53r5.pdf",
                 "page": 267
+              },
+              {
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 287
               }
             ]
           },
           "production": {
             "metrics": {
               "recall_at_5": 1.0,
-              "mrr": 0.2,
-              "ndcg_at_5": 0.38685280723454163,
+              "mrr": 0.3333333333333333,
+              "ndcg_at_5": 0.5,
               "source_page_precision_at_5": 0.2,
               "source_page_recall_at_5": 1.0
             },
@@ -4713,16 +4685,16 @@
                 "page": 194
               },
               {
-                "source": "NIST-SP-800-171r3.pdf",
-                "page": 39
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 61
               },
               {
                 "source": "NIST-SP-800-53r5.pdf",
-                "page": 396
+                "page": 267
               },
               {
                 "source": "NIST-SP-800-161r1-upd1.pdf",
-                "page": 61
+                "page": 287
               }
             ]
           }
@@ -4806,32 +4778,32 @@
           },
           "dense_vector_only": {
             "metrics": {
-              "recall_at_5": 0.5,
-              "mrr": 0.25,
-              "ndcg_at_5": 0.2640681225725909,
-              "source_page_precision_at_5": 0.2,
-              "source_page_recall_at_5": 0.5
+              "recall_at_5": 0.0,
+              "mrr": 0.0,
+              "ndcg_at_5": 0.0,
+              "source_page_precision_at_5": 0.0,
+              "source_page_recall_at_5": 0.0
             },
             "retrieved_pages": [
               {
-                "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 7
-              },
-              {
-                "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 108
-              },
-              {
-                "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 109
-              },
-              {
-                "source": "OWASP-ASVS-5.0.0.pdf",
-                "page": 106
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 74
               },
               {
                 "source": "NIST-SP-800-63B-4.pdf",
-                "page": 12
+                "page": 8
+              },
+              {
+                "source": "NIST-SP-800-190.pdf",
+                "page": 51
+              },
+              {
+                "source": "NIST-SP-800-190.pdf",
+                "page": 52
+              },
+              {
+                "source": "NIST-SP-800-161r1-upd1.pdf",
+                "page": 201
               }
             ]
           },

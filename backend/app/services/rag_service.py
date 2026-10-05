@@ -54,6 +54,7 @@ from app.prompts import (
 )
 
 from app.rag.retriever import HybridRetriever
+from app.rag.query_expander import condense_query, expand_query, _BACK_REF
 
 from app.agents.intents import (
     BASIS_CONVERSATION,
@@ -252,14 +253,30 @@ class RAGService:
         documents do not cover, is told exactly that.
         """
 
+        # ---- context-aware retrieval query --------------------------------
+        # For short follow-up questions that are mostly back-references
+        # ("What does it require?", "How does that work?"), retrieval gets
+        # almost nothing to match on. Heuristic: if the condensed query is
+        # very short or the back-reference ratio is high, pull the last
+        # assistant reply and graft its key topic words onto the query so
+        # BM25 and the dense arm have signal to work with.
+        # No extra LLM call - the history is already loaded later anyway;
+        # we just read the most recent message here.
+        retrieval_question = RAGService._augment_if_needed(
+            question=question,
+            db=db,
+            conversation_id=conversation_id,
+            user_id=user_id,
+        )
+
         documents, metrics = HybridRetriever.search_with_metrics(
-            query=question,
+            query=retrieval_question,
             top_k=5,
             user_id=user_id,
             include_uploads=True,
         )
 
-        relevance = RAGService._relevance(documents, metrics, question)
+        relevance = RAGService._relevance(documents, metrics, retrieval_question)
 
         if relevance == "document":
             return RAGService._document_answer(
@@ -287,6 +304,69 @@ class RAGService:
             document_scoped=document_scoped,
             template=template,
         )
+
+    @staticmethod
+    def _augment_if_needed(
+        question: str,
+        db: Session,
+        conversation_id: int,
+        user_id: int,
+    ) -> str:
+        """Augment a short or back-reference-heavy follow-up with prior context.
+
+        When the user asks "What does it require?" or "Explain that further",
+        the retrieval query has almost no signal.  This heuristic grafts the
+        last assistant turn's top topic words onto the query so both BM25 and
+        the dense encoder have something to rank against.
+
+        Conditions for augmentation (all must hold):
+        * The condensed, noise-stripped query is ≤ 6 tokens, OR
+        * The query is ≥ 50 % back-reference tokens.
+        * A prior assistant message exists in this conversation.
+
+        No LLM call is made. The history is fetched from the DB (already
+        cached by SQLAlchemy in the same request context).
+        """
+
+        condensed = condense_query(question)
+        tokens = condensed.split()
+
+        # Count back-reference tokens to decide whether augmentation is needed.
+        back_ref_tokens = sum(
+            1 for t in tokens
+            if _BACK_REF.fullmatch(t.strip(".,?!"))
+        )
+        is_back_ref_heavy = (
+            len(tokens) <= 6
+            or (len(tokens) > 0 and back_ref_tokens / len(tokens) >= 0.50)
+        )
+
+        if not is_back_ref_heavy:
+            return question
+
+        # Pull the last assistant message for its topic words.
+        history = ConversationService.load_history(
+            db=db,
+            conversation_id=conversation_id,
+            user_id=user_id,
+        )
+
+        last_assistant = next(
+            (m.content for m in reversed(history) if m.role == "assistant"),
+            None,
+        )
+
+        if not last_assistant:
+            return question
+
+        # Extract the first sentence or first 120 chars of the last reply;
+        # these usually contain the topic.
+        topic_snippet = re.split(r"[.!?\n]", last_assistant.strip())[0][:120]
+
+        # Expand acronyms in the topic snippet, then append to the question.
+        topic_expanded = expand_query(topic_snippet)
+        augmented = f"{question} [{topic_expanded}]"
+        return augmented
 
     @staticmethod
     def _relevance(documents, metrics, question: str = "") -> str:

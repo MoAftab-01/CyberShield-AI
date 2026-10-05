@@ -38,6 +38,7 @@ import numpy as np
 from app.rag.bm25_store import BM25Store
 from app.rag.embeddings import EmbeddingService
 from app.rag.faiss_store import FAISSStore
+from app.rag.query_expander import prepare_retrieval_query
 
 #: Fusion mode. ``on`` runs the full RRF + rerank + MMR pipeline; ``off``
 #: ranks by dense similarity alone.
@@ -256,6 +257,15 @@ class HybridRetriever:
         )
         config = _tuning()
 
+        # ---- query preparation -----------------------------------------
+        # Condense conversational filler ("Can you explain…") and expand
+        # security acronyms ("MFA" → adds "multi-factor authentication",
+        # "PDP" → adds "policy decision point") so both BM25 and the dense
+        # encoder match documents that use the full spelling, and vice versa.
+        # The *raw* query is preserved for term-coverage scoring, which
+        # measures how many of the user's own words appear in each passage.
+        retrieval_query = prepare_retrieval_query(query)
+
         # A filtering stage removes candidates, so widen the pool to keep
         # enough survivors for the requested top_k.
         filtering = uploads_visible or len(visible) < len(documents)
@@ -268,7 +278,7 @@ class HybridRetriever:
         )
 
         # ---- lexical ranking -------------------------------------------
-        bm25_scores = np.asarray(bm25.get_scores(BM25Store.tokenize(query)))
+        bm25_scores = np.asarray(bm25.get_scores(BM25Store.tokenize(retrieval_query)))
         masked_bm25 = np.full(len(bm25_scores), -np.inf, dtype=np.float64)
         for index in visible:
             masked_bm25[index] = bm25_scores[index]
@@ -281,7 +291,7 @@ class HybridRetriever:
 
         # ---- dense ranking --------------------------------------------
         query_vector = np.asarray(
-            EmbeddingService.embed_query(query),
+            EmbeddingService.embed_query(retrieval_query),
             dtype="float32",
         )
         if query_vector.ndim == 1:
@@ -302,6 +312,8 @@ class HybridRetriever:
             semantic_score[index] = max(0.0, 1.0 - (distance / 2.0))
 
         # ---- query term coverage --------------------------------------
+        # Coverage is measured against the *raw* user query so the signal
+        # reflects what the user actually asked, not the expanded form.
         query_terms = {
             token
             for token in BM25Store.tokenize(query)
@@ -443,6 +455,7 @@ class HybridRetriever:
             "candidate_count": candidate_count,
             "vector_candidates": len(vector_rank),
             "lexical_candidates": len(bm25_indices),
+            "retrieval_query": retrieval_query if retrieval_query != query else None,
             "fusion": (
                 "dense_only"
                 if config["fusion"] in {"off", "dense", "semantic"}
