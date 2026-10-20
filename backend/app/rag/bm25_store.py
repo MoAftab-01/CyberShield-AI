@@ -29,6 +29,19 @@ class BM25Store:
 
         corpus = [cls.tokenize(doc.page_content) for doc in documents]
 
+        if not corpus:
+            # No documents to index – store empty state and skip BM25 construction
+            cls._bm25 = None
+            cls._documents = []
+            # Ensure index files exist as empty placeholders for downstream consumers
+            cls.INDEX_PATH.parent.mkdir(parents=True, exist_ok=True)
+            with open(cls.INDEX_PATH, "wb") as f:
+                pickle.dump(None, f)
+            with open(cls.DOCS_PATH, "wb") as f:
+                pickle.dump([], f)
+            print("[BM25Store] No documents to index – created empty store.")
+            return
+
         bm25 = BM25Okapi(corpus)
 
         cls.INDEX_PATH.parent.mkdir(

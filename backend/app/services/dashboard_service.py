@@ -54,7 +54,6 @@ class DashboardService:
         # -----------------------
 
         password_distribution = {
-
             "Weak": (
                 db.query(PasswordScan)
                 .filter(
@@ -68,7 +67,7 @@ class DashboardService:
                 db.query(PasswordScan)
                 .filter(
                     PasswordScan.user_id == current_user.id,
-                    PasswordScan.password_strength == "Medium",
+                    PasswordScan.password_strength.in_(["Medium", "Moderate"]),
                 )
                 .count()
             ),
@@ -77,7 +76,7 @@ class DashboardService:
                 db.query(PasswordScan)
                 .filter(
                     PasswordScan.user_id == current_user.id,
-                    PasswordScan.password_strength == "Strong",
+                    PasswordScan.password_strength.in_(["Strong", "Very Strong"]),
                 )
                 .count()
             ),

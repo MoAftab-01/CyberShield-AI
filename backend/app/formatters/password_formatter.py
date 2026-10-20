@@ -31,7 +31,7 @@ class PasswordFormatter:
 
 **{result.strength}**
 
-Score: {result.score}/100
+Score: {result.score}/5
 
 Entropy: {result.entropy:.2f}
 

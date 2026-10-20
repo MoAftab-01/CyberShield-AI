@@ -43,3 +43,7 @@ class URLResponse(BaseModel):
     confidence: int
 
     analysis_summary: list[str]
+
+    threat_status: str = "inconclusive"
+
+    is_private_ip: bool = False

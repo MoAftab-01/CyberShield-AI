@@ -28,17 +28,20 @@ class URLService:
     ) -> URLResponse:
 
         valid = is_valid_url(url)
-
         domain = extract_domain(url)
-
         https = uses_https(url)
-
         ip = contains_ip(url)
+        from app.utils.url_utils import (
+            is_private_or_internal_host,
+            contains_punycode,
+            has_non_standard_port,
+        )
+        is_private = is_private_or_internal_host(url)
+        is_puny = contains_punycode(url)
+        non_standard_port = has_non_standard_port(url)
 
         length = url_length(url)
-
         keywords = detect_keywords(url)
-
         subdomains = count_subdomains(domain)
 
         score, level, recommendations = calculate_url_risk(
@@ -47,6 +50,9 @@ class URLService:
             keywords=keywords,
             length=length,
             subdomains=subdomains,
+            is_private_or_internal=is_private,
+            is_punycode=is_puny,
+            has_non_standard_port=non_standard_port,
         )
 
         vt = await VirusTotalClient.analyze_url(url)
@@ -90,14 +96,16 @@ class URLService:
             risk_score=score,
             risk_level=level,
             recommendations=recommendations,
-            virustotal_found=vt["found"],
-            virustotal_malicious=vt["malicious"],
-            virustotal_suspicious=vt["suspicious"],
-            virustotal_harmless=vt["harmless"],
+            virustotal_found=vt.get("found", False),
+            virustotal_malicious=vt.get("malicious", 0),
+            virustotal_suspicious=vt.get("suspicious", 0),
+            virustotal_harmless=vt.get("harmless", 0),
             final_risk_score=aggregation["final_score"],
             final_risk_level=aggregation["final_level"],
             confidence=aggregation["confidence"],
             analysis_summary=aggregation["reasons"],
+            threat_status=aggregation.get("threat_status", "inconclusive"),
+            is_private_ip=is_private,
         )
 
     @staticmethod
@@ -105,12 +113,12 @@ class URLService:
 
         provider = ProviderFactory.get_provider()
 
-        return {
-            "answer": provider.chat(
+        try:
+            answer = provider.chat(
                 f"""
 You are a cybersecurity expert.
 
-Explain the following URL security question.
+Explain the following URL security question. Never invent scan results or override security evidence.
 
 Question:
 {question}
@@ -118,7 +126,16 @@ Question:
 Be concise and practical.
 """
             )
-        }
+        except Exception:
+            answer = (
+                "URL Security Advice:\n"
+                "- Verify domains carefully for typosquatting, punycode characters, and suspicious subdomains.\n"
+                "- Only enter credentials on verified HTTPS websites with valid certificates.\n"
+                "- Do not click shortened or obfuscated links from untrusted communications."
+            )
+
+        return {"answer": answer}
+
 
     @staticmethod
     def recommend():

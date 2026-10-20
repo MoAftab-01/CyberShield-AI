@@ -6,6 +6,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
 
+from app.database.models import User
 from sqlalchemy.orm import relationship
 
 from app.database.database import Base

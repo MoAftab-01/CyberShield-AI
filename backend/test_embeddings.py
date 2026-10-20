@@ -18,4 +18,7 @@ print(f"Chunks: {len(chunks)}")
 
 print(f"Embedding Shape: {vectors.shape}")
 
-print(vectors[0][:10])
+if vectors.shape[0] > 0:
+    print(vectors[0][:10])
+else:
+    print('No vectors generated')

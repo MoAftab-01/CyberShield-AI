@@ -268,7 +268,9 @@ export default function UrlScanner() {
           harmless={result.virustotal_harmless}
           suspicious={result.virustotal_suspicious}
           malicious={result.virustotal_malicious}
+          threatStatus={result.threat_status}
         />
+
 
         <AnalysisSummary
           summary={result.analysis_summary}

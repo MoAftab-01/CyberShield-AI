@@ -132,8 +132,8 @@ class RAGService:
     @staticmethod
     def ask(
         question: str,
-        db: Session,
-        user_id: int,
+        db: Session | None = None,
+        user_id: int | None = None,
         conversation_id: int | None = None,
         template=None,
     ):
@@ -144,18 +144,21 @@ class RAGService:
         has already resolved the conversation.
         """
 
-        conversation_id = RAGService._resolve_conversation(
-            db=db,
-            user_id=user_id,
-            conversation_id=conversation_id,
-            question=question,
-        )
-
-        ConversationService.add_user_message(
-            db=db,
-            conversation_id=conversation_id,
-            message=question,
-        )
+        if db is None or user_id is None:
+            # No DB context: use a dummy conversation ID and skip persistence
+            conversation_id = -1
+        else:
+            conversation_id = RAGService._resolve_conversation(
+                db=db,
+                user_id=user_id,
+                conversation_id=conversation_id,
+                question=question,
+            )
+            ConversationService.add_user_message(
+                db=db,
+                conversation_id=conversation_id,
+                message=question,
+            )
 
         return RAGService.answer(
             question=question,
@@ -199,10 +202,16 @@ class RAGService:
 
             return conversation_id
 
+        from app.agents.router import IntentRouter
+        from app.agents.tools import redact_secrets
+
+        # Sanitize the question for title to avoid leaking secrets
+        decision = IntentRouter.classify(question)
+        sanitized_title = redact_secrets(question, decision)
         conversation = ConversationService.start_chat(
             db=db,
             user_id=user_id,
-            first_question=question,
+            first_question=sanitized_title,
         )
 
         return conversation.id
@@ -308,10 +317,21 @@ class RAGService:
     @staticmethod
     def _augment_if_needed(
         question: str,
-        db: Session,
-        conversation_id: int,
-        user_id: int,
+        db: Session | None = None,
+        conversation_id: int | None = None,
+        user_id: int | None = None,
     ) -> str:
+        """Augment short or back‑reference‑heavy follow‑ups with prior context.
+
+        If a database session is not provided (e.g., during unit tests), the
+        function skips history lookup and returns the original question unchanged.
+        This keeps the augmentation logic safe for callers that do not have a
+        DB context.
+        """
+        if db is None:
+            # No persistence layer available – cannot fetch history.
+            return question
+
         """Augment a short or back-reference-heavy follow-up with prior context.
 
         When the user asks "What does it require?" or "Explain that further",
@@ -739,6 +759,9 @@ class RAGService:
 
     @staticmethod
     def _persist(db: Session, conversation_id: int, answer: str) -> None:
+        if db is None:
+            # No DB session in test context; skip persistence
+            return
         ConversationService.add_ai_message(
             db=db,
             conversation_id=conversation_id,

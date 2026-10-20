@@ -71,7 +71,7 @@ async def password_generate(context: ToolContext) -> ToolResult:
         f"| --- | --- |\n"
         f"| Length | {generated['length']} characters |\n"
         f"| Estimated strength | **{generated['strength']}** |\n"
-        f"| Score | {generated['score']}/100 |\n"
+        f"| Score | {generated['score']}/5 |\n"
         f"| Entropy | {generated['entropy']:.1f} bits "
         f"({generated['entropy_rating']}) |\n\n"
         f"This password was produced locally with a cryptographically secure "
@@ -208,12 +208,15 @@ async def url_scan(context: ToolContext) -> ToolResult:
             "risk_level": analysis.final_risk_level,
             "risk_score": analysis.final_risk_score,
             "confidence": analysis.confidence,
+            "threat_status": getattr(analysis, "threat_status", "inconclusive"),
+            "is_private_ip": getattr(analysis, "is_private_ip", False),
         },
         suggestions=[
             "What are the signs of a phishing URL?",
             "How do I report a phishing site?",
         ],
     )
+
 
 
 # ---------------------------------------------------------------------------
@@ -399,13 +402,14 @@ def redact_secrets(text: str, decision: RoutingDecision) -> str:
     A password the user pasted for analysis is needed in memory to score it,
     but storing it verbatim in the chat log would turn a stateless check into a
     durable plaintext credential store. It is masked before the message is
-    written to the database.
+    written to the database or passed to external models.
     """
+    password = decision.password
+    if not password:
+        from app.agents.router import extract_password
+        password = extract_password(text)
 
-    if decision.intent is not Intent.PASSWORD_ANALYSIS:
+    if not password:
         return text
 
-    if not decision.password:
-        return text
-
-    return text.replace(decision.password, MASK)
+    return text.replace(password, MASK)

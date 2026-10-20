@@ -24,14 +24,14 @@ class Settings(BaseSettings):
     # ==========================
     # Application
     # ==========================
-    APP_NAME: str
-    APP_VERSION: str
-    ENVIRONMENT: str
+    APP_NAME: str = "CyberShield"
+    APP_VERSION: str = "0.1.0"
+    ENVIRONMENT: str = "development"
 
     # ==========================
     # Database
     # ==========================
-    DATABASE_URL: str
+    DATABASE_URL: str = "sqlite:///./test.db"
 
     # Comma-separated browser origins allowed to call the API.
     CORS_ORIGINS: str = (
@@ -43,9 +43,9 @@ class Settings(BaseSettings):
     # ==========================
     # JWT Authentication
     # ==========================
-    JWT_SECRET: str
-    JWT_ALGORITHM: str
-    ACCESS_TOKEN_EXPIRE_MINUTES: int
+    JWT_SECRET: str = "testsecret"
+    JWT_ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
 
     # ==========================
     # AI APIs

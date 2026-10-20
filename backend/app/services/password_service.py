@@ -155,7 +155,7 @@ class PasswordService:
 
 Length: {result["length"]}
 
-Estimated strength: **{result["strength"]}** (score {result["score"]}/100)
+Estimated strength: **{result["strength"]}** (score {result["score"]}/5)
 
 Entropy: {result["entropy"]:.2f} bits ({result["entropy_rating"]})
 
@@ -193,19 +193,56 @@ Maximum 8 bullets.
     @staticmethod
     def explain(question: str):
 
+        from app.agents.router import extract_password
+        raw_pwd = extract_password(question)
+        sanitized_question = question.replace(raw_pwd, "[REDACTED_PASSWORD]") if raw_pwd else question
+
         provider = ProviderFactory.get_provider()
 
-        return {
-            "answer": provider.chat(
+        try:
+            answer = provider.chat(
                 f"""
 You are a cybersecurity expert.
 
-Explain this password-related question.
+Explain this password-related question. Do NOT ask for or guess raw passwords.
 
 Question:
-{question}
+{sanitized_question}
 
 Keep the explanation concise and practical.
 """
             )
-        }
+        except Exception:
+            answer = (
+                "Password Best Practices:\n"
+                "- Use passwords of at least 16 characters with mixed character classes.\n"
+                "- Avoid dictionary words, sequential characters, and personal details.\n"
+                "- Use a reputable password manager and enable Multi-Factor Authentication (MFA)."
+            )
+
+        return {"answer": answer}
+
+    @staticmethod
+    def explain_findings(findings: dict) -> str:
+        """Produce actionable explanation based ONLY on sanitized findings without raw password."""
+        provider = ProviderFactory.get_provider()
+        prompt = (
+            "You are a cybersecurity expert. Provide concise, actionable advice based solely on these sanitized password audit findings:\n"
+            f"- Measured Strength: {findings.get('strength')}\n"
+            f"- Length: {findings.get('length')} characters\n"
+            f"- Entropy: {findings.get('entropy')} bits ({findings.get('entropy_rating')})\n"
+            f"- Missing Classes: {[k for k, v in [('Uppercase', findings.get('has_uppercase')), ('Lowercase', findings.get('has_lowercase')), ('Numbers', findings.get('has_number')), ('Special Characters', findings.get('has_special_character'))] if not v]}\n"
+            f"- Dictionary Words Detected: {findings.get('detected_dictionary_words') or 'None'}\n"
+            f"- Patterns Detected: {findings.get('detected_patterns') or 'None'}\n"
+            f"- Risk Level: {findings.get('risk_level')}\n\n"
+            "Explain in 2-3 short bullet points why this configuration presents risk and how to improve it. "
+            "Never ask for, infer, or echo any raw password."
+        )
+
+        try:
+            return provider.chat(prompt, max_tokens=250, temperature=0.2)
+        except Exception:
+            recs = findings.get("recommendations", [])
+            if recs:
+                return "\n".join(f"- {r}" for r in recs)
+            return "- Increase length to 16+ characters and use a password manager with MFA."

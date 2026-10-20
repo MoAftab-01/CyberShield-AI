@@ -24,7 +24,7 @@ export default function PasswordSummary({
     },
     {
       title: "Score",
-      value: `${score}/100`,
+      value: `${score}/5`,
       subtitle: "Security Score",
       color: "from-violet-500 to-fuchsia-600",
     },

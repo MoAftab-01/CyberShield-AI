@@ -38,7 +38,12 @@ export interface URLResponse {
   confidence: number;
 
   analysis_summary: string[];
+
+  threat_status?: string;
+
+  is_private_ip?: boolean;
 }
+
 
 export async function analyzeURL(url: string) {
   const response = await api.post<URLResponse>(

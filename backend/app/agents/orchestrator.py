@@ -83,19 +83,21 @@ class CyberGPTOrchestrator:
             f"source={decision.source} confidence={decision.confidence:.2f}"
         )
 
+        sanitized_question = redact_secrets(question, decision)
+
         # The conversation is resolved before dispatch so every path,
         # including a pure tool call, has somewhere to record itself.
         conversation_id = self._conversation(
             db=db,
             user_id=user_id,
             conversation_id=conversation_id,
-            question=question,
+            question=sanitized_question,
         )
 
         ConversationService.add_user_message(
             db=db,
             conversation_id=conversation_id,
-            message=redact_secrets(question, decision),
+            message=sanitized_question,
         )
 
         if decision.intent in TOOL_INTENTS:
@@ -108,14 +110,14 @@ class CyberGPTOrchestrator:
             )
         elif decision.intent in CONVERSATION_INTENTS:
             result = RAGService.converse(
-                question=question,
+                question=sanitized_question,
                 db=db,
                 user_id=user_id,
                 conversation_id=conversation_id,
             )
         else:
             result = RAGService.answer(
-                question=question,
+                question=sanitized_question,
                 db=db,
                 user_id=user_id,
                 conversation_id=conversation_id,
@@ -171,6 +173,13 @@ class CyberGPTOrchestrator:
         )
 
         result = await run_tool(decision, context)
+
+        if result is None:
+            from app.agents.tools import ToolResult
+            result = ToolResult(
+                answer="No tool handler was available to process this request.",
+                ok=False,
+            )
 
         ConversationService.add_ai_message(
             db=db,

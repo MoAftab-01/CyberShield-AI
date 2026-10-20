@@ -214,13 +214,23 @@ def extract_url(question: str) -> str | None:
     return None
 
 
+PASSWORD_STOP_WORDS = {
+    "why", "what", "how", "is", "are", "can", "should", "the", "this", "that",
+    "my", "your", "a", "an", "good", "bad", "strong", "weak", "safe", "safer",
+    "secure", "insecure", "password", "passwords", "passphrase", "make", "makes",
+    "better", "best", "practices", "policy", "policies", "manager", "length",
+    "entropy", "character", "characters", "symbol", "symbols", "number", "numbers",
+    "uppercase", "lowercase", "check", "analyze", "analyse", "test", "rate",
+    "score", "audit", "crack", "cracked", "tell", "explain", "about", "long",
+    "longer", "short", "shorter", "easy", "simple", "complex", "predictable",
+}
+
+
 def extract_password(question: str) -> str | None:
     """Extract a password the user explicitly supplied for analysis.
 
     Deliberately conservative: only returns a value when the user clearly
-    handed one over. Returning a guess here would mean analysing the wrong
-    string, which is the bug this replaces (the old agent analysed the whole
-    sentence, e.g. ``"Analyze this password: MyPassword123!"``).
+    handed one over or asked about a specific credential token.
     """
     # "analyze this password: X" / "password is X" / "password = X"
     match = PASSWORD_AFTER_COLON.search(question)
@@ -240,13 +250,21 @@ def extract_password(question: str) -> str | None:
     if match:
         candidate = match.group("value").strip().strip("'\"`")
         # Avoid treating the topic word itself as the value.
-        if candidate.lower() not in {
-            "strength", "security", "manager", "policy", "policies",
-            "requirements", "guidance", "advice", "best", "practices",
-            "generator", "analysis", "reset", "management", "authentication",
-            "safer", "safe", "strong", "weak",
-        }:
+        if candidate.lower() not in PASSWORD_STOP_WORDS:
             return candidate
+
+    # Specific candidate token inside a password-related question:
+    # e.g. "Is SecretP@ssw0rd123! a strong password?" or "Why is Hunter2! bad?"
+    if PASSWORD_TOPIC_PATTERN.search(question):
+        tokens = question.split()
+        for token in tokens:
+            cleaned = token.strip(".,;:!?\"'`()[]{}")
+            if len(cleaned) >= 4 and cleaned.lower() not in PASSWORD_STOP_WORDS:
+                has_mixed_case = any(c.isupper() for c in cleaned) and any(c.islower() for c in cleaned)
+                has_digits = any(c.isdigit() for c in cleaned)
+                has_special = any(c in "!@#$%^&*()-_=+[]{}?`~" for c in cleaned)
+                if (has_digits and (has_mixed_case or any(c.isalpha() for c in cleaned))) or has_special or (has_mixed_case and len(cleaned) >= 6):
+                    return cleaned
 
     return None
 
@@ -497,7 +515,18 @@ class IntentRouter:
 
     @classmethod
     def _classify_with_llm(cls, question: str) -> RoutingDecision | None:
-        """Ask the model to classify, tolerating every failure mode."""
+        # If a password is present, never send it to the LLM; route directly or sanitize
+        pwd = extract_password(question)
+        if pwd:
+            return RoutingDecision(
+                intent=Intent.PASSWORD_ANALYSIS,
+                confidence=0.88,
+                source="rule",
+                reason="password entity extracted before model consultation",
+                password=pwd,
+            )
+
+        sanitized_question = question[:400]
 
         # Imported lazily so that routing unit tests do not need an API key.
         from app.services.llm.provider_factory import ProviderFactory
@@ -507,7 +536,7 @@ class IntentRouter:
         prompt = (
             "Classify the user request into exactly one label.\n"
             f"Labels: {labels}\n"
-            f"Request: {question[:400]}\n"
+            f"Request: {sanitized_question}\n"
             'Reply with JSON only: {"intent":"<LABEL>","confidence":<0-1>}'
         )
 

@@ -39,24 +39,45 @@ def contains_special_character(password: str) -> bool:
 
 
 def calculate_score(password: str) -> int:
+    if not password:
+        return 0
+
     score = 0
 
+    # Length scoring
     if len(password) >= 8:
         score += 1
-
-    if contains_uppercase(password):
+    if len(password) >= 12:
         score += 1
 
-    if contains_lowercase(password):
+    # Character class diversity
+    classes = sum([
+        contains_uppercase(password),
+        contains_lowercase(password),
+        contains_number(password),
+        contains_special_character(password),
+    ])
+
+    if classes >= 3:
+        score += 1
+    if classes == 4:
+        score += 1
+    if len(password) >= 16 and classes == 4:
         score += 1
 
-    if contains_number(password):
-        score += 1
+    # Penalties for known weaknesses
+    dictionary_words = detect_dictionary_words(password)
+    patterns = detect_patterns(password)
+    entropy = calculate_entropy(password)
 
-    if contains_special_character(password):
-        score += 1
+    if dictionary_words or patterns:
+        score = min(score, 2)
+    elif entropy < 36:
+        score = min(score, 2)
+    elif entropy < 50:
+        score = min(score, 3)
 
-    return score
+    return max(0, min(score, 5))
 
 
 def password_strength(score: int) -> str:

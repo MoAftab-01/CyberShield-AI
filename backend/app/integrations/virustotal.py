@@ -47,6 +47,24 @@ class VirusTotalClient:
         original conflated.
         """
 
+        from app.utils.url_utils import is_private_or_internal_host, is_valid_url
+
+        if not is_valid_url(url):
+            return VirusTotalClient._unavailable(
+                "URL is invalid or has an unsupported scheme."
+            )
+
+        if is_private_or_internal_host(url):
+            return {
+                "found": False,
+                "available": True,
+                "malicious": 0,
+                "suspicious": 0,
+                "harmless": 0,
+                "is_internal": True,
+                "reason": "Target points to internal or private infrastructure; external threat reputation is not applicable.",
+            }
+
         if not settings.VT_API_KEY:
             return VirusTotalClient._unavailable(
                 "No VirusTotal API key is configured."

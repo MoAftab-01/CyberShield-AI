@@ -36,6 +36,9 @@ class URLFormatter:
         else:
             keywords = "None"
 
+        status_label = getattr(data, "threat_status", "inconclusive").capitalize()
+        is_private = getattr(data, "is_private_ip", False)
+
         return f"""# 🌐 URL Security Analysis
 
 ## 📍 Target
@@ -54,6 +57,8 @@ class URLFormatter:
 
 **Confidence:** {data.confidence}%
 
+**Threat Intelligence Status:** {status_label}
+
 ---
 
 ## 🔍 URL Characteristics
@@ -61,6 +66,8 @@ class URLFormatter:
 - HTTPS: {"✅ Yes" if data.uses_https else "❌ No"}
 
 - Contains IP Address: {"✅ Yes" if data.contains_ip_address else "❌ No"}
+
+- Internal / Private Network (SSRF Risk): {"🚨 Yes" if is_private else "✅ No (Public domain)"}
 
 - URL Length: {data.url_length}
 
@@ -70,17 +77,19 @@ class URLFormatter:
 
 ---
 
-## 🦠 VirusTotal
+## 🦠 VirusTotal Threat Intelligence
 
-- Malicious: {data.virustotal_malicious}
+- Status: {status_label}
 
-- Suspicious: {data.virustotal_suspicious}
+- Malicious Detections: {data.virustotal_malicious}
 
-- Harmless: {data.virustotal_harmless}
+- Suspicious Detections: {data.virustotal_suspicious}
+
+- Harmless / Clean: {data.virustotal_harmless}
 
 ---
 
-## 🤖 AI Assessment
+## 🛡️ Verified Evidence & Findings
 
 {summary}
 
@@ -89,4 +98,4 @@ class URLFormatter:
 ## 🛠️ Recommended Actions
 
 {recommendations}
-"""
+"""
