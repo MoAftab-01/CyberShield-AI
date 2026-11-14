@@ -1,0 +1,23 @@
+# Allow only application inputs; no operational env files, caches or user data.
+**
+!frontend/
+!frontend/package.json
+!frontend/package-lock.json
+!frontend/index.html
+!frontend/vite.config.ts
+!frontend/tsconfig*.json
+!frontend/src/
+!frontend/src/**
+!frontend/public/
+!frontend/public/**
+!backend/
+!backend/requirements.txt
+!backend/demo.py
+!backend/app/
+!backend/app/**
+!backend/knowledge_base/
+!backend/knowledge_base/**
+**/__pycache__/
+**/*.pyc
+**/.env
+**/.env.*
