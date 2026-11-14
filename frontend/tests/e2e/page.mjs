@@ -254,6 +254,66 @@ try {
       assert.equal(await navigation.getAttribute("aria-expanded"), "false");
     });
   }
+
+  if (production) {
+    await run("Compiled LangGraph investigation streams real progress and cited findings", async () => {
+      await alpha.page.setViewportSize({ width: 1280, height: 900 });
+      await alpha.page.goto(live.origin + "/investigate");
+      await alpha.page.getByRole("textbox", { name: "CVE identifier" }).waitFor();
+      await alpha.page.getByRole("button", { name: "Investigate CVE", exact: true }).focus();
+      await alpha.page.keyboard.press("Enter");
+      await alpha.page.getByRole("article", { name: "Investigation findings" }).waitFor();
+      await alpha.page.getByText("OFFLINE SYNTHETIC DEMO — not live threat intelligence", { exact: true }).waitFor();
+      assert.equal(await alpha.page.locator(".grounded-claims li").count(), 3);
+      assert.equal(await alpha.page.getByRole("status").innerText(), "Investigation finished: complete");
+      const steps = await alpha.page.locator(".investigation-workflow li").allTextContents();
+      assert.equal(steps.length, 7); assert(steps.every(text => text.includes("✓")));
+      await alpha.page.getByRole("button", { name: "Source 1", exact: true }).focus();
+      await alpha.page.keyboard.press("Enter");
+      assert.equal(await alpha.page.locator("details[open] summary").first().evaluate(n => n === document.activeElement), true);
+      await alpha.page.screenshot({ path: path.join(artifacts, "investigation-desktop.png"), fullPage: true });
+    });
+    await run("Investigation report downloads exact public fixture provenance", async () => {
+      const download = alpha.page.waitForEvent("download");
+      await alpha.page.getByRole("button", { name: "Download investigation report (JSON)" }).click();
+      const item = await download;
+      assert.equal(item.suggestedFilename(), "CVE-2021-44228-investigation.json");
+      const filename = path.join(artifacts, "synthetic-investigation-report.json");
+      await item.saveAs(filename);
+      const { readFile } = await import("node:fs/promises");
+      const report = JSON.parse(await readFile(filename, "utf8"));
+      assert.equal(report.mode, "offline_fixture");
+      assert.equal(report.metrics.llm_calls, 0);
+      assert(report.grounding.evidence.every(e => e.scope === "public" && e.trust === "synthetic_fixture"));
+    });
+    await run("Investigation rejects malformed input without dispatch", async () => {
+      await alpha.page.getByRole("textbox", { name: "CVE identifier" }).fill("cve-2021-44228");
+      assert.equal(await alpha.page.getByRole("button", { name: "Investigate CVE", exact: true }).isDisabled(), true);
+      await alpha.page.getByRole("textbox", { name: "CVE identifier" }).fill("CVE-2099-9999");
+      await alpha.page.getByRole("button", { name: "Investigate CVE", exact: true }).click();
+      await alpha.page.getByRole("status").filter({ hasText: "Investigation finished: partial" }).waitFor();
+      await alpha.page.getByText("not_found", { exact: true }).waitFor();
+    });
+    await run("Investigation mobile controls remain keyboard accessible", async () => {
+      await alpha.page.setViewportSize({ width: 375, height: 812 });
+      await alpha.page.getByRole("textbox", { name: "CVE identifier" }).fill("CVE-2024-3094");
+      await alpha.page.getByRole("button", { name: "Investigate CVE", exact: true }).focus();
+      await alpha.page.keyboard.press("Enter");
+      await alpha.page.getByRole("status").filter({ hasText: "Investigation finished: complete" }).waitFor();
+      assert.equal(await alpha.page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+      const input = await alpha.page.getByRole("textbox", { name: "CVE identifier" }).boundingBox();
+      assert(input && input.x >= 0 && input.x + input.width <= 375);
+      await alpha.page.screenshot({ path: path.join(artifacts, "investigation-mobile.png"), fullPage: true });
+    });
+    await run("Investigation authentication failure clears session without evidence", async () => {
+      await alpha.page.route("**/api/investigations/cve?stream=true", route => route.fulfill({ status: 401, body: "{}" }));
+      await alpha.page.getByRole("button", { name: "Investigate CVE", exact: true }).click();
+      await alpha.page.waitForURL("**/login");
+      assert.equal(await alpha.page.evaluate(() => localStorage.getItem("access_token")), null);
+      assert.equal(await alpha.page.locator(".grounded-answer").count(), 0);
+    });
+  }
+
   const legacy = await server(true);
   const old = await account(legacy.origin, "alpha");
   await run("Disabled server flag retains the legacy frontend/API path", async () => {

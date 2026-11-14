@@ -31,7 +31,8 @@ os.environ.update(ENVIRONMENT="test", DATABASE_URL="sqlite:///" + str(data / "br
     JWT_SECRET="isolated-browser-signing-fixture-value-only",
     JWT_ALGORITHM="HS256", GROQ_API_KEY="synthetic-unused", OPENAI_API_KEY="synthetic-unused",
     VT_API_KEY="", EMBEDDING_BACKEND="hash", VECTOR_DB_DIR=str(data / "vector_db"),
-    CYBERGPT_V2_ENABLED="false" if options.legacy else "true")
+    CYBERGPT_V2_ENABLED="false" if options.legacy else "true",
+    CVE_INVESTIGATION_ENABLED="true", CVE_INVESTIGATION_LIVE_APPROVED="false")
 sys.path.insert(0, str(backend))
 blocked = []
 (data / "isolation.json").write_text(json.dumps({"blocked": blocked}), encoding="utf-8")
@@ -110,6 +111,8 @@ from fastapi.staticfiles import StaticFiles
 from app.api import copilot_routes, conversation_routes, user_routes, upload_routes
 
 app = FastAPI()
+from app.api.investigation_routes import router as investigation_router
+app.include_router(investigation_router, prefix="/api")
 for router in (copilot_routes.router, conversation_routes.router, user_routes.router, upload_routes.router):
     app.include_router(router, prefix="/api")
 @app.get("/health")

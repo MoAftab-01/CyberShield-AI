@@ -13,6 +13,7 @@ import ThreatIntel from "../pages/ThreatIntel";
 import Reports from "../pages/Reports";
 import Settings from "../pages/Settings";
 import Copilot from "../pages/Copilot";
+import CveInvestigation from "../pages/CveInvestigation";
 
 export default function AppRouter() {
   return (
@@ -55,6 +56,7 @@ export default function AppRouter() {
         }
       >
         <Route path="/copilot" element={<Copilot />} />
+        <Route path="/investigate" element={<CveInvestigation />} />
       </Route>
 
     </Routes>
