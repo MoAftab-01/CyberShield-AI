@@ -102,7 +102,9 @@ are not presented as proof of a container build. No models were downloaded.
 | Check | Final result |
 | --- | --- |
 | Baseline backend before sprint implementation | 615 passed; 11 warnings; 199.14 s |
-| Final complete backend suite, repository isolation runner | 669 passed; 0 failures/errors/skips; 13 warnings; 105.55 s |
+| Final complete backend suite, clean same-named checkout | 680 passed; 0 failures/errors/skips; 13 warnings; 103.57 s |
+| Clean Linux CI, Python 3.12 | 680 passed; 0 failures/errors; 758 deprecation warnings; 59.56 s |
+| Strict upload/authentication subset | 32 passed; 0 failures; 9.68 s |
 | Focused security/privacy/ownership regressions | 166 passed; 3 warnings; 19.55 s (subset) |
 | New runner selected API/graph/auth/verifier/readiness | 76 passed; 13 warnings; 18.24 s (subset) |
 | Frontend unit tests | 58 passed; 0 failures/skips |
@@ -122,7 +124,8 @@ failing password-routing assertions remain passing.
 The initial full run had 665 passes and two contract failures: the old missing-token
 403 expectation and a verifier import allowlist. The first now requires 401 plus the
 Bearer challenge; the second explicitly permits the new opt-in agent's exact imports
-and verifies disabled feature defaults/lazy heavy imports. Neither test was skipped
+and verifies disabled feature defaults/lazy heavy imports. The old anonymous-upload false positive is also fixed: the real /uploads/ endpoint
+must return 401/Bearer and must not reach storage or indexing. Neither test was skipped
 or reduced to an accept-any-status assertion. A retry-progress label mismatch,
 test-fixture setup, Windows PostgreSQL output-pipe handling, frontend type/test setup,
 and new Unicode display encoding were corrected before the final successful runs.
@@ -151,8 +154,9 @@ GitHub's own clone named CyberShield-AI. A separate correction permits only
 checkout-local Python code and reviewed JSON fixture reads in that case. It still
 blocks environment/database/upload/index/model-cache reads, every separate-original
 read, all writes outside the worker scratch directory and all network access.
-Eleven concrete path regressions cover both layouts. The PR checks provide the
-clean-Linux rerun evidence.
+Eleven concrete path regressions cover both layouts. The corrected clean Linux run passed all 680 tests and frontend checks:
+https://github.com/MoAftab-01/CyberShield-AI/actions/runs/43538663315.
+Its 758 warnings are Python 3.12 deprecation warnings; no assertion was skipped.
 
 ## Investigation evaluation
 

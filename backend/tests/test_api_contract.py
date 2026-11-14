@@ -358,13 +358,20 @@ class TestConversationRoutesRequireAuthentication:
 
 class TestUploadRoutesRequireAuthentication:
 
-    def test_anonymous_upload_is_refused(self, client):
+    def test_anonymous_upload_is_refused(self, client, monkeypatch):
+        from app.services.document_service import DocumentService
+        from app.services.document_index_service import DocumentIndexService
+        def forbidden(*args, **kwargs):
+            pytest.fail("Anonymous upload reached storage or indexing")
+        monkeypatch.setattr(DocumentService, "save_uploaded_file", staticmethod(forbidden))
+        monkeypatch.setattr(DocumentIndexService, "index_document", staticmethod(forbidden))
         response = client.post(
-            "/upload",
+            "/uploads/",
             files={"file": ("a.txt", b"hello", "text/plain")},
         )
 
-        assert response.status_code in {401, 403, 404}
+        assert response.status_code == 401
+        assert response.headers["www-authenticate"] == "Bearer"
 
 
 # ---------------------------------------------------------------------------
