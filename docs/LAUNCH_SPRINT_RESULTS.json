@@ -1,0 +1,666 @@
+{
+  "date": "2026-11-14",
+  "timezone": "Asia/Calcutta",
+  "baseline_commit": "f2feed8",
+  "branch": "feature/cybergpt-2-source-foundation",
+  "pr": "https://github.com/MoAftab-01/CyberShield-AI/pull/1",
+  "backend": {
+    "passed": 669,
+    "failed": 0,
+    "skipped": 0,
+    "warnings": 13,
+    "seconds": 105.55
+  },
+  "frontend": {
+    "unit_passed": 58,
+    "browser_api_passed": 22,
+    "lint": "pass; one pre-existing warning",
+    "typescript": "pass",
+    "build": "pass; existing large-chunk warning"
+  },
+  "postgres": {
+    "checks_passed": 26,
+    "failed": 0,
+    "real_application_data_accessed": false,
+    "cluster_stopped": true
+  },
+  "dependency_resolution_packages": 114,
+  "evaluation": {
+    "dataset": "20 original synthetic investigation scenarios; CC0-1.0",
+    "models": [],
+    "langgraph": "1.2.21",
+    "seed": "none; deterministic fixtures, no random retrieval",
+    "cases": 20,
+    "successful": 20,
+    "correct_tool_cases": 20,
+    "citation_links": 39,
+    "exact_citation_links": 39,
+    "citation_validity": 1.0,
+    "covered_expected_sources": 27,
+    "expected_source_count": 27,
+    "source_evidence_coverage": 1.0,
+    "latency_median_ms": 6.0225,
+    "latency_p95_ms": 9.246,
+    "latency_total_ms": 162.132,
+    "llm_calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "estimated_model_cost_usd": 0.0,
+    "limitations": [
+      "Synthetic expected outcomes and source coverage do not measure semantic security correctness.",
+      "No live-network latency or model performance measured.",
+      "Quotation attribution does not establish factual truth or complete asset assessment.",
+      "No held-out tuning; this is a deterministic workflow regression set."
+    ],
+    "results": [
+      {
+        "scenario": "normal",
+        "cve": "CVE-2021-44228",
+        "expected": "complete",
+        "actual": "complete",
+        "success": true,
+        "correct_tool_calls": true,
+        "tool_calls": 2,
+        "citation_links": 3,
+        "exact_citation_links": 3,
+        "expected_sources": [
+          "cisa-kev",
+          "nvd"
+        ],
+        "covered_sources": [
+          "cisa-kev",
+          "nvd"
+        ],
+        "covered_expected_sources": 2,
+        "expected_source_count": 2,
+        "latency_ms": 47.052,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_model_cost_usd": 0.0
+      },
+      {
+        "scenario": "rapid_reset",
+        "cve": "CVE-2023-44487",
+        "expected": "complete",
+        "actual": "complete",
+        "success": true,
+        "correct_tool_calls": true,
+        "tool_calls": 2,
+        "citation_links": 3,
+        "exact_citation_links": 3,
+        "expected_sources": [
+          "cisa-kev",
+          "nvd"
+        ],
+        "covered_sources": [
+          "cisa-kev",
+          "nvd"
+        ],
+        "covered_expected_sources": 2,
+        "expected_source_count": 2,
+        "latency_ms": 9.246,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_model_cost_usd": 0.0
+      },
+      {
+        "scenario": "xz",
+        "cve": "CVE-2024-3094",
+        "expected": "complete",
+        "actual": "complete",
+        "success": true,
+        "correct_tool_calls": true,
+        "tool_calls": 2,
+        "citation_links": 2,
+        "exact_citation_links": 2,
+        "expected_sources": [
+          "cisa-kev",
+          "nvd"
+        ],
+        "covered_sources": [
+          "cisa-kev",
+          "nvd"
+        ],
+        "covered_expected_sources": 2,
+        "expected_source_count": 2,
+        "latency_ms": 6.15,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_model_cost_usd": 0.0
+      },
+      {
+        "scenario": "unknown",
+        "cve": "CVE-2099-9999",
+        "expected": "partial",
+        "actual": "partial",
+        "success": true,
+        "correct_tool_calls": true,
+        "tool_calls": 2,
+        "citation_links": 1,
+        "exact_citation_links": 1,
+        "expected_sources": [
+          "cisa-kev"
+        ],
+        "covered_sources": [
+          "cisa-kev"
+        ],
+        "covered_expected_sources": 1,
+        "expected_source_count": 1,
+        "latency_ms": 5.153,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_model_cost_usd": 0.0
+      },
+      {
+        "scenario": "negative",
+        "cve": "CVE-2021-44228",
+        "expected": "complete",
+        "actual": "complete",
+        "success": true,
+        "correct_tool_calls": true,
+        "tool_calls": 2,
+        "citation_links": 2,
+        "exact_citation_links": 2,
+        "expected_sources": [
+          "cisa-kev",
+          "nvd"
+        ],
+        "covered_sources": [
+          "cisa-kev",
+          "nvd"
+        ],
+        "covered_expected_sources": 2,
+        "expected_source_count": 2,
+        "latency_ms": 5.895,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_model_cost_usd": 0.0
+      },
+      {
+        "scenario": "retry",
+        "cve": "CVE-2021-44228",
+        "expected": "complete",
+        "actual": "complete",
+        "success": true,
+        "correct_tool_calls": true,
+        "tool_calls": 4,
+        "citation_links": 3,
+        "exact_citation_links": 3,
+        "expected_sources": [
+          "cisa-kev",
+          "nvd"
+        ],
+        "covered_sources": [
+          "cisa-kev",
+          "nvd"
+        ],
+        "covered_expected_sources": 2,
+        "expected_source_count": 2,
+        "latency_ms": 7.319,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_model_cost_usd": 0.0
+      },
+      {
+        "scenario": "outage",
+        "cve": "CVE-2021-44228",
+        "expected": "insufficient_evidence",
+        "actual": "insufficient_evidence",
+        "success": true,
+        "correct_tool_calls": true,
+        "tool_calls": 4,
+        "citation_links": 0,
+        "exact_citation_links": 0,
+        "expected_sources": [],
+        "covered_sources": [],
+        "covered_expected_sources": 0,
+        "expected_source_count": 0,
+        "latency_ms": 3.118,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_model_cost_usd": 0.0
+      },
+      {
+        "scenario": "nvd_outage",
+        "cve": "CVE-2021-44228",
+        "expected": "partial",
+        "actual": "partial",
+        "success": true,
+        "correct_tool_calls": true,
+        "tool_calls": 3,
+        "citation_links": 2,
+        "exact_citation_links": 2,
+        "expected_sources": [
+          "cisa-kev"
+        ],
+        "covered_sources": [
+          "cisa-kev"
+        ],
+        "covered_expected_sources": 1,
+        "expected_source_count": 1,
+        "latency_ms": 6.84,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_model_cost_usd": 0.0
+      },
+      {
+        "scenario": "cisa-kev_outage",
+        "cve": "CVE-2021-44228",
+        "expected": "partial",
+        "actual": "partial",
+        "success": true,
+        "correct_tool_calls": true,
+        "tool_calls": 3,
+        "citation_links": 1,
+        "exact_citation_links": 1,
+        "expected_sources": [
+          "nvd"
+        ],
+        "covered_sources": [
+          "nvd"
+        ],
+        "covered_expected_sources": 1,
+        "expected_source_count": 1,
+        "latency_ms": 5.554,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_model_cost_usd": 0.0
+      },
+      {
+        "scenario": "mismatch",
+        "cve": "CVE-2021-44228",
+        "expected": "partial",
+        "actual": "partial",
+        "success": true,
+        "correct_tool_calls": true,
+        "tool_calls": 2,
+        "citation_links": 2,
+        "exact_citation_links": 2,
+        "expected_sources": [
+          "cisa-kev"
+        ],
+        "covered_sources": [
+          "cisa-kev"
+        ],
+        "covered_expected_sources": 1,
+        "expected_source_count": 1,
+        "latency_ms": 5.615,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_model_cost_usd": 0.0
+      },
+      {
+        "scenario": "withdrawn",
+        "cve": "CVE-2021-44228",
+        "expected": "partial",
+        "actual": "partial",
+        "success": true,
+        "correct_tool_calls": true,
+        "tool_calls": 2,
+        "citation_links": 2,
+        "exact_citation_links": 2,
+        "expected_sources": [
+          "cisa-kev"
+        ],
+        "covered_sources": [
+          "cisa-kev"
+        ],
+        "covered_expected_sources": 1,
+        "expected_source_count": 1,
+        "latency_ms": 5.764,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_model_cost_usd": 0.0
+      },
+      {
+        "scenario": "injection",
+        "cve": "CVE-2021-44228",
+        "expected": "partial",
+        "actual": "partial",
+        "success": true,
+        "correct_tool_calls": true,
+        "tool_calls": 2,
+        "citation_links": 2,
+        "exact_citation_links": 2,
+        "expected_sources": [
+          "cisa-kev"
+        ],
+        "covered_sources": [
+          "cisa-kev"
+        ],
+        "covered_expected_sources": 1,
+        "expected_source_count": 1,
+        "latency_ms": 5.869,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_model_cost_usd": 0.0
+      },
+      {
+        "scenario": "stale",
+        "cve": "CVE-2021-44228",
+        "expected": "partial",
+        "actual": "partial",
+        "success": true,
+        "correct_tool_calls": true,
+        "tool_calls": 2,
+        "citation_links": 3,
+        "exact_citation_links": 3,
+        "expected_sources": [
+          "cisa-kev",
+          "nvd"
+        ],
+        "covered_sources": [
+          "cisa-kev",
+          "nvd"
+        ],
+        "covered_expected_sources": 2,
+        "expected_source_count": 2,
+        "latency_ms": 6.507,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_model_cost_usd": 0.0
+      },
+      {
+        "scenario": "malformed",
+        "cve": "CVE-2021-44228",
+        "expected": "partial",
+        "actual": "partial",
+        "success": true,
+        "correct_tool_calls": true,
+        "tool_calls": 2,
+        "citation_links": 2,
+        "exact_citation_links": 2,
+        "expected_sources": [
+          "cisa-kev"
+        ],
+        "covered_sources": [
+          "cisa-kev"
+        ],
+        "covered_expected_sources": 1,
+        "expected_source_count": 1,
+        "latency_ms": 5.638,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_model_cost_usd": 0.0
+      },
+      {
+        "scenario": "malformed_kev",
+        "cve": "CVE-2021-44228",
+        "expected": "partial",
+        "actual": "partial",
+        "success": true,
+        "correct_tool_calls": true,
+        "tool_calls": 2,
+        "citation_links": 1,
+        "exact_citation_links": 1,
+        "expected_sources": [
+          "nvd"
+        ],
+        "covered_sources": [
+          "nvd"
+        ],
+        "covered_expected_sources": 1,
+        "expected_source_count": 1,
+        "latency_ms": 5.362,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_model_cost_usd": 0.0
+      },
+      {
+        "scenario": "duplicate",
+        "cve": "CVE-2021-44228",
+        "expected": "partial",
+        "actual": "partial",
+        "success": true,
+        "correct_tool_calls": true,
+        "tool_calls": 2,
+        "citation_links": 1,
+        "exact_citation_links": 1,
+        "expected_sources": [
+          "nvd"
+        ],
+        "covered_sources": [
+          "nvd"
+        ],
+        "covered_expected_sources": 1,
+        "expected_source_count": 1,
+        "latency_ms": 5.365,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_model_cost_usd": 0.0
+      },
+      {
+        "scenario": "identifier_omitted",
+        "cve": "CVE-2021-44228",
+        "expected": "complete",
+        "actual": "complete",
+        "success": true,
+        "correct_tool_calls": true,
+        "tool_calls": 2,
+        "citation_links": 3,
+        "exact_citation_links": 3,
+        "expected_sources": [
+          "cisa-kev",
+          "nvd"
+        ],
+        "covered_sources": [
+          "cisa-kev",
+          "nvd"
+        ],
+        "covered_expected_sources": 2,
+        "expected_source_count": 2,
+        "latency_ms": 6.357,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_model_cost_usd": 0.0
+      },
+      {
+        "scenario": "missing",
+        "cve": "CVE-2021-44228",
+        "expected": "partial",
+        "actual": "partial",
+        "success": true,
+        "correct_tool_calls": true,
+        "tool_calls": 2,
+        "citation_links": 2,
+        "exact_citation_links": 2,
+        "expected_sources": [
+          "cisa-kev"
+        ],
+        "covered_sources": [
+          "cisa-kev"
+        ],
+        "covered_expected_sources": 1,
+        "expected_source_count": 1,
+        "latency_ms": 6.424,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_model_cost_usd": 0.0
+      },
+      {
+        "scenario": "malicious_action",
+        "cve": "CVE-2021-44228",
+        "expected": "partial",
+        "actual": "partial",
+        "success": true,
+        "correct_tool_calls": true,
+        "tool_calls": 2,
+        "citation_links": 2,
+        "exact_citation_links": 2,
+        "expected_sources": [
+          "cisa-kev",
+          "nvd"
+        ],
+        "covered_sources": [
+          "cisa-kev",
+          "nvd"
+        ],
+        "covered_expected_sources": 2,
+        "expected_source_count": 2,
+        "latency_ms": 6.239,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_model_cost_usd": 0.0
+      },
+      {
+        "scenario": "long",
+        "cve": "CVE-2021-44228",
+        "expected": "partial",
+        "actual": "partial",
+        "success": true,
+        "correct_tool_calls": true,
+        "tool_calls": 2,
+        "citation_links": 2,
+        "exact_citation_links": 2,
+        "expected_sources": [
+          "cisa-kev"
+        ],
+        "covered_sources": [
+          "cisa-kev"
+        ],
+        "covered_expected_sources": 1,
+        "expected_source_count": 1,
+        "latency_ms": 6.665,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_model_cost_usd": 0.0
+      }
+    ]
+  },
+  "files_changed_from_published_milestone": [
+    ".github/workflows/ci.yml",
+    "README.md",
+    "backend/.dockerignore",
+    "backend/.env.example",
+    "backend/Dockerfile.staging",
+    "backend/app/agents/cve_input.py",
+    "backend/app/agents/investigation.py",
+    "backend/app/agents/investigation_intelligence.py",
+    "backend/app/api/investigation_routes.py",
+    "backend/app/api/routes.py",
+    "backend/app/api/user_routes.py",
+    "backend/app/core/config.py",
+    "backend/app/core/security.py",
+    "backend/app/dependencies/auth.py",
+    "backend/app/main.py",
+    "backend/app/services/user_service.py",
+    "backend/evaluation/investigation/README.md",
+    "backend/evaluation/investigation/cases.json",
+    "backend/evaluation/investigation/run.py",
+    "backend/evaluation/investigation/scenarios.py",
+    "backend/requirements.txt",
+    "backend/tests/test_api_contract.py",
+    "backend/tests/test_cve_investigation.py",
+    "backend/tests/test_grounded_evaluation.py",
+    "backend/tests/test_launch_auth.py",
+    "backend/tests/test_staging_readiness.py",
+    "backend/validation/disposable_postgres.py",
+    "backend/validation/run_isolated_tests.py",
+    "backend/validation/secret_scan.py",
+    "docker-compose.staging.yml",
+    "docs/LAUNCH_SPRINT.md",
+    "docs/LAUNCH_SPRINT_RESULTS.json",
+    "docs/validation/launch-sprint/backend-pytest.xml",
+    "docs/validation/launch-sprint/investigation-desktop.png",
+    "docs/validation/launch-sprint/investigation-evaluation.json",
+    "docs/validation/launch-sprint/investigation-mobile.png",
+    "docs/validation/launch-sprint/page-browser-results.json",
+    "docs/validation/launch-sprint/postgres-results.json",
+    "docs/validation/launch-sprint/synthetic-investigation-report.json",
+    "frontend/.dockerignore",
+    "frontend/Dockerfile.staging",
+    "frontend/nginx.staging.conf",
+    "frontend/src/components/layout/Sidebar.tsx",
+    "frontend/src/lib/investigation.ts",
+    "frontend/src/pages/CveInvestigation.tsx",
+    "frontend/src/pages/investigation.css",
+    "frontend/src/router/AppRouter.tsx",
+    "frontend/src/services/investigationService.ts",
+    "frontend/tests/e2e/page.mjs",
+    "frontend/tests/e2e/server.py",
+    "frontend/tests/investigation.test.ts",
+    "requirements.txt"
+  ],
+  "sha256": {
+    ".github/workflows/ci.yml": "f89ff8e94c7eb5dd1dc390564684bf00b09daa1e35bf6ae523bb75e7ad3b8117",
+    "README.md": "59e4edfb490188016c1bcfba3285f5f281d1d62c0e10aa3c099822a36c02f97f",
+    "backend/.dockerignore": "81d6ffb318bf5009f761e51dc26387f1aef56f4fb2060b5f89dbff8d2c6a37f5",
+    "backend/.env.example": "c482221c423c9fbf011f4b61c70865ed310b20b3eb36ecc323c3ace13eb437f7",
+    "backend/Dockerfile.staging": "5749ca61488f54df46546ad0582688f1be327ead56b371a7ac224f623c5edddf",
+    "backend/app/agents/cve_input.py": "4b5775770d4a1cee3c23349028bb602082fef6b3203779b26d0afadb325e76ae",
+    "backend/app/agents/investigation.py": "2135fa09d2b7cf35fe3b0611c534384991e1d264e10e5b94d1ec08688dfc0e53",
+    "backend/app/agents/investigation_intelligence.py": "f8fca4969670a5bf8f4425798ea7a593db983a47590d8c788b1c82fc013657c4",
+    "backend/app/api/investigation_routes.py": "b9265172c10c003906034e4a80c485127d2b25acff2da1edd0dc53af17f0ba45",
+    "backend/app/api/routes.py": "3eef83b021f7550eba38bc3dc5b43c486941d143c76f60c307dc51b7654d1bbf",
+    "backend/app/api/user_routes.py": "b22ba013da5806e77dcfaa59dc702b9acaed19a76ec74fa10e68ad931e54cf47",
+    "backend/app/core/config.py": "f270eed3ad24c215d39bf2c18f0bc9cda0eca27f23afa1a090f076cc20902abc",
+    "backend/app/core/security.py": "564212c7c696ae602b9b0b9854cec9027d017f600bc8a7426e5f8ef9a0425bd0",
+    "backend/app/dependencies/auth.py": "e566bfc287d9eab34e4f45628c38e4735dd22cc12750f692013e09b325a1f787",
+    "backend/app/main.py": "7f8f0f7f34a1f1434b31a426c953ed69d20f83bff15ea6e7721c659317eb7e23",
+    "backend/app/services/user_service.py": "0c4bb7bca851b5dda265063bac2d58c4acf5c6ecba37f4942f262fc213f14ce2",
+    "backend/evaluation/investigation/README.md": "a550b5102f7206169f0a221246bec0e9a5ac028b064516dc7c610044f59b4904",
+    "backend/evaluation/investigation/cases.json": "f3da366927f8cce9aabc1b34c45101e42c5e4302f2766e3143d024eb6dfa5a04",
+    "backend/evaluation/investigation/run.py": "7fd6012df9ea9860d707aaf8ffc8bdde780756f5cac6f002b06007258ca4e294",
+    "backend/evaluation/investigation/scenarios.py": "eddf8c5103fa748e3300d46a714d9c32362c5e0cfc22a55ce44bada0e890f6dc",
+    "backend/requirements.txt": "9637b85e26d31dbb25951f2fa3966ac4059b85f25830980a93b48ec9423f3d08",
+    "backend/tests/test_api_contract.py": "10bca9a37271449228ea706d5ad4442df9a0a6521179efca665dd72778985108",
+    "backend/tests/test_cve_investigation.py": "7a498e73b14424a47bf9b5aa12bf698724862010573630b26d47cc9bfb376d02",
+    "backend/tests/test_grounded_evaluation.py": "590501b3ac7a53a751e62f70ab5109b97bba2fa1f8d95b9399af6e64a8980fd1",
+    "backend/tests/test_launch_auth.py": "816b661f526916c8731bd024820d11e5725fd28a7738690962d60a66edad8c32",
+    "backend/tests/test_staging_readiness.py": "dee075eb96765247930649b52fb3acc99d7deadcc28cfd45ece15ab84032a191",
+    "backend/validation/disposable_postgres.py": "edb8e597f02e3c35756b9a8164698dbd5ee92d65511d020345a6a5dd418e2ad7",
+    "backend/validation/run_isolated_tests.py": "9f607833ca7979107fd447c7c26f166301da3f4c49c4b7889209309eb33fd162",
+    "backend/validation/secret_scan.py": "9a5a852e956a1f602f34c26837ff77871edf2d48e40269130a134416b0700467",
+    "docker-compose.staging.yml": "f12bbe1bdd92e685115fda50d90ee7d9bb28da36c25a4974282db07a77550fd5",
+    "docs/LAUNCH_SPRINT.md": "34742343087712a0be5f3160d96f4b7aa154eab745f41306c8b5fe5d4e77f28c",
+    "docs/validation/launch-sprint/backend-pytest.xml": "c537f20aeede9d5016d0a5d6153a7f1a67772a065ee6ce110a4ea5633bef80c0",
+    "docs/validation/launch-sprint/investigation-desktop.png": "97f8dcec7aa3b090542fb7f7c5fb52a0a1ae292350a0d38c84708678414e29fd",
+    "docs/validation/launch-sprint/investigation-evaluation.json": "412f1b6f443a8f5718f6f9ac93d5ce2bfd528e5c2c12eea7049969da0c68b246",
+    "docs/validation/launch-sprint/investigation-mobile.png": "941a875ca1c172f5f991467fcf7c6b981f9a9bd9652ccb7279826032ab65cb9f",
+    "docs/validation/launch-sprint/page-browser-results.json": "95b53202df5b5e46ca355fc507c370b882b5e2c0745406fb24b124d63b43681c",
+    "docs/validation/launch-sprint/postgres-results.json": "3c09959f1fb9f190147164c1f24159d9667f44591f346ad18a980d71b798dc9f",
+    "docs/validation/launch-sprint/synthetic-investigation-report.json": "e262d0a3824bf129e8b64aac8924de7ff14f33179982bb242ecea5032a97da57",
+    "frontend/.dockerignore": "5300446b49d749f735004785581bf1933d61b6278b2874ef52fb4191f066b3b0",
+    "frontend/Dockerfile.staging": "dbd9420b29cbe21030a6b2e94ae92865ca7499f517a172c7f0610c002c276b11",
+    "frontend/nginx.staging.conf": "3ef03eb410800044415d84c806a904d4d9a7e7d1852777dec7a0ae764cb00f1e",
+    "frontend/src/components/layout/Sidebar.tsx": "c9482d3a59a9dfc8925ff383d78dd77731b3c06b63a0ec0038ce030341f8cb06",
+    "frontend/src/lib/investigation.ts": "53a190c1b343b8a72f03102eb9cda844aaa85f65e0f3cc0a8547affd43725c2b",
+    "frontend/src/pages/CveInvestigation.tsx": "ab77702f71e95246840ec381040ab83e15b44a38700729cb1ae60d19a7f3372b",
+    "frontend/src/pages/investigation.css": "403b4389a2e20299fb9879c09486ed1cc22b06873620dd5311960410e68c4461",
+    "frontend/src/router/AppRouter.tsx": "20a94d4a982d383c3f8feddb0daba6c74d32b969adc01aacd1ef5c2844ac18ac",
+    "frontend/src/services/investigationService.ts": "76ddb1b177606c0c5078bf4754c65bf985636dfccaf54ad6e85bc42711d610f1",
+    "frontend/tests/e2e/page.mjs": "f08ea3af34994d166834f272a7b26489ad4425dd9c33c8bbf20cbc6481b318e0",
+    "frontend/tests/e2e/server.py": "bbea9052edaca3209423026eb8969194542f8ad1b664108462166fc383501e39",
+    "frontend/tests/investigation.test.ts": "79dd5cdf6aeb11c34e084c4ebf81b363cc280d824a7f487a0db5863f37e9f518",
+    "requirements.txt": "58a603662ec394cb51438c62c94dda7732e23ccae447aeafea2ad74826939163"
+  },
+  "limits": [
+    "No live intelligence calls or Linux container build performed",
+    "No model downloads",
+    "No original application data or services accessed",
+    "Pattern-based source scan, not full repository-history or dependency security audit",
+    "Synthetic outcomes and source coverage are not factual/semantic accuracy"
+  ],
+  "hash_exclusion": "This results file excludes its own hash to avoid a recursive checksum.",
+  "artifact_redaction": "Synthetic credential URL userinfo in JUnit parametrized test IDs is redacted; pass/fail/counts are unchanged."
+}

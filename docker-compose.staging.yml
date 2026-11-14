@@ -1,0 +1,62 @@
+# PREPARATION ONLY. No existing compose files, external volumes or container names.
+name: cybershield-isolated-staging
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: cybershield_staging
+      POSTGRES_USER: cybershield_staging
+      POSTGRES_PASSWORD_FILE: /run/secrets/staging_pg_password
+    secrets: [staging_pg_password]
+    volumes:
+      - staging_postgres:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cybershield_staging -d cybershield_staging"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.staging
+    environment:
+      ENVIRONMENT: staging
+      DATABASE_URL: ${STAGING_DATABASE_URL:?Set a URL for this staging postgres service only}
+      JWT_SECRET: ${STAGING_JWT_SECRET:?Provide a separate strong staging secret}
+      JWT_ALGORITHM: HS256
+      CORS_ORIGINS: http://127.0.0.1:18080
+      EMBEDDING_BACKEND: hash
+      VECTOR_DB_DIR: /app/vector_db
+      CYBERGPT_V2_ENABLED: "false"
+      CVE_INVESTIGATION_ENABLED: "true"
+      CVE_INVESTIGATION_LIVE_APPROVED: "false"
+      LANGSMITH_TRACING: "false"
+      LANGCHAIN_TRACING_V2: "false"
+      GROQ_API_KEY: ""
+      OPENAI_API_KEY: ""
+      VT_API_KEY: ""
+    ports: ["127.0.0.1:18002:8000"]
+    volumes:
+      - staging_uploads:/app/uploads
+      - staging_vectors:/app/vector_db
+    depends_on:
+      postgres: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.staging
+    ports: ["127.0.0.1:18080:80"]
+    depends_on:
+      backend: {condition: service_healthy}
+secrets:
+  staging_pg_password:
+    file: ${STAGING_PG_PASSWORD_FILE:?Set an external private staging-password file}
+volumes:
+  staging_postgres:
+  staging_uploads:
+  staging_vectors:

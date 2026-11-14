@@ -53,7 +53,8 @@ jobs:
           ACCESS_TOKEN_EXPIRE_MINUTES: "30"
           EMBEDDING_BACKEND: hash
         run: |
-          python -m pytest tests/ -q
+          python -B validation/run_isolated_tests.py full-offline .
+          python -B validation/secret_scan.py
 
       - name: Check No Secrets Are Committed
         # The .env file holds the Groq key, the VirusTotal key and the JWT
@@ -81,10 +82,15 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci --ignore-scripts --no-audit --no-fund
 
-      - name: Build
-        run: npm run build
+      - name: Validate Frontend
+        env:
+          VITE_API_URL: /api
+        run: |
+          npm test
+          npm run lint
+          npm run build

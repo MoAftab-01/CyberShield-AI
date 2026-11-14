@@ -1,0 +1,98 @@
+{
+  "kind": "production Vite UI plus isolated real FastAPI auth/retrieval/verifier",
+  "passed": 22,
+  "failures": 0,
+  "checks": [
+    {
+      "name": "Authenticated real API returns multiple attributed quotations in the actual chat page",
+      "passed": true
+    },
+    {
+      "name": "Production desktop citation controls and screenshot",
+      "passed": true
+    },
+    {
+      "name": "Production response presentation: missing",
+      "passed": true
+    },
+    {
+      "name": "Production response presentation: conflict",
+      "passed": true
+    },
+    {
+      "name": "Production response presentation: injection",
+      "passed": true
+    },
+    {
+      "name": "Rename failure never logs a pasted synthetic generated password",
+      "passed": true
+    },
+    {
+      "name": "Existing history loads without fabricating structured verification",
+      "passed": true
+    },
+    {
+      "name": "Provider timeout becomes a controlled evidence status",
+      "passed": true
+    },
+    {
+      "name": "Network failure has safe manual retry without diagnostic bodies",
+      "passed": true
+    },
+    {
+      "name": "Cancel/new chat prevents a delayed response from entering another view",
+      "passed": true
+    },
+    {
+      "name": "Generated password stays immediate, absent from storage and diagnostics",
+      "passed": true
+    },
+    {
+      "name": "Owner-scoped private evidence is usable by its authenticated owner",
+      "passed": true
+    },
+    {
+      "name": "Different account cannot retrieve private evidence or read another conversation",
+      "passed": true
+    },
+    {
+      "name": "Invalid authentication removes the local token and redirects to login",
+      "passed": true
+    },
+    {
+      "name": "Protected frontend route redirects an unauthenticated browser",
+      "passed": true
+    },
+    {
+      "name": "Production mobile layout, history and navigation keyboard controls",
+      "passed": true
+    },
+    {
+      "name": "Compiled LangGraph investigation streams real progress and cited findings",
+      "passed": true
+    },
+    {
+      "name": "Investigation report downloads exact public fixture provenance",
+      "passed": true
+    },
+    {
+      "name": "Investigation rejects malformed input without dispatch",
+      "passed": true
+    },
+    {
+      "name": "Investigation mobile controls remain keyboard accessible",
+      "passed": true
+    },
+    {
+      "name": "Investigation authentication failure clears session without evidence",
+      "passed": true
+    },
+    {
+      "name": "Disabled server flag retains the legacy frontend/API path",
+      "passed": true
+    }
+  ],
+  "externalAttempts": 0,
+  "secretLogged": false,
+  "browser": "155.0.8059.80"
+}
