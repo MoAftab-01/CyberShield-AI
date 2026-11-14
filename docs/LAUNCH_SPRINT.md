@@ -132,6 +132,21 @@ TypeScript 6.0.3, Vite 8.1.5, Chrome 155.0.8059.80, Playwright 1.62.1.
 Frontend dependencies were reused from the previously approved disposable install.
 No browser or model weights were downloaded.
 
+## Clean-checkout portability correction
+
+The first GitHub Linux run installed all declared dependencies and passed frontend
+validation, but backend tests reported 522 passed, 14 failed and 133 errors because
+Git had normalized hash-pinned JSON fixtures from CRLF to LF. Integrity checks
+correctly refused those changed bytes. This had been missed by working-tree-only
+validation before the initial publication.
+
+A separate corrective commit preserves bytes only in the four evaluation JSON
+directories through .gitattributes. Fifteen files differ only in line endings from
+the earlier Git blobs; all artifact contents, approved hashes, questions, labels
+and integrity assertions remain unchanged. The new check_fixture_bytes.py command
+verifies 14 pinned relationships against both the checkout and staged Git blobs.
+It runs before CI tests. The PR checks provide the clean-Linux rerun evidence.
+
 ## Investigation evaluation
 
 Twenty deterministic scenarios cover three real CVE identifiers and a synthetic

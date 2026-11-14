@@ -53,6 +53,7 @@ jobs:
           ACCESS_TOKEN_EXPIRE_MINUTES: "30"
           EMBEDDING_BACKEND: hash
         run: |
+          python -B validation/check_fixture_bytes.py
           python -B validation/run_isolated_tests.py full-offline .
           python -B validation/secret_scan.py
 

@@ -1,1 +1,8 @@
 *.sh text eol=lf
+
+# Provenance manifests pin literal artifact bytes, including line endings.
+# Preserve them in Git on Windows and Linux; never rewrite hashes at runtime.
+backend/evaluation/source_foundation/*.json -text
+backend/evaluation/retrieval_quality/*.json -text
+backend/evaluation/grounded_answers/*.json -text
+backend/evaluation/investigation/*.json -text
