@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 from app.core.security import hash_password, verify_password
 from app.database.models import User
@@ -28,7 +29,13 @@ class UserService:
         )
 
         db.add(new_user)
-        db.commit()
+        try:
+            db.commit()
+        except IntegrityError:
+            db.rollback()
+            if UserService.get_user_by_email(db, user.email) is not None:
+                raise ValueError("Email already exists.") from None
+            raise
         db.refresh(new_user)
 
         return new_user

@@ -45,7 +45,8 @@ class TestCopilotRequiresAuthentication:
     def test_no_token_is_rejected(self, client):
         response = client.post("/copilot/ask", json={"question": "hello"})
 
-        assert response.status_code == 403
+        assert response.status_code == 401
+        assert response.headers["www-authenticate"] == "Bearer"
 
     def test_a_malformed_token_is_rejected(self, client):
         response = client.post(
