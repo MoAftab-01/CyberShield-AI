@@ -205,3 +205,53 @@ def test_pasted_generator_values_with_punctuation_remain_local_and_redacted(
     conversation=ConversationService.get_conversation(db_session,result["conversation_id"],user.id)
     assert all(SECRET not in m.content for m in conversation["messages"])
     assert SECRET not in conversation["title"] and stub_llm==[]
+
+
+@pytest.mark.parametrize("question", [
+    "Generate a secure 20-character password.",
+    "Generate a secure 20-character password!!!",
+    "Create a 24-character password.",
+    "Generate a 20\u2011character password.",
+    "\uff27\uff45\uff4e\uff45\uff52\uff41\uff54\uff45 a secure \uff12\uff10-character \uff50\uff41\uff53\uff53\uff57\uff4f\uff52\uff44.",
+])
+def test_generation_length_is_not_a_supplied_credential(question, stub_llm):
+    from app.agents.intents import Intent
+    decision = IntentRouter.classify(question)
+    assert decision.intent == Intent.PASSWORD_GENERATION
+    assert decision.password is None
+    assert decision.password_length in {20, 24}
+    assert stub_llm == []
+
+
+@pytest.mark.parametrize("question,expected", [
+    ('Generate a 20-character password; analyze password: "' + SECRET + '"', SECRET),
+    ("Generate a 20-character password, but first analyze " + SECRET, SECRET),
+    ('Generate a password; my password is "20-character"', "20-character"),
+    ("Analyze password: 20-character", "20-character"),
+    ('Generate a "20-character" password', "20-character"),
+    ("Generate a 20-character password and remember " + SECRET, SECRET),
+    ("Generate a 20-character password; password: " + SECRET, SECRET),
+])
+def test_generation_length_does_not_bypass_supplied_credentials(question, expected, stub_llm):
+    from app.agents.intents import Intent
+    decision = IntentRouter.classify(question)
+    assert decision.intent == Intent.PASSWORD_ANALYSIS
+    # Multiple candidates must remain local even when a length token comes first.
+    assert expected in credential_candidates(question)
+    assert expected not in redact_secrets(question, decision)
+    assert decision.url is None and decision.cve is None
+    assert stub_llm == []
+
+
+def test_length_qualified_generation_privacy_and_repeated_turns(
+        db_session, user_factory, generated, stub_llm, capsys):
+    user = user_factory()
+    first = ask(db_session, user, "Generate a secure 20-character password.")
+    second = ask(db_session, user, "Generate a secure 20-character password.", first["conversation_id"])
+    assert first["tool_used"] == second["tool_used"] == "Password Generator"
+    assert SECRET in first["answer"] and SECRET in second["answer"]
+    conversation = ConversationService.get_conversation(db_session, first["conversation_id"], user.id)
+    assert SECRET not in conversation["title"]
+    assert all(SECRET not in message.content for message in conversation["messages"])
+    assert stub_llm == []
+    assert SECRET not in capsys.readouterr().out

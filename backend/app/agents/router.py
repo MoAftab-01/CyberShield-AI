@@ -23,7 +23,7 @@ import json
 import re
 from dataclasses import dataclass, field
 
-from app.core.credential_privacy import credential_candidates, folded
+from app.core.credential_privacy import LABEL, QUOTED, credential_candidates, folded
 from app.agents.intents import Intent
 
 
@@ -76,7 +76,7 @@ BARE_DOMAIN_PATTERN = re.compile(
     re.IGNORECASE,
 )
 PASSWORD_LENGTH_PATTERN = re.compile(
-    r"\b(\d{1,3})\s*(?:character|char|digit|letter|symbol)s?\b",
+    r"\b(\d{1,3})\s*[-\u2010-\u2015]?\s*(?:character|char|digit|letter|symbol)s?\b",
     re.IGNORECASE,
 )
 
@@ -234,6 +234,19 @@ def extract_password(question: str) -> str | None:
     handed one over or asked about a specific credential token.
     """
     values = credential_candidates(question)
+    normalized = folded(question)
+    if (_contains_any(normalized, GENERATE_VERBS)
+            and not LABEL.search(normalized) and not QUOTED.search(normalized)):
+        # Only an unquoted length immediately before password/passphrase is
+        # generation syntax. Explicit/quoted credentials still take priority,
+        # and all other candidates keep their original spelling and stay local.
+        # Do not change the shared detector used for history/prompt redaction.
+        lengths = {
+            match.group(0) for match in PASSWORD_LENGTH_PATTERN.finditer(normalized)
+            if re.match(r"\s+(?:password|passphrase)s?\b", normalized[match.end():])
+        }
+        values = tuple(value for value in values
+                       if folded(value).rstrip(".,;:!?") not in lengths)
     return values[0] if values else None
 
 
