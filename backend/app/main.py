@@ -62,14 +62,7 @@ app = FastAPI(
 try:
     init_db()
 except Exception as error:  # pragma: no cover - depends on the environment
-    print(
-        f"[startup] database not reachable ({type(error).__name__}). "
-        f"DATABASE_URL host is "
-        f"{settings.DATABASE_URL.rsplit('@', 1)[-1].split('/')[0]!r}. "
-        "The API will start, but every endpoint that touches the database "
-        "will fail until this is fixed. For local development, point "
-        "DATABASE_URL at SQLite: sqlite:///./local_dev.db"
-    )
+    print("[startup] database unavailable; check server database configuration.")
 
 # ==========================================
 # CORS Configuration
@@ -121,3 +114,6 @@ def home():
         "version": settings.APP_VERSION,
         "status": "Running",
     }
+# Separate opt-in investigation API; existing chat dispatch is unchanged.
+from app.api.investigation_routes import router as investigation_router
+app.include_router(investigation_router)

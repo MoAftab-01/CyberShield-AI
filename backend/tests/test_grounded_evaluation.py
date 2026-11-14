@@ -57,7 +57,8 @@ def test_only_flagged_adapter_imports_verifier_and_serving_never_imports_evaluat
     from app.core.config import Settings
     backend=Path(__file__).resolve().parents[1]
     allowed={"services/grounded_chat_service.py": {"VerifiedAnswer", "quotation_answer", "instruction_like"},
-             "schemas/copilot_schema.py": {"VerifiedAnswer"}}
+             "schemas/copilot_schema.py": {"VerifiedAnswer"},
+             "agents/investigation.py": {"instruction_like", "verify_draft", "terms"}}
     forbidden={"evaluation", "grounded_evaluation", "quality_evaluation", "answer_improvement_evaluation",
                "quality_dataset", "quality_metrics"}
     found=set()
@@ -79,3 +80,10 @@ def test_only_flagged_adapter_imports_verifier_and_serving_never_imports_evaluat
                                for m in modules for bad in forbidden)
     assert found==set(allowed)
     assert Settings.model_fields["CYBERGPT_V2_ENABLED"].default is False
+
+    assert Settings.model_fields["CVE_INVESTIGATION_ENABLED"].default is False
+    assert Settings.model_fields["CVE_INVESTIGATION_LIVE_APPROVED"].default is False
+    route_tree=ast.parse((backend/"app/api/investigation_routes.py").read_text())
+    assert not any(isinstance(node, ast.ImportFrom) and node.module in {
+        "app.agents.investigation", "app.agents.investigation_intelligence"}
+        for node in route_tree.body)  # Heavy execution imports stay behind server flags.

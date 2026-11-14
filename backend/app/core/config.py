@@ -32,6 +32,8 @@ class Settings(BaseSettings):
     APP_VERSION: str = "0.1.0"
     ENVIRONMENT: str = "development"
     # Server-only opt-in; no default catalog or benchmark data admission.
+    CVE_INVESTIGATION_ENABLED: bool = False
+    CVE_INVESTIGATION_LIVE_APPROVED: bool = False
     CYBERGPT_V2_ENABLED: bool = False
     CYBERGPT_V2_CATALOG_MANIFEST: Path | None = None
 
@@ -89,7 +91,7 @@ class Settings(BaseSettings):
         hide_input_in_errors=True,
     )
 
-    @field_validator("CYBERGPT_V2_ENABLED", mode="before")
+    @field_validator("CYBERGPT_V2_ENABLED", "CVE_INVESTIGATION_ENABLED", "CVE_INVESTIGATION_LIVE_APPROVED", mode="before")
     @classmethod
     def _validate_cybergpt_v2_enabled(cls, value):
         if type(value) is bool:

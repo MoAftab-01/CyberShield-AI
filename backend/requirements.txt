@@ -2,7 +2,7 @@
 fastapi==0.115.6
 uvicorn[standard]==0.34.0
 pydantic==2.12.5
-pydantic-settings==2.7.1
+pydantic-settings==2.15.0
 email-validator==2.2.0
 SQLAlchemy==2.0.36
 psycopg2-binary==2.9.10
@@ -16,9 +16,9 @@ openai==1.58.1
 numpy<2
 faiss-cpu==1.9.0.post1
 rank-bm25==0.2.2
-langchain-core==0.3.29
-langchain-community==0.3.14
-langchain-text-splitters==0.3.5
+langchain-core==1.7.7
+langchain-community==0.4.2
+langchain-text-splitters==1.1.3
 pypdf==5.1.0
 PyMuPDF==1.25.1
 python-docx==1.1.2
@@ -30,3 +30,6 @@ attackcti==0.6.4
 # Chosen over sentence-transformers because torch alone is several hundred MB
 # of image for a free-tier container that has 512MB of RAM.
 fastembed==0.8.1
+
+# Bounded CVE investigation StateGraph; no checkpoint or model downloads.
+langgraph==1.2.21

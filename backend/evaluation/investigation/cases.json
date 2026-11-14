@@ -1,0 +1,168 @@
+[
+  {
+    "scenario": "normal",
+    "expected": "complete",
+    "expected_sources": [
+      "nvd",
+      "cisa-kev"
+    ],
+    "cve": "CVE-2021-44228"
+  },
+  {
+    "scenario": "rapid_reset",
+    "expected": "complete",
+    "expected_sources": [
+      "nvd",
+      "cisa-kev"
+    ],
+    "cve": "CVE-2023-44487"
+  },
+  {
+    "scenario": "xz",
+    "expected": "complete",
+    "expected_sources": [
+      "nvd",
+      "cisa-kev"
+    ],
+    "cve": "CVE-2024-3094"
+  },
+  {
+    "scenario": "unknown",
+    "expected": "partial",
+    "expected_sources": [
+      "cisa-kev"
+    ],
+    "cve": "CVE-2099-9999"
+  },
+  {
+    "scenario": "negative",
+    "expected": "complete",
+    "expected_sources": [
+      "nvd",
+      "cisa-kev"
+    ],
+    "cve": "CVE-2021-44228"
+  },
+  {
+    "scenario": "retry",
+    "expected": "complete",
+    "expected_sources": [
+      "nvd",
+      "cisa-kev"
+    ],
+    "cve": "CVE-2021-44228"
+  },
+  {
+    "scenario": "outage",
+    "expected": "insufficient_evidence",
+    "expected_sources": [],
+    "cve": "CVE-2021-44228"
+  },
+  {
+    "scenario": "nvd_outage",
+    "expected": "partial",
+    "expected_sources": [
+      "cisa-kev"
+    ],
+    "cve": "CVE-2021-44228"
+  },
+  {
+    "scenario": "cisa-kev_outage",
+    "expected": "partial",
+    "expected_sources": [
+      "nvd"
+    ],
+    "cve": "CVE-2021-44228"
+  },
+  {
+    "scenario": "mismatch",
+    "expected": "partial",
+    "expected_sources": [
+      "cisa-kev"
+    ],
+    "cve": "CVE-2021-44228"
+  },
+  {
+    "scenario": "withdrawn",
+    "expected": "partial",
+    "expected_sources": [
+      "cisa-kev"
+    ],
+    "cve": "CVE-2021-44228"
+  },
+  {
+    "scenario": "injection",
+    "expected": "partial",
+    "expected_sources": [
+      "cisa-kev"
+    ],
+    "cve": "CVE-2021-44228"
+  },
+  {
+    "scenario": "stale",
+    "expected": "partial",
+    "expected_sources": [
+      "nvd",
+      "cisa-kev"
+    ],
+    "cve": "CVE-2021-44228"
+  },
+  {
+    "scenario": "malformed",
+    "expected": "partial",
+    "expected_sources": [
+      "cisa-kev"
+    ],
+    "cve": "CVE-2021-44228"
+  },
+  {
+    "scenario": "malformed_kev",
+    "expected": "partial",
+    "expected_sources": [
+      "nvd"
+    ],
+    "cve": "CVE-2021-44228"
+  },
+  {
+    "scenario": "duplicate",
+    "expected": "partial",
+    "expected_sources": [
+      "nvd"
+    ],
+    "cve": "CVE-2021-44228"
+  },
+  {
+    "scenario": "identifier_omitted",
+    "expected": "complete",
+    "expected_sources": [
+      "nvd",
+      "cisa-kev"
+    ],
+    "cve": "CVE-2021-44228"
+  },
+  {
+    "scenario": "missing",
+    "expected": "partial",
+    "expected_sources": [
+      "cisa-kev"
+    ],
+    "cve": "CVE-2021-44228"
+  },
+  {
+    "scenario": "malicious_action",
+    "expected": "partial",
+    "expected_sources": [
+      "nvd",
+      "cisa-kev"
+    ],
+    "cve": "CVE-2021-44228"
+  },
+  {
+    "scenario": "long",
+    "expected": "partial",
+    "expected_sources": [
+      "cisa-kev"
+    ],
+    "cve": "CVE-2021-44228"
+  }
+]
