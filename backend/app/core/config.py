@@ -1,5 +1,11 @@
-from pydantic import field_validator
+from pathlib import Path
+
+from pydantic import ValidationInfo, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from sqlalchemy.engine import make_url
+from sqlalchemy.exc import ArgumentError
+
+BACKEND_ENV_FILE = Path(__file__).resolve().parents[2] / ".env"
 
 #: JWT signing algorithms this application will accept.
 #:
@@ -13,10 +19,8 @@ ALLOWED_JWT_ALGORITHMS = frozenset(
     {"HS256", "HS384", "HS512"}
 )
 
-#: Below this length an HMAC secret is brute-forceable offline. Warned about
-#: rather than enforced, because a hard failure at import would take down a
-#: running deployment that is otherwise healthy - and a warning the operator
-#: can see is more useful than an outage.
+#: Normal runtime must fail before serving requests with a weak signing secret.
+#: Explicit test settings retain the warning for existing synthetic fixtures.
 MIN_JWT_SECRET_LENGTH = 32
 
 
@@ -27,11 +31,16 @@ class Settings(BaseSettings):
     APP_NAME: str = "CyberShield"
     APP_VERSION: str = "0.1.0"
     ENVIRONMENT: str = "development"
+    # Server-only opt-in; no default catalog or benchmark data admission.
+    CVE_INVESTIGATION_ENABLED: bool = False
+    CVE_INVESTIGATION_LIVE_APPROVED: bool = False
+    CYBERGPT_V2_ENABLED: bool = False
+    CYBERGPT_V2_CATALOG_MANIFEST: Path | None = None
 
     # ==========================
     # Database
     # ==========================
-    DATABASE_URL: str = "sqlite:///./test.db"
+    DATABASE_URL: str
 
     # Comma-separated browser origins allowed to call the API.
     CORS_ORIGINS: str = (
@@ -43,7 +52,7 @@ class Settings(BaseSettings):
     # ==========================
     # JWT Authentication
     # ==========================
-    JWT_SECRET: str = "testsecret"
+    JWT_SECRET: str
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
 
@@ -76,9 +85,54 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=BACKEND_ENV_FILE,
+        env_file_encoding="utf-8",
         extra="ignore",
+        hide_input_in_errors=True,
     )
+
+    @field_validator("CYBERGPT_V2_ENABLED", "CVE_INVESTIGATION_ENABLED", "CVE_INVESTIGATION_LIVE_APPROVED", mode="before")
+    @classmethod
+    def _validate_cybergpt_v2_enabled(cls, value):
+        if type(value) is bool:
+            return value
+        if isinstance(value, str) and value.strip().casefold() in {"true", "false"}:
+            return value.strip().casefold() == "true"
+        raise ValueError("CYBERGPT_V2_ENABLED accepts only true or false.")
+
+    @field_validator("CYBERGPT_V2_CATALOG_MANIFEST")
+    @classmethod
+    def _validate_cybergpt_v2_manifest(cls, value):
+        if value is not None and not value.is_absolute():
+            raise ValueError("CYBERGPT_V2_CATALOG_MANIFEST requires an absolute path.")
+        return value
+
+    @field_validator("ENVIRONMENT")
+    @classmethod
+    def _normalize_environment(cls, value: str) -> str:
+        environment = value.strip().lower()
+        if not environment:
+            raise ValueError("ENVIRONMENT must not be empty.")
+        return environment
+
+    @field_validator("DATABASE_URL")
+    @classmethod
+    def _validate_database_url(cls, value: str, info: ValidationInfo) -> str:
+        try:
+            url = make_url(value)
+        except (ArgumentError, ValueError):
+            raise ValueError("DATABASE_URL must be a valid database URL.") from None
+
+        backend = url.get_backend_name()
+        if backend == "sqlite":
+            if info.data.get("ENVIRONMENT") != "test":
+                raise ValueError("SQLite is allowed only with ENVIRONMENT=test.")
+        elif backend != "postgresql":
+            raise ValueError("DATABASE_URL must use PostgreSQL outside SQLite tests.")
+        elif not url.host or not url.database or not url.database.strip():
+            raise ValueError("PostgreSQL DATABASE_URL requires a host and database name.")
+
+        return value
 
     @field_validator("JWT_ALGORITHM")
     @classmethod
@@ -96,8 +150,15 @@ class Settings(BaseSettings):
 
     @field_validator("JWT_SECRET")
     @classmethod
-    def _check_jwt_secret_strength(cls, value: str) -> str:
-        if len(value or "") < MIN_JWT_SECRET_LENGTH:
+    def _check_jwt_secret_strength(cls, value: str, info: ValidationInfo) -> str:
+        if not value.strip():
+            raise ValueError("JWT_SECRET must not be empty.")
+        if len(value.strip()) < MIN_JWT_SECRET_LENGTH:
+            if info.data.get("ENVIRONMENT") != "test":
+                raise ValueError(
+                    f"JWT_SECRET must contain at least {MIN_JWT_SECRET_LENGTH} "
+                    "characters outside tests; configure a randomly generated secret."
+                )
             print(
                 "[security] JWT_SECRET is shorter than "
                 f"{MIN_JWT_SECRET_LENGTH} characters. An HMAC secret this "

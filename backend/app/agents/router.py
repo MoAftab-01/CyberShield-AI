@@ -23,6 +23,7 @@ import json
 import re
 from dataclasses import dataclass, field
 
+from app.core.credential_privacy import LABEL, QUOTED, credential_candidates, folded
 from app.agents.intents import Intent
 
 
@@ -34,7 +35,7 @@ class RoutingDecision:
     confidence: float
     source: str  # "rule" | "llm" | "default"
     reason: str
-    password: str | None = None
+    password: str | None = field(default=None, repr=False)
     url: str | None = None
     cve: str | None = None
     password_length: int | None = None
@@ -75,7 +76,7 @@ BARE_DOMAIN_PATTERN = re.compile(
     re.IGNORECASE,
 )
 PASSWORD_LENGTH_PATTERN = re.compile(
-    r"\b(\d{1,3})\s*(?:character|char|digit|letter|symbol)s?\b",
+    r"\b(\d{1,3})\s*[-\u2010-\u2015]?\s*(?:character|char|digit|letter|symbol)s?\b",
     re.IGNORECASE,
 )
 
@@ -232,41 +233,21 @@ def extract_password(question: str) -> str | None:
     Deliberately conservative: only returns a value when the user clearly
     handed one over or asked about a specific credential token.
     """
-    # "analyze this password: X" / "password is X" / "password = X"
-    match = PASSWORD_AFTER_COLON.search(question)
-    if match:
-        candidate = match.group("value").strip().strip("'\"`")
-        if candidate and "//" not in candidate and not candidate.lower().startswith("http"):
-            return candidate
-
-    # 'password "hunter2"'
-    if PASSWORD_TOPIC_PATTERN.search(question):
-        match = PASSWORD_QUOTED.search(question)
-        if match:
-            return match.group("value").strip()
-
-    # "password hunter2"
-    match = PASSWORD_TRAILING_TOKEN.search(question)
-    if match:
-        candidate = match.group("value").strip().strip("'\"`")
-        # Avoid treating the topic word itself as the value.
-        if candidate.lower() not in PASSWORD_STOP_WORDS:
-            return candidate
-
-    # Specific candidate token inside a password-related question:
-    # e.g. "Is SecretP@ssw0rd123! a strong password?" or "Why is Hunter2! bad?"
-    if PASSWORD_TOPIC_PATTERN.search(question):
-        tokens = question.split()
-        for token in tokens:
-            cleaned = token.strip(".,;:!?\"'`()[]{}")
-            if len(cleaned) >= 4 and cleaned.lower() not in PASSWORD_STOP_WORDS:
-                has_mixed_case = any(c.isupper() for c in cleaned) and any(c.islower() for c in cleaned)
-                has_digits = any(c.isdigit() for c in cleaned)
-                has_special = any(c in "!@#$%^&*()-_=+[]{}?`~" for c in cleaned)
-                if (has_digits and (has_mixed_case or any(c.isalpha() for c in cleaned))) or has_special or (has_mixed_case and len(cleaned) >= 6):
-                    return cleaned
-
-    return None
+    values = credential_candidates(question)
+    normalized = folded(question)
+    if (_contains_any(normalized, GENERATE_VERBS)
+            and not LABEL.search(normalized) and not QUOTED.search(normalized)):
+        # Only an unquoted length immediately before password/passphrase is
+        # generation syntax. Explicit/quoted credentials still take priority,
+        # and all other candidates keep their original spelling and stay local.
+        # Do not change the shared detector used for history/prompt redaction.
+        lengths = {
+            match.group(0) for match in PASSWORD_LENGTH_PATTERN.finditer(normalized)
+            if re.match(r"\s+(?:password|passphrase)s?\b", normalized[match.end():])
+        }
+        values = tuple(value for value in values
+                       if folded(value).rstrip(".,;:!?") not in lengths)
+    return values[0] if values else None
 
 
 def extract_password_length(question: str) -> int | None:
@@ -326,7 +307,12 @@ class IntentRouter:
                 reason="empty question",
             )
 
-        decision = cls._apply_rules(question)
+        # Credentials are handled before unrelated tools or provider routing.
+        password = extract_password(question)
+        if password:
+            return RoutingDecision(intent=Intent.PASSWORD_ANALYSIS, confidence=0.98,
+                source="rule", reason="credential supplied for local analysis", password=password)
+        decision = cls._apply_rules(folded(question))
         if decision is not None:
             return decision
 

@@ -2,3 +2,5 @@ node_modules
 dist
 .env
 .git
+# Never bake environment variants into application images.
+.env.*

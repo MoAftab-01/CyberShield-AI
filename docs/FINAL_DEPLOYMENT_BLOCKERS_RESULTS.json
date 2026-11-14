@@ -1,0 +1,417 @@
+{
+  "date": "2026-11-15",
+  "timezone": "Asia/Calcutta",
+  "base_sha": "42858a1fbc1e6c8f2731e38cc96a78fd0f7a4a02",
+  "branch": "feature/cybergpt-2-source-foundation",
+  "decisions": {
+    "password": "FIXED",
+    "existing_preview_isolation": "BLOCKED",
+    "fresh_local_staging": "PASS",
+    "public_deployment": "NOT_AUTHORIZED"
+  },
+  "project": "cybershield-gate-e569ec4963f5",
+  "demo_url": "http://127.0.0.1:18080/investigate",
+  "results": {
+    "reproduction": {
+      "exit_code": 1,
+      "files": [
+        "test_password_privacy.py"
+      ],
+      "seconds": 35.441,
+      "network": "none",
+      "no_application_volumes_or_credentials": true,
+      "summary_lines": [
+        ".....................................FFFFF.......F                       [100%]ISOLATION_RESULT {\"outbound_attempts_blocked\": 0, \"postgres_attempts_blocked\": 0, \"test_storage_outside_repository\": true}",
+        "E   AssertionError: assert <Intent.PASSW...ORD_ANALYSIS'> == <Intent.PASSW...D_GENERATION'>",
+        "E   AssertionError: assert <Intent.PASSW...ORD_ANALYSIS'> == <Intent.PASSW...D_GENERATION'>",
+        "E   AssertionError: assert <Intent.PASSW...ORD_ANALYSIS'> == <Intent.PASSW...D_GENERATION'>",
+        "E   AssertionError: assert <Intent.PASSW...ORD_ANALYSIS'> == <Intent.PASSW...D_GENERATION'>",
+        "E   AssertionError: assert <Intent.PASSW...ORD_ANALYSIS'> == <Intent.PASSW...D_GENERATION'>",
+        "E   AssertionError: assert 'Password Analyzer' == 'Password Generator'",
+        "FAILED tests/test_password_privacy.py::test_generation_length_is_not_a_supplied_credential[Generate a secure 20-character password.]",
+        "FAILED tests/test_password_privacy.py::test_generation_length_is_not_a_supplied_credential[Generate a secure 20-character password!!!]",
+        "FAILED tests/test_password_privacy.py::test_generation_length_is_not_a_supplied_credential[Create a 24-character password.]",
+        "FAILED tests/test_password_privacy.py::test_generation_length_is_not_a_supplied_credential[Generate a 20\\u2011character password.]",
+        "FAILED tests/test_password_privacy.py::test_generation_length_is_not_a_supplied_credential[\\uff27\\uff45\\uff4e\\uff45\\uff52\\uff41\\uff54\\uff45 a secure \\uff12\\uff10-character \\uff50\\uff41\\uff53\\uff53\\uff57\\uff4f\\uff52\\uff44.]",
+        "FAILED tests/test_password_privacy.py::test_length_qualified_generation_privacy_and_repeated_turns",
+        "6 failed, 44 passed, 174 warnings in 20.15s"
+      ]
+    },
+    "focused": {
+      "exit_code": 0,
+      "files": [
+        "test_password_privacy.py",
+        "test_router.py",
+        "test_orchestrator.py",
+        "test_launch_auth.py",
+        "test_security.py"
+      ],
+      "seconds": 50.838,
+      "network": "none",
+      "no_application_volumes_or_credentials": true,
+      "summary_lines": [
+        "........                                                                 [100%]ISOLATION_RESULT {\"outbound_attempts_blocked\": 0, \"postgres_attempts_blocked\": 0, \"test_storage_outside_repository\": true}",
+        "152 passed, 280 warnings in 38.90s"
+      ]
+    },
+    "full": {
+      "exit_code": 0,
+      "files": [
+        "."
+      ],
+      "seconds": 153.622,
+      "network": "none",
+      "no_application_volumes_or_credentials": true,
+      "summary_lines": [
+        ".............................................                            [100%]ISOLATION_RESULT {\"outbound_attempts_blocked\": 0, \"postgres_attempts_blocked\": 0, \"test_storage_outside_repository\": true}",
+        "693 passed, 765 warnings in 142.38s (0:02:22)"
+      ]
+    },
+    "database_identity": {
+      "passed": 11,
+      "checks": [
+        "project_and_service",
+        "no_postgres_host_port",
+        "fresh_named_volume",
+        "volume_project_label",
+        "only_own_network",
+        "internal_project_network",
+        "database_and_role",
+        "empty_schema_before_application",
+        "postgres18_volume_directory",
+        "database_marker",
+        "backend_connection_to_verified_cluster"
+      ],
+      "schema_was_empty": true,
+      "internal_network": true,
+      "original_storage_reused": false
+    },
+    "http": {
+      "passed": 45,
+      "failed": 0,
+      "checks": [
+        "ready_through_real_nginx",
+        "unauthorized_graph_is_401",
+        "unauthorized_bearer_challenge",
+        "anonymous_real_upload_rejected",
+        "login_alpha",
+        "previous_registration_confirmed_alpha",
+        "login_beta",
+        "previous_registration_confirmed_beta",
+        "wrong_password_is_controlled",
+        "jwt_expired_rejected",
+        "jwt_missing_exp_rejected",
+        "jwt_invalid_subject_rejected",
+        "invalid_token_rejected",
+        "authenticated_graph_complete",
+        "all_seven_compiled_nodes",
+        "response_contract_v1",
+        "offline_fixture_no_model_usage",
+        "exact_authorized_citation_links",
+        "provenance_and_public_scope",
+        "client_cannot_override_user_id",
+        "client_cannot_override_live",
+        "client_cannot_override_url",
+        "malformed_cve_rejected",
+        "streamed_nodes_and_report",
+        "stream_no_store",
+        "cancel_after_first_event_0",
+        "cancel_after_first_event_1",
+        "capacity_recovers_after_cancellation",
+        "legacy_chat_response_compatible",
+        "exact_length_qualified_generation_routes_correctly",
+        "requested_generation_length_preserved",
+        "own_conversation_access",
+        "generated_password_not_in_history",
+        "cross_user_history_denied",
+        "cross_user_rename_denied",
+        "cross_user_delete_denied",
+        "owner_history_preserved",
+        "owner_scoped_threat_history_1",
+        "owner_scoped_threat_stats_1",
+        "owner_scoped_threat_history_2",
+        "owner_scoped_threat_stats_2",
+        "synthetic_upload_on_fresh_storage",
+        "owner_downloads_own_upload",
+        "cross_user_upload_download_denied",
+        "cross_user_upload_delete_denied"
+      ],
+      "citation_links": 3,
+      "cancellation": "Client closed after first streamed event; capacity recovered. Fast fixtures do not prove interruption of a slow external adapter.",
+      "registration_previously_verified": true,
+      "setup_correction": "Existing API omits tool_metadata; length verified from immediate code-fenced response. Initial diagnostics retained; no application changes.",
+      "all_intelligence_offline": true,
+      "original_data_accessed": false
+    },
+    "initial_http_harness_diagnostic": {
+      "failed_stage": "exact_length_qualified_generation_routes_correctly",
+      "error_type": "KeyError",
+      "passed_before_failure": 30,
+      "checks": [
+        "ready_through_real_nginx",
+        "unauthorized_graph_is_401",
+        "unauthorized_bearer_challenge",
+        "anonymous_real_upload_rejected",
+        "registration_alpha",
+        "login_alpha",
+        "registration_beta",
+        "login_beta",
+        "wrong_password_is_controlled",
+        "jwt_expired_rejected",
+        "jwt_missing_exp_rejected",
+        "jwt_invalid_subject_rejected",
+        "invalid_token_rejected",
+        "authenticated_graph_complete",
+        "all_seven_compiled_nodes",
+        "response_contract_v1",
+        "offline_fixture_no_model_usage",
+        "exact_authorized_citation_links",
+        "provenance_and_public_scope",
+        "client_cannot_override_user_id",
+        "client_cannot_override_live",
+        "client_cannot_override_url",
+        "malformed_cve_rejected",
+        "streamed_nodes_and_report",
+        "stream_no_store",
+        "cancel_after_first_event_0",
+        "cancel_after_first_event_1",
+        "capacity_recovers_after_cancellation",
+        "legacy_chat_response_compatible",
+        "exact_length_qualified_generation_routes_correctly"
+      ]
+    },
+    "browser": {
+      "passed": 10,
+      "failed": 0,
+      "checks": [
+        "unauthenticated_investigation_redirects_to_login",
+        "real_frontend_login",
+        "actual_container_graph_and_seven_workflow_nodes",
+        "citation_keyboard_focus_and_provenance",
+        "downloaded_report_has_only_verified_public_fixtures",
+        "cross_user_conversation_is_inaccessible_in_browser",
+        "length_qualified_generation_immediate_only_in_real_chat",
+        "mobile_layout_and_keyboard_navigation",
+        "UI_cancellation_ignores_delayed_real_response",
+        "frontend_unauthorized_response_clears_token"
+      ],
+      "external_requests_blocked": 0,
+      "secret_console_disclosures": 0,
+      "browser": "155.0.8059.80",
+      "actual_staging_containers": true,
+      "slow_backend_interruption_proven": false
+    },
+    "runtime_restart": {
+      "images": {
+        "backend": {
+          "id": "sha256:98768c54a8368133e49c48f483898d8b6341a825cf1a2a230bd5a87fcac4c669",
+          "os": "linux",
+          "architecture": "amd64"
+        },
+        "frontend": {
+          "id": "sha256:130638af156638f812a90ead8a54753bd2b5628c5d893f92c10ffde5b518ce5d",
+          "os": "linux",
+          "architecture": "amd64"
+        },
+        "postgres": {
+          "id": "sha256:3cccc725163a95947178f4da5e9bf16add75cb286170ac5a2cd2f6513534955d",
+          "os": "linux",
+          "architecture": "amd64"
+        }
+      },
+      "networks": {
+        "default_internal": true,
+        "frontend_only_ingress": true
+      },
+      "volumes": {
+        "/app/uploads": {
+          "name": "cybershield-gate-e569ec4963f5_staging_uploads",
+          "project": "cybershield-gate-e569ec4963f5"
+        },
+        "/app/vector_db": {
+          "name": "cybershield-gate-e569ec4963f5_staging_vectors",
+          "project": "cybershield-gate-e569ec4963f5"
+        },
+        "postgres": {
+          "name": "cybershield-gate-e569ec4963f5_staging_postgres",
+          "project": "cybershield-gate-e569ec4963f5"
+        }
+      },
+      "passed": 38,
+      "failed": 0,
+      "checks": [
+        "owned_container_backend",
+        "linux_image_backend",
+        "loopback_or_no_public_ports_backend",
+        "internal_only_backend",
+        "not_published_backend",
+        "only_new_owned_volume_backend",
+        "only_new_owned_volume_backend",
+        "live_models_and_intelligence_disabled",
+        "new_signing_secret_and_database_only",
+        "owned_container_frontend",
+        "linux_image_frontend",
+        "loopback_or_no_public_ports_frontend",
+        "localhost_frontend_listener",
+        "owned_container_postgres",
+        "linux_image_postgres",
+        "loopback_or_no_public_ports_postgres",
+        "internal_only_postgres",
+        "not_published_postgres",
+        "only_new_owned_volume_postgres",
+        "default_network_egress_blocked",
+        "frontend_serves_investigation_SPA",
+        "static_script_same_origin",
+        "compiled_frontend_uses_same_origin_api",
+        "no_staging_server_secrets_in_bundle",
+        "no_secret_patterns_in_staging_bundle",
+        "pre_restart_authentication",
+        "fresh_hash_index_has_owned_synthetic_upload",
+        "postgres_survives_app_rollback",
+        "rollback_restore_ready",
+        "full_restart_ready",
+        "same_database_identity_and_record_counts",
+        "JWT_remains_valid_after_restart",
+        "conversation_survives_restart",
+        "private_upload_survives_restart",
+        "cross_user_rejection_survives_restart",
+        "uploaded_index_chunks_survive_restart",
+        "graph_recovers_after_restart",
+        "no_server_credentials_or_synthetic_login_passwords_in_logs"
+      ],
+      "frontend_bundles": [
+        {
+          "path": "/assets/index-C_Xo3A0f.js",
+          "bytes": 1593620,
+          "sha256": "781be0c9ce5b6c509f7786cddc0361c65259d49ef664773e679d768b6b6adbb7",
+          "api_base": "/api"
+        }
+      ],
+      "vectors_before": {
+        "documents": 8407,
+        "alpha_upload_chunks": 1,
+        "model_cache_present": false
+      },
+      "vectors_after": {
+        "documents": 8407,
+        "alpha_upload_chunks": 1,
+        "model_cache_present": false
+      },
+      "staging_left_running": true
+    },
+    "extra_privacy_isolation": {
+      "passed": 5,
+      "failed": 0,
+      "checks": [
+        "cross_user_upload_listing_isolated",
+        "cross_user_private_upload_absent_from_evidence",
+        "second_exact_generation_succeeds",
+        "immediate_password_absent_from_saved_conversation",
+        "immediate_password_absent_from_owned_container_logs"
+      ],
+      "generated_secret_recorded": false
+    },
+    "source_runtime_identity": {
+      "router_sha256_normalized": "2d9635aa8a710a4d60d7b3e2c263d97960035ad64b56b9cccd1f82f4a853f8a1",
+      "running_image_matches_corrected_router": true,
+      "model_or_application_storage_reused": false,
+      "new_credentials_distinct_from_prior_staging": true
+    },
+    "preview": {
+      "deployment": {
+        "id": "dpl_8G4fiBqmxsXKJd9C2LFR9aep46pc",
+        "url": "cyber-shield-iu37aps5j-mohammedaftabahamed2-8189.vercel.app",
+        "sha": "42858a1fbc1e6c8f2731e38cc96a78fd0f7a4a02",
+        "ref": "feature/cybergpt-2-source-foundation",
+        "state": "READY",
+        "createdAt": 1794618790631
+      },
+      "envs": [
+        {
+          "key": "VITE_API_URL",
+          "target": [
+            "production",
+            "preview"
+          ],
+          "type": "sensitive",
+          "createdAt": 1790371657807,
+          "updatedAt": 1790371657807
+        }
+      ],
+      "project": {
+        "id": "prj_9mMJGQv2DrbxmaaFTeaOq1y3rxEI",
+        "name": "cyber-shield-ai",
+        "createdAt": 1790371658021,
+        "updatedAt": 1792465088110,
+        "ssoProtection": {
+          "enabled": true,
+          "deploymentType": "all_except_custom_domains"
+        }
+      },
+      "projectRoutes": [],
+      "inspection": {
+        "authenticated_cli_available": false,
+        "local_vercel_link_present": false,
+        "settings_changed": false,
+        "sharing_changed": false,
+        "deployed_assets_fetched": 0,
+        "deployed_asset_hashes": [],
+        "deployed_js_secret_findings": null,
+        "bundle_scan_result": "BLOCKED: protected assets inaccessible with current read-only access",
+        "effective_api_destination": "UNVERIFIED",
+        "destination_storage_and_credentials": "UNVERIFIED",
+        "source_rewrites": "SPA fallback only; no isolated API proxy",
+        "source_api_fallback": "http://127.0.0.1:8002"
+      },
+      "environment_event_history": {
+        "result": "BLOCKED for current refresh",
+        "error_code": "INVALID_ARGUMENT",
+        "prior_gate": "No env/settings changes observed in bounded project-filtered events; variable and project timestamps predate PR."
+      },
+      "decision": "BLOCKED"
+    }
+  },
+  "evidence_sha256": {
+    "before-fix.json": "4feaf73b9aac6737efaca0bb26b79eba14b72c20f8699e06a7e82277f75c16cc",
+    "focused.json": "c5116f804daefc2e72b394cab57f0249e4459b4a36307d6579e99a46cb8706ab",
+    "full.json": "e45c1051f62e527157cd09ba46cb9884d3fb778fc18c4c0ca6ea40716b693628",
+    "database-identity.json": "ee9837513e8c6559c3d2d11ccabd159a51030942ffc7ee3cbd9941313958990b",
+    "http-results.json": "84b7e11142412c0227c9e285fd938826d1c15dff63ef93d74f7aaf130e25dc36",
+    "http-failure-initial.json": "c211f071bac4c597b91cc15033ff9c869ed9429c764760a6ddaf1f1ba309eca8",
+    "browser-results.json": "1737831e86c8e2e5db95c9ba7535ba6227c225cd5807676c7a5a5735964733bc",
+    "restart-runtime-results.json": "0fb78d40f300187a6c65435355c7de52b2642472da9c5bd99d5dcc94a42f33b4",
+    "extra-privacy-isolation.json": "8fb672c38059c59229ad791e1038bae1c8f8ff4c536452ddc06349d2e6fcd8d0",
+    "source-runtime-identity.json": "838be4d22fa8e22531e5b2516fda3403f1c0a556bc19464119071b557f5fcabb",
+    "preview-readonly.json": "abac61fe6fdd6aa67458cb774963289d108d849baba27023b7615becfad02c39"
+  },
+  "screenshots": {
+    "staging-desktop.png": "55dccfeddc9b4eb370e0a30a8c383c29a76afa2d6319350d910c3c285fdaec0c",
+    "staging-citation.png": "e811a5b10f2ba377c374ae2d46a20139cf4faca9a005c59b8ada1683b198bae4",
+    "staging-mobile.png": "ad52d7c23be25ae79c57f89f93c79556a84191178c10600ee913dcffd703513f"
+  },
+  "harness_setup_events": [
+    "Initial HTTP check assumed tool_metadata was public; verified existing code-fenced response instead, retaining initial diagnostic.",
+    "An extra privacy probe overlapped planned service stop and got connection refused; sequential retry passed."
+  ],
+  "limitations": [
+    "No actual Vercel asset retrieved; compiled API/destination storage/credentials and deployed secret scan remain unverified.",
+    "Fast offline cancellation does not prove interruption of slow live adapters.",
+    "Exact fixture citations do not establish factual correctness.",
+    "Full pytest used installed pure-Python 8.4.2 overlay; CI pins 9.1.1.",
+    "Previous untracked staging-gate reports/screenshots preserved and excluded from commit."
+  ],
+  "next_action": "Approve a separate HTTPS demo deployment of the tested isolated Compose stack on a new dedicated host with fresh demo-only secrets/storage; leave existing production and Vercel project unchanged.",
+  "final_ready": {
+    "status": 200,
+    "body": {
+      "status": "ready",
+      "database": "available",
+      "ownership_schema": "available"
+    }
+  },
+  "source_scan": {
+    "source_files": 425,
+    "findings": [],
+    "scope": "tracked and non-ignored untracked source; values suppressed"
+  }
+}

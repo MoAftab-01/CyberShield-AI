@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import Boolean, DateTime, Float, String
+from sqlalchemy import Boolean, DateTime, Float, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.database import Base
@@ -11,6 +11,13 @@ class ThreatSearch(Base):
 
     id: Mapped[int] = mapped_column(
         primary_key=True,
+        index=True,
+    )
+
+    # Existing searches retain unknown ownership; normal writes require an owner.
+    user_id: Mapped[int | None] = mapped_column(
+        ForeignKey("users.id", name="fk_threat_searches_user_id", ondelete="SET NULL"),
+        nullable=True,
         index=True,
     )
 

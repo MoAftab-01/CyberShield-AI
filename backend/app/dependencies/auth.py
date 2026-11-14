@@ -7,19 +7,20 @@ from app.database.database import get_db
 from app.database.models import User
 from app.services.user_service import UserService
 
-security = HTTPBearer()
+security = HTTPBearer(auto_error=False)
 
 
 def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
+    credentials: HTTPAuthorizationCredentials | None = Depends(security),
     db: Session = Depends(get_db),
 ) -> User:
 
-    token = credentials.credentials
+    token = credentials.credentials if credentials else ""
 
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Invalid or expired token.",
+        headers={"WWW-Authenticate": "Bearer"},
     )
 
     payload = decode_access_token(token)

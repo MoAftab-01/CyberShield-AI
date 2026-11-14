@@ -1,0 +1,26 @@
+# Demo-only combined host; application source and runtime defaults are unchanged.
+FROM node:24-alpine AS frontend
+WORKDIR /web
+COPY frontend/package*.json ./
+RUN npm ci --ignore-scripts --no-audit --no-fund
+COPY frontend/index.html frontend/vite.config.ts frontend/tsconfig*.json ./
+COPY frontend/src ./src
+COPY frontend/public ./public
+ENV VITE_API_URL=/api
+RUN npm run build
+
+FROM python:3.12-slim
+WORKDIR /app
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_DISABLE_PIP_VERSION_CHECK=1
+COPY backend/requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+COPY backend/app ./app
+COPY backend/demo.py ./
+COPY backend/knowledge_base ./knowledge_base
+COPY --from=frontend /web/dist ./frontend_dist
+RUN useradd --create-home --uid 10001 cybershield \
+    && mkdir -p /app/uploads /app/vector_db \
+    && chown -R cybershield:cybershield /app
+USER cybershield
+EXPOSE 10000
+CMD ["python","-m","uvicorn","demo:app","--host","0.0.0.0","--port","10000","--no-access-log","--no-proxy-headers"]

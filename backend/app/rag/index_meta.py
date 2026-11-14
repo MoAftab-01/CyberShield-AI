@@ -48,7 +48,10 @@ def expected_stamp(vector_dimension: int, backend: str, model: str | None) -> di
             if path.is_file() and path.suffix.lower() in {".pdf", ".txt", ".md"}:
                 stat = path.stat()
                 with path.open("rb") as source:
-                    digest = hashlib.file_digest(source, "sha256").hexdigest()
+                    hasher = hashlib.sha256()
+                    for block in iter(lambda: source.read(1024 * 1024), b""):
+                        hasher.update(block)
+                    digest = hasher.hexdigest()
                 source_inventory.append(
                     {
                         "path": path.relative_to(knowledge_base).as_posix(),

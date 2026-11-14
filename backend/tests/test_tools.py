@@ -278,8 +278,9 @@ class TestCveLookup:
 
         seen = {}
 
-        def fake_get_cve(cve_id, db):
+        def fake_get_cve(cve_id, db, *, user_id):
             seen["cve"] = cve_id
+            seen["user_id"] = user_id
             return {
                 "cve": cve_id,
                 "severity": "CRITICAL",
@@ -293,18 +294,18 @@ class TestCveLookup:
             threat_service.ThreatService, "get_cve", staticmethod(fake_get_cve)
         )
 
-        result, decision = call_tool(
-            "What is CVE-2021-44228?", db_session, user_factory()
-        )
+        user = user_factory()
+        result, decision = call_tool("What is CVE-2021-44228?", db_session, user)
 
         assert seen["cve"] == "CVE-2021-44228"
+        assert seen["user_id"] == user.id
         assert result.metadata["known_exploited"] is True
         assert result.metadata["severity"] == "CRITICAL"
 
     def test_an_upstream_failure_is_disclosed(self, db_session, user_factory, monkeypatch):
         from app.services import threat_service
 
-        def exploding(cve_id, db):
+        def exploding(cve_id, db, *, user_id):
             raise RuntimeError("NVD rate limited")
 
         monkeypatch.setattr(

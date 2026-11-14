@@ -21,3 +21,6 @@ upload_vector_db
 *.pyd
 tests
 test_*.py
+
+# Never bake environment variants into application images.
+.env.*

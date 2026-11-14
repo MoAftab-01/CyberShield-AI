@@ -134,3 +134,8 @@ The Render free service may sleep when idle, so the first request can be delayed
 | `docs/` | Deployment and architecture documentation |
 
 Licensed under the terms in [LICENSE](LICENSE).
+
+
+## CVE Investigation Agent (feature branch)
+
+The authenticated `/investigate` interface runs a bounded LangGraph workflow with NVD/KEV evidence, exact-quotation citations, progress and JSON reports. It is disabled by default; offline synthetic demonstration and separately approved read-only live modes are distinct. See [launch validation and isolated staging instructions](docs/LAUNCH_SPRINT.md).

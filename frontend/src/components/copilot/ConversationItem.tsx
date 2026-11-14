@@ -28,6 +28,7 @@ export default function ConversationItem({
 }: Props) {
 
   const [editing, setEditing] = useState(false);
+  const [renameError, setRenameError] = useState(false);
   const [title, setTitle] = useState(conversation.title);
 
   const updated = new Date(
@@ -51,6 +52,7 @@ export default function ConversationItem({
 
     }
 
+    setRenameError(false);
     try {
 
       await renameConversation(
@@ -64,9 +66,9 @@ export default function ConversationItem({
 
     }
 
-    catch (error) {
+    catch {
 
-      console.error(error);
+      setRenameError(true);
 
     }
 
@@ -141,6 +143,7 @@ hover:shadow-[0_0_18px_rgba(34,211,238,0.08)]
       `}
     >
 
+      {renameError && <p role="alert" className="text-sm text-amber-200">Unable to rename conversation.</p>}
       {active && (
 
         <div
@@ -219,6 +222,7 @@ hover:shadow-[0_0_18px_rgba(34,211,238,0.08)]
 
                   <input
 
+                    aria-label="Conversation title"
                     autoFocus
 
                     value={title}
@@ -287,7 +291,8 @@ hover:shadow-[0_0_18px_rgba(34,211,238,0.08)]
                     "
                   >
 
-                    {conversation.title}
+                    <button type="button" className="block w-full truncate text-left" aria-current={active ? "true" : undefined}
+                      onClick={event => { event.stopPropagation(); onSelect(conversation.id); }}>{conversation.title}</button>
 
                   </h3>
 
@@ -334,6 +339,7 @@ hover:shadow-[0_0_18px_rgba(34,211,238,0.08)]
           transition-opacity
 
           group-hover:opacity-100
+          group-focus-within:opacity-100
           "
         >
 
@@ -346,6 +352,7 @@ hover:shadow-[0_0_18px_rgba(34,211,238,0.08)]
                 <>
 
                   <button
+                  aria-label="Save conversation title"
 
                     onClick={(e) => {
 
@@ -373,6 +380,7 @@ hover:shadow-[0_0_18px_rgba(34,211,238,0.08)]
                   </button>
 
                   <button
+                  aria-label="Cancel rename"
 
                     onClick={(e) => {
 
@@ -410,6 +418,7 @@ hover:shadow-[0_0_18px_rgba(34,211,238,0.08)]
                 <>
 
                   <button
+                  aria-label="Rename conversation"
 
                     onClick={(e) => {
 
@@ -437,6 +446,7 @@ hover:shadow-[0_0_18px_rgba(34,211,238,0.08)]
                   </button>
 
                   <button
+                  aria-label="Delete conversation"
 
                     onClick={(e) => {
 
