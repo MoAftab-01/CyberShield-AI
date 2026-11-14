@@ -206,7 +206,7 @@ class RAGService:
         from app.agents.tools import redact_secrets
 
         # Sanitize the question for title to avoid leaking secrets
-        decision = IntentRouter.classify(question)
+        decision = IntentRouter.classify(question, allow_llm=False)
         sanitized_title = redact_secrets(question, decision)
         conversation = ConversationService.start_chat(
             db=db,
@@ -231,13 +231,9 @@ class RAGService:
             user_id=user_id,
         )
 
-        lines = []
-
-        for message in history[-8:]:
-            role = "Assistant" if message.role == "assistant" else "User"
-            lines.append(f"{role}: {message.content[:600]}")
-
-        return "\n".join(lines)
+        from app.core.credential_privacy import history_topics
+        topics = history_topics(history)
+        return "Prior non-sensitive topics: " + ", ".join(topics) if topics else ""
 
     # ------------------------------------------------------------------
     # Answering
@@ -371,22 +367,9 @@ class RAGService:
             user_id=user_id,
         )
 
-        last_assistant = next(
-            (m.content for m in reversed(history) if m.role == "assistant"),
-            None,
-        )
-
-        if not last_assistant:
-            return question
-
-        # Extract the first sentence or first 120 chars of the last reply;
-        # these usually contain the topic.
-        topic_snippet = re.split(r"[.!?\n]", last_assistant.strip())[0][:120]
-
-        # Expand acronyms in the topic snippet, then append to the question.
-        topic_expanded = expand_query(topic_snippet)
-        augmented = f"{question} [{topic_expanded}]"
-        return augmented
+        from app.core.credential_privacy import history_topics
+        topics = history_topics(history)
+        return f"{question} [{', '.join(topics)}]" if topics else question
 
     @staticmethod
     def _relevance(documents, metrics, question: str = "") -> str:
@@ -544,7 +527,7 @@ class RAGService:
         answer = RAGService._generate(prompt, DOCUMENT_MAX_TOKENS)
 
         if persist:
-            RAGService._persist(db, conversation_id, answer)
+            RAGService._persist(db, conversation_id, answer, question=question)
 
         return {
             "answer": answer,
@@ -609,7 +592,7 @@ class RAGService:
                 answer += " Provide the relevant passage or ask a broader question."
 
             if persist:
-                RAGService._persist(db, conversation_id, answer)
+                RAGService._persist(db, conversation_id, answer, question=question)
 
             return {
                 "answer": answer,
@@ -645,7 +628,7 @@ class RAGService:
         answer = RAGService._generate(prompt, GENERAL_MAX_TOKENS)
 
         if persist:
-            RAGService._persist(db, conversation_id, notice + answer)
+            RAGService._persist(db, conversation_id, notice + answer, question=question)
 
         # This is the honesty case the calibration measured: a security
         # question the corpus does not cover can score close to one it does.
@@ -682,7 +665,7 @@ class RAGService:
         answer = RAGService._generate(prompt, CONVERSATION_MAX_TOKENS)
 
         if persist:
-            RAGService._persist(db, conversation_id, answer)
+            RAGService._persist(db, conversation_id, answer, question=question)
 
         return {
             "answer": answer,
@@ -758,10 +741,12 @@ class RAGService:
         return sources
 
     @staticmethod
-    def _persist(db: Session, conversation_id: int, answer: str) -> None:
+    def _persist(db: Session, conversation_id: int, answer: str, *, question: str | None = None) -> None:
         if db is None:
             # No DB session in test context; skip persistence
             return
+        from app.core.credential_privacy import persisted_answer
+        answer = persisted_answer(answer, question)
         ConversationService.add_ai_message(
             db=db,
             conversation_id=conversation_id,

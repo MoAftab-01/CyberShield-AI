@@ -48,7 +48,7 @@ export default function ChatFooter({
 
         relative
 
-        overflow-hidden
+        overflow-clip
 
         rounded-[32px]
 
@@ -259,7 +259,7 @@ export default function ChatFooter({
 
           {/* Chat */}
 
-          <div className="flex-1">
+          <div className="min-w-0 flex-1">
 
             <ChatInput
               loading={loading}

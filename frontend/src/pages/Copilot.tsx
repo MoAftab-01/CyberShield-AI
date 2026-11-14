@@ -1,189 +1,165 @@
-import { useEffect, useState } from "react";
-// import {
-//   PanelLeftClose,
-//   PanelLeftOpen,
-// } from "lucide-react";
-
-// import ChatInput from "@/components/copilot/ChatInput";
+import { useEffect, useRef, useState } from "react";
 import ConversationSidebar from "@/components/copilot/ConversationSidebar";
 import MessageList from "@/components/copilot/MessageList";
 import TypingIndicator from "@/components/copilot/TypingIndicator";
-
 import ChatFooter from "@/components/copilot/ChatFooter";
 import ChatWelcome from "@/components/copilot/ChatWelcome";
-
 import { toast } from "sonner";
-
 import { askCopilot } from "@/services/copilotService";
-import {
-  ConversationItem,
-  getConversation,
-  getConversations,
-  deleteConversation,
-} from "@/services/conversationService";
-
-
-import { Source } from "@/types/copilot";
-
-// import UploadButton from "@/components/upload/UploadButton";
-
-import {
-  uploadDocument,
-  getUploadedDocuments,
-  deleteUploadedDocument,
-  UploadedDocument,
-} from "@/services/uploadService";
+import { getConversation, getConversations, deleteConversation } from "@/services/conversationService";
+import type { ConversationItem } from "@/services/conversationService";
+import type { Source } from "@/types/copilot";
+import { uploadDocument, getUploadedDocuments, deleteUploadedDocument } from "@/services/uploadService";
+import type { UploadedDocument } from "@/services/uploadService";
+import "@/components/copilot/grounding.css";
 
 interface ChatMessage {
   role: "user" | "assistant";
   content: string;
   sources?: Source[];
   relatedSources?: Source[];
+  grounding?: unknown;
 }
-
-
 
 export default function Copilot() {
   const [loading, setLoading] = useState(false);
+  const [historyLoading, setHistoryLoading] = useState(false);
   const [conversationId, setConversationId] = useState<number>();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-    const [conversations, setConversations] =useState<ConversationItem[]>([]);
-    const [search, setSearch] = useState("");
-    const [uploadedFiles, setUploadedFiles] = useState<UploadedDocument[]>([]);
+  const [conversations, setConversations] = useState<ConversationItem[]>([]);
+  const [search, setSearch] = useState("");
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedDocument[]>([]);
+  const [error, setError] = useState("");
+  const [failedQuestion, setFailedQuestion] = useState<string | null>(null);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const lifecycle = useRef({ request: null as AbortController | null, version: 0 });
+  const historyToggle = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-  const loadConversations = async () => {
+    let mounted = true;
+    const state = lifecycle.current;
+    Promise.all([getConversations(), getUploadedDocuments()])
+      .then(([history, files]) => {
+        if (mounted) { setConversations(history); setUploadedFiles(files); }
+      })
+      .catch(() => { if (mounted) setError("Unable to load chat history or uploaded files."); });
+    return () => {
+      mounted = false;
+      state.request?.abort();
+      state.request = null;
+      state.version++;
+    };
+  }, []);
+
+  function cancelRequest() {
+    lifecycle.current.request?.abort();
+    lifecycle.current.request = null;
+    setLoading(false);
+    setFailedQuestion(null);
+  }
+
+  function newChat() {
+    cancelRequest();
+    lifecycle.current.version++;
+    setHistoryLoading(false);
+    setConversationId(undefined);
+    setMessages([]);
+    setError("");
+    setHistoryOpen(false);
+  }
+
+  async function selectConversation(id: number) {
+    cancelRequest();
+    const version = ++lifecycle.current.version;
+    setHistoryLoading(true);
+    setConversationId(id);
+    setMessages([]);
+    setError("");
+    setHistoryOpen(false);
     try {
-      const data = await getConversations();
-      setConversations(data);
-      const files =
-        await getUploadedDocuments();
-
-    setUploadedFiles(files);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  loadConversations();
-}, []);  
-
-  const handleSend = async (question: string) => {
-    if (!question.trim()) return;
-
-    setMessages((prev) => [
-      ...prev,
-      {
-        role: "user",
-        content: question,
-      },
-    ]);
-
-    setLoading(true);
-
-    try {
-      const response = await askCopilot({
-        question,
-        conversation_id: conversationId,
-      });
-
-      if (!conversationId) {
-        setConversationId(response.conversation_id);
-
-        setConversations((prev) => {
-  const exists = prev.some(
-    (conversation) =>
-      conversation.id === response.conversation_id
-  );
-
-  if (exists) return prev;
-
-  return [
-    {
-      id: response.conversation_id,
-      title: question,
-      updated_at: new Date().toISOString(),
-    },
-    ...prev,
-  ];
-});
+      const conversation = await getConversation(id);
+      if (version === lifecycle.current.version) {
+        // History is server-owned display text; do not fabricate persisted grounding.
+        setMessages(conversation.messages.map(message => ({ role: message.role, content: message.content })));
       }
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: response.answer,
-          sources: response.sources,
-          relatedSources: response.related_sources,
-        },
-      ]);
+    } catch {
+      if (version === lifecycle.current.version) setError("Unable to load this conversation.");
     } finally {
-      setLoading(false);
+      if (version === lifecycle.current.version) setHistoryLoading(false);
     }
-  };
-    const filteredConversations = conversations.filter((conversation) =>
-  conversation.title
-    .toLowerCase()
-    .includes(search.toLowerCase())
-    );
-
-const handleUpload = async (
-  file: File,
-) => {
-  try {
-    await uploadDocument(file);
-
-    const files =
-      await getUploadedDocuments();
-
-    setUploadedFiles(files);
-
-    toast.success(
-      "Document uploaded successfully!"
-    );
-
-  } catch (error) {
-
-    console.error(error);
-
-    toast.error(
-      "Upload failed."
-    );
-  }
-};
-
-const handleDeleteDocument = async (
-  filename: string,
-) => {
-
-  try {
-
-    await deleteUploadedDocument(
-      filename,
-    );
-
-    setUploadedFiles((prev) =>
-      prev.filter(
-        (file) =>
-          file.filename !== filename,
-      ),
-    );
-
   }
 
-  catch (error) {
-
-    console.error(error);
-
+  async function removeConversation(id: number) {
+    const version = lifecycle.current.version;
+    try {
+      await deleteConversation(id);
+      setConversations(prev => prev.filter(conversation => conversation.id !== id));
+      if (version === lifecycle.current.version && conversationId === id) newChat();
+    } catch { setError("Unable to delete this conversation."); }
   }
 
-};
+  async function handleSend(question: string, retry = false) {
+    if (!question.trim() || lifecycle.current.request || historyLoading) return;
+    const controller = new AbortController();
+    lifecycle.current.request = controller;
+    const version = lifecycle.current.version;
+    setError("");
+    setFailedQuestion(null);
+    if (!retry) setMessages(prev => [...prev, { role: "user", content: question }]);
+    setLoading(true);
+    try {
+      const response = await askCopilot({ question, conversation_id: conversationId }, controller.signal);
+      if (controller.signal.aborted || lifecycle.current.request !== controller || version !== lifecycle.current.version) return;
+      if (!conversationId && response.conversation_id !== null) {
+        const id = response.conversation_id;
+        setConversationId(id);
+        setConversations(prev => prev.some(conversation => conversation.id === id) ? prev : [
+          { id, title: "New conversation", updated_at: new Date().toISOString() }, ...prev,
+        ]);
+        // Retrieve the server's redacted title; never use a raw submitted password as a title.
+        getConversations().then(items => {
+          if (version === lifecycle.current.version) setConversations(items);
+        }).catch(() => { /* A title refresh failure must not discard an answer. */ });
+      }
+      setMessages(prev => [...prev, {
+        role: "assistant", content: response.grounding == null ? response.answer : "", sources: response.sources,
+        relatedSources: response.related_sources, grounding: response.grounding,
+      }]);
+    } catch {
+      if (!controller.signal.aborted && lifecycle.current.request === controller && version === lifecycle.current.version) {
+        setError("Unable to send the message. A completed turn may already appear in history. Retry only if needed.");
+        setFailedQuestion(question);
+      }
+    } finally {
+      if (lifecycle.current.request === controller) {
+        lifecycle.current.request = null;
+        setLoading(false);
+      }
+    }
+  }
 
+  const filteredConversations = conversations.filter(conversation =>
+    conversation.title.toLowerCase().includes(search.toLowerCase()));
+
+  async function handleUpload(file: File) {
+    try {
+      await uploadDocument(file);
+      setUploadedFiles(await getUploadedDocuments());
+      toast.success("Document uploaded successfully!");
+    } catch { toast.error("Upload failed."); }
+  }
+
+  async function handleDeleteDocument(filename: string) {
+    try {
+      await deleteUploadedDocument(filename);
+      setUploadedFiles(prev => prev.filter(file => file.filename !== filename));
+    } catch { setError("Unable to delete the uploaded document."); }
+  }
 
   return (
   <div
     className="
+    copilot-page
     relative
 
     flex
@@ -255,56 +231,11 @@ const handleDeleteDocument = async (
 
 </div>
 
-  <ConversationSidebar
-    conversations={filteredConversations}
-    loading={false}
-    search={search}
-    activeConversationId={conversationId ?? null}
-    onSearch={setSearch}
-
-    onSelectConversation={async (id) => {
-      try {
-        setConversationId(id);
-
-        const conversation =
-          await getConversation(id);
-
-        setMessages(
-          conversation.messages.map((message) => ({
-            role: message.role,
-            content: message.content,
-          }))
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    }}
-
-    onDeleteConversation={async (id) => {
-      try {
-        await deleteConversation(id);
-
-        setConversations((prev) =>
-          prev.filter(
-            (conversation) =>
-              conversation.id !== id
-          )
-        );
-
-        if (conversationId === id) {
-          setConversationId(undefined);
-          setMessages([]);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    }}
-
-    onNewChat={() => {
-      setConversationId(undefined);
-      setMessages([]);
-    }}
-  />
+  <div id="copilot-conversations" className="copilot-conversations" data-open={historyOpen} onKeyDown={event => { if (event.key === "Escape") { setHistoryOpen(false); historyToggle.current?.focus(); } }}>
+    <ConversationSidebar conversations={filteredConversations} loading={false} search={search}
+      activeConversationId={conversationId ?? null} onSearch={setSearch}
+      onSelectConversation={selectConversation} onDeleteConversation={removeConversation} onNewChat={newChat} />
+  </div>
 
 
 
@@ -330,6 +261,15 @@ const handleDeleteDocument = async (
 
         
 
+        <button type="button" ref={historyToggle} className="copilot-history-toggle" aria-controls="copilot-conversations"
+          onKeyDown={event => { if (event.key === "Escape") setHistoryOpen(false); }}
+          aria-expanded={historyOpen} onClick={() => setHistoryOpen(value => !value)}>Chat history</button>
+        <div className="copilot-request-status" role="status" aria-live="polite">
+          {historyLoading && <p>Loading conversation...</p>}
+          {loading && <button type="button" onClick={() => { cancelRequest(); setError("Request cancelled. A completed turn may appear when history is reloaded."); }}>Cancel response</button>}
+          {error && <p>{error}</p>}
+          {failedQuestion && <button type="button" onClick={() => handleSend(failedQuestion, true)}>Retry message</button>}
+        </div>
         {/* Scrollable Chat */}
 
         <div
@@ -337,6 +277,8 @@ const handleDeleteDocument = async (
   relative
 
   flex-1
+  copilot-chat-scroll
+  min-h-0
 
   overflow-y-auto
 
@@ -367,7 +309,7 @@ const handleDeleteDocument = async (
         {/* Fixed Footer */}
 
         <ChatFooter
-  loading={loading}
+  loading={loading || historyLoading}
   uploadedFiles={uploadedFiles}
   onSend={handleSend}
   onUpload={handleUpload}

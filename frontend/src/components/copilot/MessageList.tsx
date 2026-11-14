@@ -10,6 +10,7 @@ interface Message {
 
     sources?: Source[];
     relatedSources?: Source[];
+    grounding?: unknown;
 
 }
 
@@ -52,6 +53,7 @@ export default function MessageList({
                             sources={message.sources}
 
                             relatedSources={message.relatedSources}
+                            grounding={message.grounding}
 
                         />
 

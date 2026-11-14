@@ -22,7 +22,7 @@ export default function ChatInput({
 
   const handleSend = () => {
 
-    if (!message.trim()) return;
+    if (loading || !message.trim()) return;
 
     onSend(message);
 
@@ -105,6 +105,7 @@ export default function ChatInput({
 
       <textarea
 
+        aria-label="Message CyberGPT"
         ref={textareaRef}
 
         rows={1}
@@ -170,6 +171,8 @@ export default function ChatInput({
       {/* Send Button */}
 
       <button
+        type="button"
+        aria-label="Send message"
 
         disabled={
           loading ||

@@ -16,6 +16,7 @@ Two rules hold across all tools:
 """
 
 from dataclasses import dataclass, field
+from app.core.credential_privacy import GENERATED_HISTORY, redact_credentials
 
 from sqlalchemy.orm import Session
 
@@ -33,7 +34,7 @@ class ToolContext:
 
     db: Session
     user: object
-    question: str
+    question: str = field(repr=False)
     decision: RoutingDecision
     conversation_id: int | None = None
 
@@ -42,13 +43,14 @@ class ToolContext:
 class ToolResult:
     """The outcome of a tool invocation."""
 
-    answer: str
+    answer: str = field(repr=False)
     basis: str = BASIS_TOOL
     tool_used: str | None = None
     sources: list = field(default_factory=list)
-    metadata: dict = field(default_factory=dict)
+    metadata: dict = field(default_factory=dict, repr=False)
     suggestions: list = field(default_factory=list)
     ok: bool = True
+    history_answer: str | None = field(default=None, repr=False)
 
 
 # ---------------------------------------------------------------------------
@@ -60,6 +62,9 @@ async def password_generate(context: ToolContext) -> ToolResult:
 
     from app.services.password_service import PasswordService
 
+    owner = getattr(context.user, "id", None)
+    if type(owner) is not int or owner <= 0:
+        raise PermissionError("An authenticated user is required.")
     length = context.decision.password_length or 16
 
     generated = PasswordService.generate_secure(length)
@@ -82,6 +87,7 @@ async def password_generate(context: ToolContext) -> ToolResult:
 
     return ToolResult(
         answer=answer,
+        history_answer=GENERATED_HISTORY,
         tool_used=TOOL_LABELS[Intent.PASSWORD_GENERATION],
         metadata={
             "password": generated["password"],
@@ -137,6 +143,7 @@ async def password_analyze(context: ToolContext) -> ToolResult:
 
     return ToolResult(
         answer=PasswordFormatter.format(analysis),
+        history_answer="Password Analysis: performed locally; submitted value not saved.",
         tool_used=TOOL_LABELS[Intent.PASSWORD_ANALYSIS],
         metadata={
             "score": analysis.score,
@@ -244,7 +251,9 @@ async def cve_lookup(context: ToolContext) -> ToolResult:
         )
 
     try:
-        record = ThreatService.get_cve(cve_id=cve, db=context.db)
+        record = ThreatService.get_cve(
+            cve_id=cve, db=context.db, user_id=context.user.id
+        )
     except Exception as error:
         return ToolResult(
             answer=(
@@ -404,12 +413,4 @@ def redact_secrets(text: str, decision: RoutingDecision) -> str:
     durable plaintext credential store. It is masked before the message is
     written to the database or passed to external models.
     """
-    password = decision.password
-    if not password:
-        from app.agents.router import extract_password
-        password = extract_password(text)
-
-    if not password:
-        return text
-
-    return text.replace(password, MASK)
+    return redact_credentials(text, (decision.password,))

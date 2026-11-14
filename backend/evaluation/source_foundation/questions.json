@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "questions": [
+    {
+      "id": "nvd-severity",
+      "question": "What CVSS severity and base score does CVE-2021-44228 have?",
+      "gold": [
+        "CVE-2021-44228"
+      ],
+      "user_id": 202,
+      "abstain": false
+    },
+    {
+      "id": "cve-exact",
+      "question": "What severity does CVE-2099-10001 have?",
+      "gold": [
+        "SYN-CVE-10001"
+      ],
+      "user_id": 202,
+      "abstain": false
+    },
+    {
+      "id": "cve-overlap",
+      "question": "What severity does CVE-2099-100010 have?",
+      "gold": [
+        "SYN-CVE-100010"
+      ],
+      "user_id": 202,
+      "abstain": false
+    },
+    {
+      "id": "known-exploited",
+      "question": "Which synthetic CISA KEV vulnerability is known exploited?",
+      "gold": [
+        "SYN-KEV"
+      ],
+      "user_id": 202,
+      "abstain": false
+    },
+    {
+      "id": "attack",
+      "question": "What does MITRE ATTACK T1059 describe?",
+      "gold": [
+        "SYN-ATTACK"
+      ],
+      "user_id": 202,
+      "abstain": false
+    },
+    {
+      "id": "attack-subtechnique",
+      "question": "What does T1059.001 describe?",
+      "gold": [
+        "SYN-ATTACK-NEG"
+      ],
+      "user_id": 202,
+      "abstain": false
+    },
+    {
+      "id": "cwe",
+      "question": "How does CWE-89 mitigate SQL injection?",
+      "gold": [
+        "SYN-CWE"
+      ],
+      "user_id": 202,
+      "abstain": false
+    },
+    {
+      "id": "owasp",
+      "question": "What OWASP session cookie attributes are recommended?",
+      "gold": [
+        "SYN-OWASP"
+      ],
+      "user_id": 202,
+      "abstain": false
+    },
+    {
+      "id": "current",
+      "question": "What is the current NIST AC-2 account review interval?",
+      "gold": [
+        "SYN-ROTATION"
+      ],
+      "user_id": 202,
+      "abstain": false
+    },
+    {
+      "id": "conflict",
+      "question": "What conflicting AC-2 account review intervals are described?",
+      "gold": [
+        "SYN-ROTATION",
+        "SYN-CONFLICT"
+      ],
+      "user_id": 202,
+      "abstain": false
+    },
+    {
+      "id": "private-owner",
+      "question": "What does PRIVATE-ORCHID-71 incident recovery require?",
+      "gold": [
+        "PRIVATE-ORCHID-71"
+      ],
+      "user_id": 101,
+      "abstain": false
+    },
+    {
+      "id": "private-other",
+      "question": "What does PRIVATE-ORCHID-71 incident recovery require?",
+      "gold": [],
+      "user_id": 202,
+      "abstain": true
+    },
+    {
+      "id": "missing",
+      "question": "What is the severity of CVE-2099-99999?",
+      "gold": [],
+      "user_id": 202,
+      "abstain": true
+    },
+    {
+      "id": "withdrawn",
+      "question": "What severity does CVE-2099-77777 have?",
+      "gold": [],
+      "user_id": 202,
+      "abstain": true
+    },
+    {
+      "id": "deleted",
+      "question": "What patch does CVE-2099-88888 require?",
+      "gold": [],
+      "user_id": 202,
+      "abstain": true
+    },
+    {
+      "id": "injection",
+      "question": "What is CVE-2099-66666 remediation?",
+      "gold": [],
+      "user_id": 202,
+      "abstain": true
+    }
+  ]
+}

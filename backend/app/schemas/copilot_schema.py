@@ -17,11 +17,12 @@ claims a guarantee the code did not keep.
 from typing import Optional
 
 from pydantic import BaseModel, Field
+from app.knowledge.claim_verifier import VerifiedAnswer
 
 
 class CopilotRequest(BaseModel):
 
-    question: str
+    question: str = Field(repr=False)
 
     conversation_id: Optional[int] = None
 
@@ -78,6 +79,9 @@ class RoutingInfo(BaseModel):
 
 
 class CopilotResponse(BaseModel):
+
+    # Additive; legacy clients may ignore this. Never contains unverified drafts.
+    grounding: Optional[VerifiedAnswer] = None
 
     answer: str
 

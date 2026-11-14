@@ -1,0 +1,51 @@
+{
+  "license": "CC0-1.0",
+  "records": [
+    {
+      "record_id": "D-ROTATE",
+      "title": "Cedar key maintenance",
+      "modified_at": "2026-06-01T00:00:00Z",
+      "identifiers": {
+        "policy": "CEDAR-KEY"
+      },
+      "state": "active",
+      "sections": [
+        {
+          "heading": "Interval",
+          "text": "The Cedar key-maintenance bulletin effective June 2026 requires a six-month rotation interval."
+        }
+      ]
+    },
+    {
+      "record_id": "D-RETRACT",
+      "title": "Retracted Redwood bulletin",
+      "modified_at": "2026-06-01T00:00:00Z",
+      "identifiers": {},
+      "state": "withdrawn",
+      "sections": []
+    },
+    {
+      "record_id": "D-DELETED",
+      "title": "Removed patch notice",
+      "modified_at": "2026-06-01T00:00:00Z",
+      "identifiers": {},
+      "state": "deleted",
+      "sections": []
+    },
+    {
+      "record_id": "H-KDF",
+      "title": "Juniper key derivation",
+      "modified_at": "2026-06-01T00:00:00Z",
+      "identifiers": {
+        "policy": "JUNIPER-KDF"
+      },
+      "state": "active",
+      "sections": [
+        {
+          "heading": "Algorithm",
+          "text": "The Juniper application key specification revised in 2026 derives subkeys with HKDF using SHA-384."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+# Offline source-foundation fixtures
+
+The NVD fixture is a reviewed, selected-field CVE API 2.0 snapshot for CVE-2021-44228: identifier, publication/modification dates, and NVD primary CVSS v3.1 score/severity only. It is NOT a complete API response. No third-party description is redistributed. Source: https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2021-44228 (reviewed 2026-10-30). Attribution: NIST NVD and CVE contributors. See the registry licensing notes before expanding this fixture.
+
+All other records and questions are original synthetic CC0-1.0 test material. CVE-2099 identifiers and policy intervals are fictional, not security advice. No synthetic record receives an official URL or official trust. The operator-controlled manifest pins artifact bytes; a supplied document cannot change its own approval, scope, or trust. History fixtures exercise supersession, withdrawal and deletion. Private fixtures are generated in memory for synthetic user 101. Never load this corpus into the application indexes.

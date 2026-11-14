@@ -1,0 +1,50 @@
+{
+  "base_commit": "2c6bf6879aee47cb6e432c88a1dab8c57fe1de73",
+  "original_branch": "main",
+  "branch": "feature/cybergpt-2-source-foundation",
+  "worktree": "E:\\placement_personal\\Projects\\CyberShield-AI-cybergpt-2-source-foundation",
+  "staged_files": [],
+  "original_modified_files": [
+    "backend/app/agents/tools.py",
+    "backend/app/api/threat_routes.py",
+    "backend/app/core/config.py",
+    "backend/app/database/threat_crud.py",
+    "backend/app/models/threat_search.py",
+    "backend/app/rag/retriever.py",
+    "backend/app/services/threat_service.py",
+    "backend/tests/conftest.py",
+    "backend/tests/test_tools.py",
+    "frontend/Dockerfile"
+  ],
+  "reviewed_transferred_untracked_files": [
+    "backend/migrations/001_threat_search_ownership.sql",
+    "backend/migrations/README.md",
+    "backend/tests/test_configuration.py",
+    "backend/tests/test_rag_visibility.py",
+    "backend/tests/test_threat_ownership.py"
+  ],
+  "excluded_untracked_files": 24,
+  "transfer_sha256": {
+    "backend/app/agents/tools.py": "f3f56699b51f536d1b63fcfedca4b0d03b89daf37f4ff34788f04240cd9038ad",
+    "backend/app/api/threat_routes.py": "e34d230e350a3bd49073f3bb0ee702395b1b2b56ef9f6071b3f97aa7c430aa5c",
+    "backend/app/core/config.py": "3891d42bbc6567b2842f223e8ad053b6dec405ba329bf4447bd24a3bbb80a9ba",
+    "backend/app/database/threat_crud.py": "cad9e75666e445574fe28ef3f4acabeb14c8a620d70e606a8ff2b8c7aa7720f2",
+    "backend/app/models/threat_search.py": "5af1f0401843b30a3a6b8b6589d25b8cfb4f132eb2db20118bc6fafc2d0023bd",
+    "backend/app/rag/retriever.py": "04ca30360b5f45a893c1b7d959e8dd333ac472c74f4f00956ae9a91604bd7495",
+    "backend/app/services/threat_service.py": "b1c794160eb5ade091ca376cfeb9824a60b83a4c8d5bcd83295f6b596864f907",
+    "backend/tests/conftest.py": "617e84e8781977d9ef402019f9fac902fb8636a909760c39da73f8b8edee608a",
+    "backend/tests/test_tools.py": "a4c323e4fc71cb1c33a2051d251386d5f8d9ca3a29b6962885242c678b6c2851",
+    "frontend/Dockerfile": "610edb4e322f9c547c1a3038710b47cb1766e386ad1db79927d581bdd73bbbb4",
+    "backend/migrations/001_threat_search_ownership.sql": "8685576fcf75a4b00e0e1908d511c1c98c55e15ee011a23da3329f2c95ec106d",
+    "backend/migrations/README.md": "447bf9227e9f906ae3f6137d812f32db9f577e2031b35207c305371ea7fd3588",
+    "backend/tests/test_configuration.py": "9fbbdc3e73d3526c1bf8016911150d3734ec838e8d63bce675d77578574220d3",
+    "backend/tests/test_rag_visibility.py": "0d68ac6aa7bc6ddb4d05a09d32bdbf88aec632ba24a6e6c91b79218ea6cde687",
+    "backend/tests/test_threat_ownership.py": "f43419b2dfb9f789ca11f0f688526ca664e88085e66a32defbccba4e1b69913a"
+  },
+  "verification": {
+    "original_inventory_unchanged": true,
+    "all_15_original_and_transferred_hashes_match": true,
+    "private_generated_roots_absent_in_worktree": true,
+    "real_database_migration_applied": false
+  }
+}

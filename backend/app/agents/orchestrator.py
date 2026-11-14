@@ -43,6 +43,7 @@ from app.agents.intents import (
 from app.agents.router import IntentRouter, RoutingDecision
 from app.agents.tools import ToolContext, redact_secrets, run_tool
 
+from app.core.config import settings
 from app.services.conversation_service import ConversationService
 from app.services.rag_service import RAGService
 
@@ -76,7 +77,12 @@ class CyberGPTOrchestrator:
                 f"The question must be under {MAX_QUESTION_LENGTH} characters."
             )
 
-        decision = IntentRouter.classify(question)
+        enabled = settings.CYBERGPT_V2_ENABLED
+        decision = IntentRouter.classify(question, allow_llm=False) if enabled else IntentRouter.classify(question)
+        if enabled:
+            from app.services.grounded_chat_service import sensitive_text
+            if sensitive_text(question) and not decision.password:
+                decision = RoutingDecision(Intent.GENERAL_SECURITY_QA, 1.0, "rule", "sensitive_input_omitted")
 
         print(
             f"[cybergpt] intent={decision.intent.value} "
@@ -84,6 +90,9 @@ class CyberGPTOrchestrator:
         )
 
         sanitized_question = redact_secrets(question, decision)
+        if enabled:
+            from app.services.grounded_chat_service import redact_input
+            sanitized_question = redact_input(sanitized_question)
 
         # The conversation is resolved before dispatch so every path,
         # including a pure tool call, has somewhere to record itself.
@@ -103,11 +112,16 @@ class CyberGPTOrchestrator:
         if decision.intent in TOOL_INTENTS:
             result = await self._tool(
                 decision=decision,
-                question=question,
+                question=sanitized_question,
                 db=db,
                 user_id=user_id,
                 conversation_id=conversation_id,
             )
+        elif enabled:
+            from app.services.grounded_chat_service import GroundedChatService
+            result = await GroundedChatService.answer(sanitized_question, user_id)
+            # Never persist from a background worker or a timed-out generation.
+            ConversationService.add_ai_message(db, conversation_id, result.pop("history_answer"))
         elif decision.intent in CONVERSATION_INTENTS:
             result = RAGService.converse(
                 question=sanitized_question,
@@ -184,7 +198,7 @@ class CyberGPTOrchestrator:
         ConversationService.add_ai_message(
             db=db,
             conversation_id=conversation_id,
-            message=result.answer,
+            message=result.history_answer if result.history_answer is not None else result.answer,
         )
 
         return {

@@ -1,0 +1,49 @@
+{
+  "records": [
+    {
+      "record_id": "SYN-ROTATION",
+      "title": "Outdated rotation example",
+      "modified_at": "2025-01-01T00:00:00Z",
+      "state": "active",
+      "identifiers": {
+        "control": "AC-2"
+      },
+      "sections": [
+        {
+          "heading": "Reviewed synthetic example",
+          "text": "The old synthetic NIST AC-2 account lifecycle example recommended a 365-day account review interval."
+        }
+      ]
+    },
+    {
+      "record_id": "SYN-WITHDRAWN",
+      "title": "Withdrawn example",
+      "modified_at": "2025-01-01T00:00:00Z",
+      "state": "active",
+      "identifiers": {
+        "cve": "CVE-2099-77777"
+      },
+      "sections": [
+        {
+          "heading": "Reviewed synthetic example",
+          "text": "CVE-2099-77777 was once marked HIGH in this synthetic example."
+        }
+      ]
+    },
+    {
+      "record_id": "SYN-DELETED",
+      "title": "Deleted example",
+      "modified_at": "2025-01-01T00:00:00Z",
+      "state": "active",
+      "identifiers": {
+        "cve": "CVE-2099-88888"
+      },
+      "sections": [
+        {
+          "heading": "Reviewed synthetic example",
+          "text": "CVE-2099-88888 had an unreviewed synthetic patch notice."
+        }
+      ]
+    }
+  ]
+}

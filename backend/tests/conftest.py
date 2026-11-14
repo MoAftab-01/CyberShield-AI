@@ -31,24 +31,33 @@ sys.path.insert(0, str(BACKEND_DIR))
 #: would not survive across the connections FastAPI's dependency opens.
 _TEMP_DIR = tempfile.mkdtemp(prefix="cybershield-tests-")
 
+#: Create all relative storage roots before app imports. Otherwise the RAG stores
+#: fall back to backend/vector_db and backend/knowledge_base in the repository.
+for _directory in ("vector_db", "knowledge_base", "uploads"):
+    (Path(_TEMP_DIR) / _directory).mkdir()
+os.environ["VECTOR_DB_DIR"] = str(Path(_TEMP_DIR) / "vector_db")
+
 #: Must happen before anything under ``app`` is imported: the document service
 #: creates its upload directory at import time.
 os.chdir(_TEMP_DIR)
 
 os.environ.setdefault("APP_NAME", "CyberShield AI (test)")
 os.environ.setdefault("APP_VERSION", "test")
-os.environ.setdefault("ENVIRONMENT", "test")
+os.environ["ENVIRONMENT"] = "test"
+os.environ["CYBERGPT_V2_ENABLED"] = "false"
+os.environ.pop("CYBERGPT_V2_CATALOG_MANIFEST", None)
 os.environ["DATABASE_URL"] = f"sqlite:///{Path(_TEMP_DIR) / 'test.db'}"
-os.environ.setdefault("JWT_SECRET", "test-secret-value-that-is-long-enough-1234")
+os.environ["JWT_SECRET"] = "test-secret-value-that-is-long-enough-1234"
 os.environ["JWT_ALGORITHM"] = "HS256"
 os.environ.setdefault("ACCESS_TOKEN_EXPIRE_MINUTES", "30")
-os.environ.setdefault("GROQ_API_KEY", "test-key-not-used")
-os.environ.setdefault("VT_API_KEY", "")
+os.environ["GROQ_API_KEY"] = "test-key-not-used"
+os.environ["OPENAI_API_KEY"] = "test-key-not-used"
+os.environ["VT_API_KEY"] = ""
 
 # Keep the embedding layer on the hashed backend. The semantic model is a
 # 90MB download and its behaviour is covered by the evaluation harness, which
 # measures it on the labelled set; unit tests must not depend on a download.
-os.environ.setdefault("EMBEDDING_BACKEND", "hash")
+os.environ["EMBEDDING_BACKEND"] = "hash"
 
 import pytest  # noqa: E402
 
@@ -56,8 +65,14 @@ import pytest  # noqa: E402
 _EMAIL_COUNTER = {"n": 0}
 
 
+def pytest_configure(config):
+    config.addinivalue_line(
+        "markers", "configuration_only: settings checks that need no application or database"
+    )
+
+
 @pytest.fixture(scope="session", autouse=True)
-def _database_schema():
+def _database_schema(request):
     """Create the schema once for the whole session.
 
     This calls the application's own ``init_db`` rather than importing the
@@ -65,6 +80,10 @@ def _database_schema():
     ``init_db``; building the schema any other way would let a new model be
     added without the test database noticing.
     """
+
+    if all(item.get_closest_marker("configuration_only") for item in request.session.items):
+        yield
+        return
 
     from app.database.init_db import init_db
 

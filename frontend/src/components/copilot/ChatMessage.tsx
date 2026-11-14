@@ -12,6 +12,8 @@ import {
 import { useState } from "react";
 
 import SourceCard from "./SourceCard";
+import GroundedAnswer from "./GroundedAnswer";
+import { readGrounding, groundingStatuses } from "../../lib/grounding";
 
 import { Source } from "@/types/copilot";
 
@@ -20,6 +22,7 @@ interface Props {
   content: string;
   sources?: Source[];
   relatedSources?: Source[];
+  grounding?: unknown;
 }
 
 export default function ChatMessage({
@@ -27,16 +30,23 @@ export default function ChatMessage({
   content,
   sources = [],
   relatedSources = [],
+  grounding,
 }: Props) {
 
   const isUser = role === "user";
+  const view = isUser ? { kind: "legacy" as const } : readGrounding(grounding);
+  const copyText = view.kind === "legacy" ? content : view.kind === "invalid" ? "Evidence metadata unavailable."
+    : view.value.abstained ? groundingStatuses[view.value.status][1] : view.value.claims.map(claim => claim.text).join("\n\n");
+  const [copyError, setCopyError] = useState(false);
 
   const [copied, setCopied] =
     useState(false);
 
   const copyMessage = async () => {
 
-    await navigator.clipboard.writeText(content);
+    try { await navigator.clipboard.writeText(copyText); }
+    catch { setCopyError(true); return; }
+    setCopyError(false);
 
     setCopied(true);
 
@@ -51,6 +61,7 @@ export default function ChatMessage({
     <div
       className={`
 
+      copilot-message
       flex
 
       items-start
@@ -120,6 +131,7 @@ export default function ChatMessage({
         className={`
         relative
 
+        copilot-message-bubble
         max-w-[850px]
 
         overflow-hidden
@@ -198,6 +210,7 @@ export default function ChatMessage({
 
             <button
 
+              aria-label="Copy response text"
               onClick={copyMessage}
 
               className="
@@ -342,7 +355,7 @@ export default function ChatMessage({
 
               )
 
-              : (
+              : view.kind !== "legacy" ? <GroundedAnswer view={view} /> : (
 
                 <div
                   className="
@@ -407,13 +420,15 @@ text-slate-200
 
         </div>
 
+        {copyError && <p role="status" className="px-6 text-sm text-amber-200">Unable to copy this response.</p>}
+
         {/* Sources */}
 
         {
 
           !isUser &&
 
-          sources.length > 0 && (
+          view.kind === "legacy" && sources.length > 0 && (
 
             <div
               className="
@@ -508,7 +523,7 @@ text-slate-200
         {/* Related reading is not cited as support for this answer. */}
         {
           !isUser &&
-          relatedSources.length > 0 && (
+          view.kind === "legacy" && relatedSources.length > 0 && (
             <div className="border-t border-amber-400/10 px-6 py-5">
               <div className="mb-4">
                 <h3 className="text-base font-semibold text-amber-100">
@@ -575,7 +590,7 @@ text-slate-200
                   className="text-cyan-400"
                 />
 
-                AI-generated response
+                {view.kind === "legacy" ? "AI-generated response" : view.kind === "valid" && !view.value.abstained ? "Source quotations - completeness not verified" : "No supported answer"}
 
               </div>
 
