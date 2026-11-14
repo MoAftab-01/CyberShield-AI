@@ -145,7 +145,14 @@ directories through .gitattributes. Fifteen files differ only in line endings fr
 the earlier Git blobs; all artifact contents, approved hashes, questions, labels
 and integrity assertions remain unchanged. The new check_fixture_bytes.py command
 verifies 14 pinned relationships against both the checkout and staged Git blobs.
-It runs before CI tests. The PR checks provide the clean-Linux rerun evidence.
+It runs before CI tests. The next Linux run passed all pin checks and 666 tests,
+with three remaining worker failures because the protected-original path matched
+GitHub's own clone named CyberShield-AI. A separate correction permits only
+checkout-local Python code and reviewed JSON fixture reads in that case. It still
+blocks environment/database/upload/index/model-cache reads, every separate-original
+read, all writes outside the worker scratch directory and all network access.
+Eleven concrete path regressions cover both layouts. The PR checks provide the
+clean-Linux rerun evidence.
 
 ## Investigation evaluation
 

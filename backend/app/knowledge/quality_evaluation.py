@@ -324,6 +324,25 @@ def _evaluate(local_models, scratch):
     return report
 
 
+
+def _protected_repository_read(path, source_root, original):
+    """Permit clone-local code/fixtures, never mutable application material.
+
+    An Actions clone may itself be named CyberShield-AI. In the isolated feature
+    worktree the separate original still denies every read, including its code.
+    Writes remain independently confined to the worker's temporary directory.
+    """
+    path, source_root, original = path.resolve(), source_root.resolve(), original.resolve()
+    if not path.is_relative_to(original):
+        return False
+    if source_root != original:
+        return True
+    code = path.is_relative_to(source_root / "backend/app") and path.suffix in {".py", ".pyc"}
+    fixtures = path.suffix == ".json" and any(path.is_relative_to(source_root / "backend/evaluation" / folder)
+        for folder in ("source_foundation", "retrieval_quality", "grounded_answers"))
+    return not (code or fixtures)
+
+
 def run_worker(*, local_models=False):
     if any(name in sys.modules for name in ("app.rag.faiss_store","app.rag.bm25_store","app.rag.embeddings")):
         raise RuntimeError("Use a fresh dedicated benchmark process.")
@@ -332,7 +351,8 @@ def run_worker(*, local_models=False):
     previous_tempdir = tempfile.tempdir
     guards = {"network_attempts_blocked":0,"forbidden_file_operations_blocked":0}
     state = {"active":False}
-    original = QUALITY_ROOT.parents[2].parent/"CyberShield-AI"
+    source_root = QUALITY_ROOT.parents[2]
+    original = source_root.parent/"CyberShield-AI"
     def audit(event,args):
         if not state["active"]:
             return
@@ -350,7 +370,7 @@ def run_worker(*, local_models=False):
             path = Path(os.fsdecode(args[0])).resolve()
             writing = isinstance(args[1],str) and any(c in args[1] for c in "wax+")
             writing = writing or bool(args[2] & (os.O_WRONLY|os.O_RDWR|os.O_CREAT|os.O_TRUNC))
-            if path.is_relative_to(original) or (writing and not path.is_relative_to(state["scratch"])):
+            if _protected_repository_read(path, source_root, original) or (writing and not path.is_relative_to(state["scratch"])):
                 guards["forbidden_file_operations_blocked"] += 1
                 raise RuntimeError("Benchmark storage is confined to its disposable directory.")
     sys.addaudithook(audit)

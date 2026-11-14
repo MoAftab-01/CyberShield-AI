@@ -93,3 +93,30 @@ print('guards verified')
                           capture_output=True,text=True,check=True,timeout=30)
     assert result.stdout.strip()=="guards verified"
     assert (tmp_path/"synthetic-protected.txt").read_text(encoding="utf-8")=="synthetic original"
+
+
+@pytest.mark.parametrize("relative,blocked", [
+    ("backend/app/rag/embeddings.py", False),
+    ("backend/app/rag/__pycache__/embeddings.cpython-312.pyc", False),
+    ("backend/evaluation/retrieval_quality/corpus.json", False),
+    ("backend/evaluation/grounded_answers/review.json", False),
+    ("backend/.env", True),
+    ("backend/uploads/private.pdf", True),
+    ("backend/vector_db/faiss.index", True),
+    ("backend/vector_db/documents.pkl", True),
+    ("backend/.model_cache/weights.onnx", True),
+    ("backend/application.db", True),
+])
+def test_same_named_checkout_only_allows_source_and_reviewed_fixtures(tmp_path, relative, blocked):
+    from app.knowledge.quality_evaluation import _protected_repository_read
+    checkout = tmp_path / "CyberShield-AI"
+    assert _protected_repository_read(checkout / relative, checkout, checkout) is blocked
+
+
+def test_separate_original_still_denies_even_source_reads(tmp_path):
+    from app.knowledge.quality_evaluation import _protected_repository_read
+    original = tmp_path / "CyberShield-AI"
+    feature = tmp_path / "CyberShield-AI-cybergpt-2-source-foundation"
+    assert _protected_repository_read(original / "backend/app/rag/embeddings.py", feature, original)
+    assert _protected_repository_read(original / "backend/evaluation/retrieval_quality/corpus.json", feature, original)
+    assert not _protected_repository_read(feature / "backend/app/rag/embeddings.py", feature, original)
