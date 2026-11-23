@@ -1,0 +1,39 @@
+{
+  "format_version": 1,
+  "artifacts": [
+    {
+      "artifact_id": "history",
+      "filename": "history.json",
+      "source_id": "fixture-reference",
+      "adapter": "reference-fixture",
+      "trust": "synthetic_fixture",
+      "sha256": "2c335fe40f6fe3106d7c0070e2a68ce92184b1c4d3f0142f7e439a3dc575369a"
+    },
+    {
+      "artifact_id": "corpus",
+      "filename": "corpus.json",
+      "source_id": "fixture-reference",
+      "adapter": "reference-fixture",
+      "trust": "synthetic_fixture",
+      "sha256": "c176a4dd79aad114f742389c0e341b17238aa7946a80ba6b1dc2145a60600ea3"
+    },
+    {
+      "artifact_id": "updates",
+      "filename": "updates.json",
+      "source_id": "fixture-reference",
+      "adapter": "reference-fixture",
+      "trust": "synthetic_fixture",
+      "sha256": "5a63ceac4041234e8f6441571a80e6f4c036827bb9d867b7370fed473fc18a52"
+    },
+    {
+      "artifact_id": "nvd-selected-fields",
+      "filename": "../source_foundation/nvd-selected-fields.json",
+      "source_id": "nvd",
+      "adapter": "nvd",
+      "trust": "official_snapshot",
+      "sha256": "1ec47ded66d92ac4aa1c2b13c56f16282944d0fa632acabf22d22cd48bc1cb18"
+    }
+  ],
+  "queries.json": "f7c37e66dc58cd5d8c2522ceb0d2f3ec89effaa4ea5bd7835a997970c2fb6e76",
+  "qrels.json": "e571ebda51b916ef01d565115386ebaabdbd3a6f55604134a53b4eaf0cecafe9"
+}

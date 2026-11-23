@@ -1,0 +1,522 @@
+{
+  "dataset": "20 original synthetic investigation scenarios; CC0-1.0",
+  "models": [],
+  "langgraph": "1.2.21",
+  "seed": "none; deterministic fixtures, no random retrieval",
+  "cases": 20,
+  "successful": 20,
+  "correct_tool_cases": 20,
+  "citation_links": 39,
+  "exact_citation_links": 39,
+  "citation_validity": 1.0,
+  "covered_expected_sources": 27,
+  "expected_source_count": 27,
+  "source_evidence_coverage": 1.0,
+  "latency_median_ms": 6.0225,
+  "latency_p95_ms": 9.246,
+  "latency_total_ms": 162.132,
+  "llm_calls": 0,
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "estimated_model_cost_usd": 0.0,
+  "limitations": [
+    "Synthetic expected outcomes and source coverage do not measure semantic security correctness.",
+    "No live-network latency or model performance measured.",
+    "Quotation attribution does not establish factual truth or complete asset assessment.",
+    "No held-out tuning; this is a deterministic workflow regression set."
+  ],
+  "results": [
+    {
+      "scenario": "normal",
+      "cve": "CVE-2021-44228",
+      "expected": "complete",
+      "actual": "complete",
+      "success": true,
+      "correct_tool_calls": true,
+      "tool_calls": 2,
+      "citation_links": 3,
+      "exact_citation_links": 3,
+      "expected_sources": [
+        "cisa-kev",
+        "nvd"
+      ],
+      "covered_sources": [
+        "cisa-kev",
+        "nvd"
+      ],
+      "covered_expected_sources": 2,
+      "expected_source_count": 2,
+      "latency_ms": 47.052,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_model_cost_usd": 0.0
+    },
+    {
+      "scenario": "rapid_reset",
+      "cve": "CVE-2023-44487",
+      "expected": "complete",
+      "actual": "complete",
+      "success": true,
+      "correct_tool_calls": true,
+      "tool_calls": 2,
+      "citation_links": 3,
+      "exact_citation_links": 3,
+      "expected_sources": [
+        "cisa-kev",
+        "nvd"
+      ],
+      "covered_sources": [
+        "cisa-kev",
+        "nvd"
+      ],
+      "covered_expected_sources": 2,
+      "expected_source_count": 2,
+      "latency_ms": 9.246,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_model_cost_usd": 0.0
+    },
+    {
+      "scenario": "xz",
+      "cve": "CVE-2024-3094",
+      "expected": "complete",
+      "actual": "complete",
+      "success": true,
+      "correct_tool_calls": true,
+      "tool_calls": 2,
+      "citation_links": 2,
+      "exact_citation_links": 2,
+      "expected_sources": [
+        "cisa-kev",
+        "nvd"
+      ],
+      "covered_sources": [
+        "cisa-kev",
+        "nvd"
+      ],
+      "covered_expected_sources": 2,
+      "expected_source_count": 2,
+      "latency_ms": 6.15,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_model_cost_usd": 0.0
+    },
+    {
+      "scenario": "unknown",
+      "cve": "CVE-2099-9999",
+      "expected": "partial",
+      "actual": "partial",
+      "success": true,
+      "correct_tool_calls": true,
+      "tool_calls": 2,
+      "citation_links": 1,
+      "exact_citation_links": 1,
+      "expected_sources": [
+        "cisa-kev"
+      ],
+      "covered_sources": [
+        "cisa-kev"
+      ],
+      "covered_expected_sources": 1,
+      "expected_source_count": 1,
+      "latency_ms": 5.153,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_model_cost_usd": 0.0
+    },
+    {
+      "scenario": "negative",
+      "cve": "CVE-2021-44228",
+      "expected": "complete",
+      "actual": "complete",
+      "success": true,
+      "correct_tool_calls": true,
+      "tool_calls": 2,
+      "citation_links": 2,
+      "exact_citation_links": 2,
+      "expected_sources": [
+        "cisa-kev",
+        "nvd"
+      ],
+      "covered_sources": [
+        "cisa-kev",
+        "nvd"
+      ],
+      "covered_expected_sources": 2,
+      "expected_source_count": 2,
+      "latency_ms": 5.895,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_model_cost_usd": 0.0
+    },
+    {
+      "scenario": "retry",
+      "cve": "CVE-2021-44228",
+      "expected": "complete",
+      "actual": "complete",
+      "success": true,
+      "correct_tool_calls": true,
+      "tool_calls": 4,
+      "citation_links": 3,
+      "exact_citation_links": 3,
+      "expected_sources": [
+        "cisa-kev",
+        "nvd"
+      ],
+      "covered_sources": [
+        "cisa-kev",
+        "nvd"
+      ],
+      "covered_expected_sources": 2,
+      "expected_source_count": 2,
+      "latency_ms": 7.319,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_model_cost_usd": 0.0
+    },
+    {
+      "scenario": "outage",
+      "cve": "CVE-2021-44228",
+      "expected": "insufficient_evidence",
+      "actual": "insufficient_evidence",
+      "success": true,
+      "correct_tool_calls": true,
+      "tool_calls": 4,
+      "citation_links": 0,
+      "exact_citation_links": 0,
+      "expected_sources": [],
+      "covered_sources": [],
+      "covered_expected_sources": 0,
+      "expected_source_count": 0,
+      "latency_ms": 3.118,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_model_cost_usd": 0.0
+    },
+    {
+      "scenario": "nvd_outage",
+      "cve": "CVE-2021-44228",
+      "expected": "partial",
+      "actual": "partial",
+      "success": true,
+      "correct_tool_calls": true,
+      "tool_calls": 3,
+      "citation_links": 2,
+      "exact_citation_links": 2,
+      "expected_sources": [
+        "cisa-kev"
+      ],
+      "covered_sources": [
+        "cisa-kev"
+      ],
+      "covered_expected_sources": 1,
+      "expected_source_count": 1,
+      "latency_ms": 6.84,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_model_cost_usd": 0.0
+    },
+    {
+      "scenario": "cisa-kev_outage",
+      "cve": "CVE-2021-44228",
+      "expected": "partial",
+      "actual": "partial",
+      "success": true,
+      "correct_tool_calls": true,
+      "tool_calls": 3,
+      "citation_links": 1,
+      "exact_citation_links": 1,
+      "expected_sources": [
+        "nvd"
+      ],
+      "covered_sources": [
+        "nvd"
+      ],
+      "covered_expected_sources": 1,
+      "expected_source_count": 1,
+      "latency_ms": 5.554,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_model_cost_usd": 0.0
+    },
+    {
+      "scenario": "mismatch",
+      "cve": "CVE-2021-44228",
+      "expected": "partial",
+      "actual": "partial",
+      "success": true,
+      "correct_tool_calls": true,
+      "tool_calls": 2,
+      "citation_links": 2,
+      "exact_citation_links": 2,
+      "expected_sources": [
+        "cisa-kev"
+      ],
+      "covered_sources": [
+        "cisa-kev"
+      ],
+      "covered_expected_sources": 1,
+      "expected_source_count": 1,
+      "latency_ms": 5.615,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_model_cost_usd": 0.0
+    },
+    {
+      "scenario": "withdrawn",
+      "cve": "CVE-2021-44228",
+      "expected": "partial",
+      "actual": "partial",
+      "success": true,
+      "correct_tool_calls": true,
+      "tool_calls": 2,
+      "citation_links": 2,
+      "exact_citation_links": 2,
+      "expected_sources": [
+        "cisa-kev"
+      ],
+      "covered_sources": [
+        "cisa-kev"
+      ],
+      "covered_expected_sources": 1,
+      "expected_source_count": 1,
+      "latency_ms": 5.764,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_model_cost_usd": 0.0
+    },
+    {
+      "scenario": "injection",
+      "cve": "CVE-2021-44228",
+      "expected": "partial",
+      "actual": "partial",
+      "success": true,
+      "correct_tool_calls": true,
+      "tool_calls": 2,
+      "citation_links": 2,
+      "exact_citation_links": 2,
+      "expected_sources": [
+        "cisa-kev"
+      ],
+      "covered_sources": [
+        "cisa-kev"
+      ],
+      "covered_expected_sources": 1,
+      "expected_source_count": 1,
+      "latency_ms": 5.869,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_model_cost_usd": 0.0
+    },
+    {
+      "scenario": "stale",
+      "cve": "CVE-2021-44228",
+      "expected": "partial",
+      "actual": "partial",
+      "success": true,
+      "correct_tool_calls": true,
+      "tool_calls": 2,
+      "citation_links": 3,
+      "exact_citation_links": 3,
+      "expected_sources": [
+        "cisa-kev",
+        "nvd"
+      ],
+      "covered_sources": [
+        "cisa-kev",
+        "nvd"
+      ],
+      "covered_expected_sources": 2,
+      "expected_source_count": 2,
+      "latency_ms": 6.507,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_model_cost_usd": 0.0
+    },
+    {
+      "scenario": "malformed",
+      "cve": "CVE-2021-44228",
+      "expected": "partial",
+      "actual": "partial",
+      "success": true,
+      "correct_tool_calls": true,
+      "tool_calls": 2,
+      "citation_links": 2,
+      "exact_citation_links": 2,
+      "expected_sources": [
+        "cisa-kev"
+      ],
+      "covered_sources": [
+        "cisa-kev"
+      ],
+      "covered_expected_sources": 1,
+      "expected_source_count": 1,
+      "latency_ms": 5.638,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_model_cost_usd": 0.0
+    },
+    {
+      "scenario": "malformed_kev",
+      "cve": "CVE-2021-44228",
+      "expected": "partial",
+      "actual": "partial",
+      "success": true,
+      "correct_tool_calls": true,
+      "tool_calls": 2,
+      "citation_links": 1,
+      "exact_citation_links": 1,
+      "expected_sources": [
+        "nvd"
+      ],
+      "covered_sources": [
+        "nvd"
+      ],
+      "covered_expected_sources": 1,
+      "expected_source_count": 1,
+      "latency_ms": 5.362,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_model_cost_usd": 0.0
+    },
+    {
+      "scenario": "duplicate",
+      "cve": "CVE-2021-44228",
+      "expected": "partial",
+      "actual": "partial",
+      "success": true,
+      "correct_tool_calls": true,
+      "tool_calls": 2,
+      "citation_links": 1,
+      "exact_citation_links": 1,
+      "expected_sources": [
+        "nvd"
+      ],
+      "covered_sources": [
+        "nvd"
+      ],
+      "covered_expected_sources": 1,
+      "expected_source_count": 1,
+      "latency_ms": 5.365,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_model_cost_usd": 0.0
+    },
+    {
+      "scenario": "identifier_omitted",
+      "cve": "CVE-2021-44228",
+      "expected": "complete",
+      "actual": "complete",
+      "success": true,
+      "correct_tool_calls": true,
+      "tool_calls": 2,
+      "citation_links": 3,
+      "exact_citation_links": 3,
+      "expected_sources": [
+        "cisa-kev",
+        "nvd"
+      ],
+      "covered_sources": [
+        "cisa-kev",
+        "nvd"
+      ],
+      "covered_expected_sources": 2,
+      "expected_source_count": 2,
+      "latency_ms": 6.357,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_model_cost_usd": 0.0
+    },
+    {
+      "scenario": "missing",
+      "cve": "CVE-2021-44228",
+      "expected": "partial",
+      "actual": "partial",
+      "success": true,
+      "correct_tool_calls": true,
+      "tool_calls": 2,
+      "citation_links": 2,
+      "exact_citation_links": 2,
+      "expected_sources": [
+        "cisa-kev"
+      ],
+      "covered_sources": [
+        "cisa-kev"
+      ],
+      "covered_expected_sources": 1,
+      "expected_source_count": 1,
+      "latency_ms": 6.424,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_model_cost_usd": 0.0
+    },
+    {
+      "scenario": "malicious_action",
+      "cve": "CVE-2021-44228",
+      "expected": "partial",
+      "actual": "partial",
+      "success": true,
+      "correct_tool_calls": true,
+      "tool_calls": 2,
+      "citation_links": 2,
+      "exact_citation_links": 2,
+      "expected_sources": [
+        "cisa-kev",
+        "nvd"
+      ],
+      "covered_sources": [
+        "cisa-kev",
+        "nvd"
+      ],
+      "covered_expected_sources": 2,
+      "expected_source_count": 2,
+      "latency_ms": 6.239,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_model_cost_usd": 0.0
+    },
+    {
+      "scenario": "long",
+      "cve": "CVE-2021-44228",
+      "expected": "partial",
+      "actual": "partial",
+      "success": true,
+      "correct_tool_calls": true,
+      "tool_calls": 2,
+      "citation_links": 2,
+      "exact_citation_links": 2,
+      "expected_sources": [
+        "cisa-kev"
+      ],
+      "covered_sources": [
+        "cisa-kev"
+      ],
+      "covered_expected_sources": 1,
+      "expected_source_count": 1,
+      "latency_ms": 6.665,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_model_cost_usd": 0.0
+    }
+  ]
+}

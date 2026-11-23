@@ -22,7 +22,11 @@ class ThreatService:
     def get_cve(
         cve_id: str,
         db: Session,
+        *,
+        user_id: int,
     ):
+        # Validate before any upstream lookup, not just before persistence.
+        user_id = ThreatCRUD.require_user_id(user_id)
 
         # ==========================
         # Collect Data
@@ -85,6 +89,7 @@ class ThreatService:
         ThreatCRUD.save_search(
             db=db,
             data=result,
+            user_id=user_id,
         )
 
         return result
@@ -92,14 +97,18 @@ class ThreatService:
     @staticmethod
     def get_history(
         db: Session,
+        *,
+        user_id: int,
     ):
-        return ThreatCRUD.get_recent_searches(db)
+        return ThreatCRUD.get_recent_searches(db, user_id=user_id)
 
     @staticmethod
     def total_searches(
         db: Session,
+        *,
+        user_id: int,
     ):
-        return ThreatCRUD.get_total_searches(db)
+        return ThreatCRUD.get_total_searches(db, user_id=user_id)
 
     @staticmethod
     def explain(cve: str):

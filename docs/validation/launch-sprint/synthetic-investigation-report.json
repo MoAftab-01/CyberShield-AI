@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "cve": "CVE-2021-44228",
+  "status": "complete",
+  "mode": "offline_fixture",
+  "generated_at": "2026-11-14T00:30:43.327689+00:00",
+  "findings": {
+    "nvd_status": "active",
+    "kev_status": "listed",
+    "known_exploited": true
+  },
+  "grounding": {
+    "status": "supported_quotes",
+    "answer": "Complete source quotations; factual truth and completeness are not verified.",
+    "abstained": false,
+    "reason": "exact_source_quotations",
+    "claims": [
+      {
+        "claim_id": "claim-1",
+        "text": "CVE-2021-44228 is listed in this synthetic KEV scenario.",
+        "citation_ids": [
+          "E-f306484b5941fa4858a7"
+        ],
+        "verification": "exact_excerpt",
+        "kind": "complete_section_quote",
+        "section_hash": "71afb5f66bfb6e1b65677372e07be49428616a5b16ac92874eb1403cb67e8546",
+        "verification_scope": "quotation_attribution_only"
+      },
+      {
+        "claim_id": "claim-2",
+        "text": "CVE-2021-44228: Synthetic Log4Shell scenario: vulnerable logging components may allow remote code execution; confirm installed versions and exposure.",
+        "citation_ids": [
+          "E-345998448b809b2802a4"
+        ],
+        "verification": "exact_excerpt",
+        "kind": "complete_section_quote",
+        "section_hash": "5a49612ccc880e770142726d35bdb5e56d148c0c0e9018116563d679a9a3e01a",
+        "verification_scope": "quotation_attribution_only"
+      },
+      {
+        "claim_id": "claim-3",
+        "text": "Synthetic exercise: review official vendor mitigation guidance; no automatic action is authorized.",
+        "citation_ids": [
+          "E-34a40b2152ac0c0ca5a6"
+        ],
+        "verification": "exact_excerpt",
+        "kind": "complete_section_quote",
+        "section_hash": "3797a0fc18e4985844a05b99bdff0c557a858d7a1bcad08dd58edf7c3d95430c",
+        "verification_scope": "quotation_attribution_only"
+      }
+    ],
+    "evidence": [
+      {
+        "citation_id": "E-f306484b5941fa4858a7",
+        "chunk_id": "chunk-b10edaf8f9f86a1753079e60b4fe7dbc2a717ca409502ea72b5cbd721241c13e",
+        "document_id": "doc-771068723ecf64d2be59d10be297e9ed472eb15448acfde9cd601177bf62a421",
+        "source_id": "cisa-kev",
+        "record_id": "CVE-2021-44228",
+        "title": "CVE-2021-44228 KEV catalog observation",
+        "canonical_url": null,
+        "section": "KEV catalog observation",
+        "excerpt": "CVE-2021-44228 is listed in this synthetic KEV scenario.",
+        "published_at": null,
+        "modified_at": "2026-11-13T00:00:00Z",
+        "retrieved_at": "2026-11-14T00:30:43.305839Z",
+        "source_version": "v-baf2466809e508aefba1e82c9c5137958a01f8d01ce65b6745a2c81b1a729f24",
+        "content_hash": "f7cf5451c565dfbb2e94d562b1e612c3ee756fcbb7138f7cda8b6b9c94955c62",
+        "trust": "synthetic_fixture",
+        "scope": "public"
+      },
+      {
+        "citation_id": "E-345998448b809b2802a4",
+        "chunk_id": "chunk-dbc2d79c37691800a17a63eccef18617615c8c3174e41e870427fb9b4dd8d3f1",
+        "document_id": "doc-129f939e3991222824da2f676be8b354e92310751e57a58a94f2b8f12b786cf7",
+        "source_id": "nvd",
+        "record_id": "CVE-2021-44228",
+        "title": "CVE-2021-44228",
+        "canonical_url": null,
+        "section": "Description (en)",
+        "excerpt": "CVE-2021-44228: Synthetic Log4Shell scenario: vulnerable logging components may allow remote code execution; confirm installed versions and exposure.",
+        "published_at": "2024-04-01T00:00:00Z",
+        "modified_at": "2024-04-02T00:00:00Z",
+        "retrieved_at": "2026-11-14T00:30:43.302834Z",
+        "source_version": "v-47d47a7614303eb640ae60eab4cdc742b081ecf56d144c8775aa381abd3649b2",
+        "content_hash": "704757772f9c9c8501a74550dfe60c7b1ebd0e1424ae341ac43335f27a281852",
+        "trust": "synthetic_fixture",
+        "scope": "public"
+      },
+      {
+        "citation_id": "E-34a40b2152ac0c0ca5a6",
+        "chunk_id": "chunk-3ebef737013351e089e71c903a9b012b9ec3e9ae5a7784db1dc23c9e8339e4f3",
+        "document_id": "doc-771068723ecf64d2be59d10be297e9ed472eb15448acfde9cd601177bf62a421",
+        "source_id": "cisa-kev",
+        "record_id": "CVE-2021-44228",
+        "title": "CVE-2021-44228 KEV catalog observation",
+        "canonical_url": null,
+        "section": "CISA required action",
+        "excerpt": "Synthetic exercise: review official vendor mitigation guidance; no automatic action is authorized.",
+        "published_at": null,
+        "modified_at": "2026-11-13T00:00:00Z",
+        "retrieved_at": "2026-11-14T00:30:43.305839Z",
+        "source_version": "v-baf2466809e508aefba1e82c9c5137958a01f8d01ce65b6745a2c81b1a729f24",
+        "content_hash": "f7cf5451c565dfbb2e94d562b1e612c3ee756fcbb7138f7cda8b6b9c94955c62",
+        "trust": "synthetic_fixture",
+        "scope": "public"
+      }
+    ],
+    "verdicts": [],
+    "quarantined_count": 0,
+    "answer_completeness": "not_verified",
+    "verification_scope": "quotation_attribution_only"
+  },
+  "uncertainty": [
+    "Asset exposure, affected installed versions, and business impact are not established."
+  ],
+  "workflow": [
+    "validate",
+    "nvd",
+    "kev",
+    "correlate",
+    "assess",
+    "verify",
+    "report"
+  ],
+  "tools": [
+    {
+      "name": "nvd",
+      "attempts": 1,
+      "status": "ok"
+    },
+    {
+      "name": "cisa-kev",
+      "attempts": 1,
+      "status": "ok"
+    }
+  ],
+  "metrics": {
+    "latency_ms": 45.369,
+    "llm_calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "estimated_model_cost_usd": 0
+  }
+}

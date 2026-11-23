@@ -54,6 +54,7 @@ class GroqProvider(BaseLLMProvider):
         max_tokens: int | None = None,
         temperature: float | None = None,
         timeout: float | None = None,
+        max_attempts: int | None = None,
     ) -> str:
 
         request = {
@@ -74,12 +75,16 @@ class GroqProvider(BaseLLMProvider):
         if max_tokens is not None:
             request["max_tokens"] = max_tokens
 
+        if max_attempts is not None and (type(max_attempts) is not int or not 1 <= max_attempts <= MAX_ATTEMPTS):
+            raise ValueError("Invalid provider attempt bound.")
+        attempts = MAX_ATTEMPTS if max_attempts is None else max_attempts
+        client = self.client if max_attempts is None else self.client.with_options(max_retries=0)
         last_error: Exception | None = None
 
-        for attempt in range(MAX_ATTEMPTS):
+        for attempt in range(attempts):
 
             try:
-                response = self.client.chat.completions.create(**request)
+                response = client.chat.completions.create(**request)
             except (RateLimitError, APITimeoutError, APIConnectionError) as error:
                 last_error = error
             except APIStatusError as error:
@@ -97,7 +102,7 @@ class GroqProvider(BaseLLMProvider):
                     return content.strip()
                 last_error = LLMError("Groq returned an empty response")
 
-            if attempt < MAX_ATTEMPTS - 1:
+            if attempt < attempts - 1:
                 time.sleep(BACKOFF_BASE_SECONDS * (2 ** attempt))
 
-        raise LLMError(f"Groq unavailable after {MAX_ATTEMPTS} attempts: {last_error}")
+        raise LLMError(f"Groq unavailable after {attempts} attempts: {last_error}")

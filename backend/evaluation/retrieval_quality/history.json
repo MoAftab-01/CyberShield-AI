@@ -1,0 +1,65 @@
+{
+  "license": "CC0-1.0",
+  "records": [
+    {
+      "record_id": "D-ROTATE",
+      "title": "Cedar key maintenance",
+      "modified_at": "2024-01-01T00:00:00Z",
+      "identifiers": {
+        "policy": "CEDAR-KEY"
+      },
+      "state": "active",
+      "sections": [
+        {
+          "heading": "Interval",
+          "text": "The Cedar key-maintenance bulletin in effect during 2024 required a twelve-month rotation interval."
+        }
+      ]
+    },
+    {
+      "record_id": "D-RETRACT",
+      "title": "Retracted Redwood bulletin",
+      "modified_at": "2024-01-01T00:00:00Z",
+      "identifiers": {
+        "cve": "CVE-2099-51111"
+      },
+      "state": "active",
+      "sections": [
+        {
+          "heading": "Assessment",
+          "text": "CVE-2099-51111 was described as critical in an unreconciled Redwood bulletin."
+        }
+      ]
+    },
+    {
+      "record_id": "D-DELETED",
+      "title": "Removed patch notice",
+      "modified_at": "2024-01-01T00:00:00Z",
+      "identifiers": {
+        "cve": "CVE-2099-52222"
+      },
+      "state": "active",
+      "sections": [
+        {
+          "heading": "Patch",
+          "text": "CVE-2099-52222 was assigned patch build 100 in an unreviewed notice."
+        }
+      ]
+    },
+    {
+      "record_id": "H-KDF",
+      "title": "Juniper key derivation",
+      "modified_at": "2023-01-01T00:00:00Z",
+      "identifiers": {
+        "policy": "JUNIPER-KDF"
+      },
+      "state": "active",
+      "sections": [
+        {
+          "heading": "Algorithm",
+          "text": "The Juniper application key specification issued in 2023 derives subkeys with HKDF using SHA-256."
+        }
+      ]
+    }
+  ]
+}

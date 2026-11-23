@@ -1,0 +1,57 @@
+.grounded-answer { color: #e2e8f0; line-height: 1.6; overflow-wrap: anywhere; min-width: 0; }
+.grounded-answer h4 { color: #a5f3fc; font-size: 1.05rem; font-weight: 650; margin: 0 0 .5rem; }
+.grounded-answer h5 { color: #f8fafc; font-size: 1rem; font-weight: 600; margin: 1.5rem 0 .75rem; }
+.grounded-answer header p, .grounded-answer > p { color: #cbd5e1; margin: .5rem 0 1rem; }
+.grounded-warning { border-left: 3px solid #fbbf24; padding-left: 1rem; }
+.grounded-warning h4 { color: #fde68a; }
+.grounded-claims { list-style: none; padding: 0; margin: 0; }
+.grounded-claims > li { margin-bottom: 1.25rem; }
+.grounded-answer blockquote { margin: .5rem 0; border-left: 3px solid #22d3ee; background: #081c2a; padding: .75rem 1rem; color: #f1f5f9; }
+.grounded-answer blockquote p { white-space: pre-wrap; margin: 0; }
+.grounded-references { display: flex; flex-wrap: wrap; gap: .5rem; }
+.grounded-answer button, .grounded-answer summary, .grounded-answer a { touch-action: manipulation; }
+.grounded-references button { cursor: pointer; border: 1px solid #328296; border-radius: .5rem; padding: .4rem .75rem; background: #102e41; color: #a5f3fc; font: inherit; }
+.grounded-answer details { margin: .75rem 0; border: 1px solid #336074; border-radius: .75rem; overflow: hidden; }
+.grounded-answer summary { padding: .85rem 1rem; background: #102638; cursor: pointer; color: #f8fafc; font-weight: 600; }
+.grounded-answer :is(button, summary, a):focus-visible { outline: 3px solid #67e8f9; outline-offset: 3px; }
+.grounded-source { padding: 1rem; }
+.grounded-source > p { margin: .35rem 0; }
+.grounded-source-kind { font-size: .9rem; color: #fde68a; }
+.grounded-source a { display: inline-block; margin: .5rem 0; color: #67e8f9; text-decoration: underline; text-underline-offset: .2em; }
+.grounded-source dl { display: grid; grid-template-columns: minmax(6rem, auto) minmax(0, 1fr); gap: .5rem 1rem; margin: 1rem 0; font-size: .9rem; }
+.grounded-source dt { color: #94a3b8; }
+.grounded-source dd { margin: 0; color: #e2e8f0; }
+.grounded-quote-label { color: #cbd5e1; font-size: .9rem; }
+.copilot-message { min-width: 0; }
+.copilot-message-bubble { min-width: 0; overflow-wrap: anywhere; }
+.copilot-request-status { margin: .5rem 1.5rem; color: #e2e8f0; line-height: 1.5; }
+.copilot-request-status button, .copilot-history-toggle, .copilot-navigation-toggle { border: 1px solid #328296; border-radius: .5rem; padding: .5rem .75rem; color: #a5f3fc; background: #102638; cursor: pointer; }
+.copilot-request-status button { margin: .4rem .5rem .4rem 0; }
+.copilot-request-status button:focus-visible, .copilot-history-toggle:focus-visible, .copilot-navigation-toggle:focus-visible { outline: 3px solid #67e8f9; outline-offset: 2px; }
+.copilot-history-toggle, .copilot-navigation-toggle { display: none; }
+.copilot-conversations { flex-shrink: 0; height: 100%; }
+@media (max-width: 767px) {
+  .grounded-source dl { grid-template-columns: minmax(0, 1fr); gap: .15rem; }
+  .grounded-source dd { margin-bottom: .6rem; }
+  .grounded-source, .grounded-answer summary { padding: .75rem; }
+  .copilot-shell > main { min-width: 0; padding: .5rem; padding-top: 3.5rem; }
+  .copilot-navigation { display: none; }
+  .copilot-navigation[data-open="true"] { display: block; position: absolute; left: 0; top: 3.5rem; bottom: 0; z-index: 50; }
+  .copilot-navigation-toggle { display: block; position: absolute; top: .4rem; left: .5rem; z-index: 60; }
+  .copilot-conversations { display: none; }
+  .copilot-conversations[data-open="true"] { display: block; position: absolute; top: 3rem; left: 0; bottom: 0; z-index: 30; }
+  .copilot-history-toggle { display: block; align-self: flex-start; margin: .5rem 1rem; }
+  .copilot-chat-scroll { padding: .75rem; }
+  .copilot-page footer { padding: .5rem; }
+  .copilot-page footer > div > div > div { gap: .5rem; padding: .5rem; }
+  .copilot-page footer .flex-1 { min-width: 0; }
+  .copilot-page textarea { min-width: 0; }
+  .copilot-message { gap: .5rem; }
+  .copilot-message > div:first-child:not(.copilot-message-bubble), .copilot-message > div:last-child:not(.copilot-message-bubble) { display: none; }
+  .copilot-message-bubble { width: 100%; max-width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .copilot-shell *, .grounded-answer * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+.grounded-answer summary:focus-visible { outline-offset: -3px; }

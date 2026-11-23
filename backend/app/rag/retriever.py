@@ -150,19 +150,39 @@ class HybridRetriever:
     # ------------------------------------------------------------------
 
     @staticmethod
-    def _scope_of(document) -> str:
-        """Classify a chunk as knowledge base or a user upload."""
+    def _scope_of(document) -> str | None:
+        """Classify trusted metadata; ambiguous chunks have no visible scope."""
 
-        metadata = document.metadata
+        metadata = getattr(document, "metadata", None)
+        if not isinstance(metadata, dict):
+            return None
 
-        if metadata.get("scope"):
-            return metadata["scope"]
+        scope = metadata.get("scope")
+        if scope is not None and not isinstance(scope, str):
+            return None
+        if scope not in (None, "", UPLOAD_SCOPE, KNOWLEDGE_BASE_SCOPE):
+            return None
 
-        # Chunks indexed before ``scope`` existed only carry a folder name.
-        if metadata.get("source_folder") == UPLOAD_SCOPE:
+        folder = metadata.get("source_folder")
+        if folder is not None and not isinstance(folder, str):
+            return None
+        folder_parts = [
+            part.strip().casefold()
+            for part in (folder or "").replace("\\", "/").split("/")
+        ]
+        upload_marker = any(part in {"uploads", UPLOAD_SCOPE} for part in folder_parts)
+
+        if scope == KNOWLEDGE_BASE_SCOPE:
+            # An upload marker or ownership field contradicts a public claim.
+            if upload_marker or "user_id" in metadata:
+                return None
+            return KNOWLEDGE_BASE_SCOPE
+
+        if scope == UPLOAD_SCOPE or upload_marker:
             return UPLOAD_SCOPE
 
-        return KNOWLEDGE_BASE_SCOPE
+        # Folder names or an owner alone never establish a public reference.
+        return None
 
     @staticmethod
     def _is_visible(document, user_id: int | None) -> bool:
@@ -173,13 +193,15 @@ class HybridRetriever:
         or misconfigured caller fails closed rather than leaking.
         """
 
-        if HybridRetriever._scope_of(document) != UPLOAD_SCOPE:
+        scope = HybridRetriever._scope_of(document)
+        if scope == KNOWLEDGE_BASE_SCOPE:
             return True
 
-        if user_id is None:
+        if scope != UPLOAD_SCOPE or type(user_id) is not int or user_id <= 0:
             return False
 
-        return document.metadata.get("user_id") == user_id
+        owner = document.metadata.get("user_id")
+        return type(owner) is int and owner > 0 and owner == user_id
 
     # ------------------------------------------------------------------
     # Search
@@ -191,6 +213,8 @@ class HybridRetriever:
         top_k: int = 5,
         user_id: int | None = None,
         include_uploads: bool = True,
+        *,
+        context=None,
     ):
         """Retrieve the best passages for a query.
 
@@ -198,29 +222,34 @@ class HybridRetriever:
         index; it returns an empty result with an explanatory status instead.
         """
 
-        index_files = (
-            FAISSStore.INDEX_PATH,
-            FAISSStore.META_PATH,
-            BM25Store.INDEX_PATH,
-            BM25Store.DOCS_PATH,
-        )
-        if not all(path.exists() for path in index_files):
-            return [], {
-                "status": "empty",
-                "reason": "No RAG index has been built yet.",
-                "retrieved_count": 0,
-                "embedding_backend": EmbeddingService.backend_name(),
-            }
+        backend_name = EmbeddingService.backend_name if context is None else lambda: context.embedding_backend
+        embed_query = EmbeddingService.embed_query if context is None else context.embed_query
+        if context is not None:
+            faiss_index, documents, bm25 = context.index, list(context.documents), context.bm25
+        else:
+            index_files = (
+                FAISSStore.INDEX_PATH,
+                FAISSStore.META_PATH,
+                BM25Store.INDEX_PATH,
+                BM25Store.DOCS_PATH,
+            )
+            if not all(path.exists() for path in index_files):
+                return [], {
+                    "status": "empty",
+                    "reason": "No RAG index has been built yet.",
+                    "retrieved_count": 0,
+                    "embedding_backend": backend_name(),
+                }
 
-        faiss_index, documents = FAISSStore.load()
-        bm25 = BM25Store.load()
+            faiss_index, documents = FAISSStore.load()
+            bm25 = BM25Store.load()
 
         if not documents:
             return [], {
                 "status": "empty",
                 "reason": "The RAG index contains no documents.",
                 "retrieved_count": 0,
-                "embedding_backend": EmbeddingService.backend_name(),
+                "embedding_backend": backend_name(),
             }
 
         # ---- scoping ---------------------------------------------------
@@ -248,7 +277,7 @@ class HybridRetriever:
                 "status": "empty",
                 "reason": "No documents are visible to this user.",
                 "retrieved_count": 0,
-                "embedding_backend": EmbeddingService.backend_name(),
+                "embedding_backend": backend_name(),
             }
 
         visible_set = set(visible)
@@ -291,7 +320,7 @@ class HybridRetriever:
 
         # ---- dense ranking --------------------------------------------
         query_vector = np.asarray(
-            EmbeddingService.embed_query(retrieval_query),
+            embed_query(retrieval_query),
             dtype="float32",
         )
         if query_vector.ndim == 1:
@@ -375,7 +404,7 @@ class HybridRetriever:
                     "status": "no_match",
                     "reason": "No passage matched the query.",
                     "retrieved_count": 0,
-                    "embedding_backend": EmbeddingService.backend_name(),
+                    "embedding_backend": backend_name(),
                     "scope": scope_label,
                 }
 
@@ -404,7 +433,7 @@ class HybridRetriever:
                 "status": "no_match",
                 "reason": "No passage matched the query.",
                 "retrieved_count": 0,
-                "embedding_backend": EmbeddingService.backend_name(),
+                "embedding_backend": backend_name(),
                 "scope": scope_label,
             }
 
@@ -461,7 +490,7 @@ class HybridRetriever:
                 if config["fusion"] in {"off", "dense", "semantic"}
                 else "reciprocal_rank_fusion+rerank+mmr"
             ),
-            "embedding_backend": EmbeddingService.backend_name(),
+            "embedding_backend": backend_name(),
             "scope": scope_label,
             "excluded_by_scope": len(documents) - len(visible),
             "top_score": round(rank_of[top_index], 6) if top_index is not None else 0.0,

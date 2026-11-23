@@ -52,6 +52,8 @@ class ConversationService:
         message: str,
     ):
 
+        from app.core.credential_privacy import persisted_answer
+        message = persisted_answer(message)
         return ConversationCRUD.save_message(
             db=db,
             conversation_id=conversation_id,

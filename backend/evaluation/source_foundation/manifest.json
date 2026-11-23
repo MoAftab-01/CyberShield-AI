@@ -1,0 +1,29 @@
+{
+  "format_version": 1,
+  "artifacts": [
+    {
+      "artifact_id": "nvd-selected-fields",
+      "filename": "nvd-selected-fields.json",
+      "source_id": "nvd",
+      "adapter": "nvd",
+      "trust": "official_snapshot",
+      "sha256": "1ec47ded66d92ac4aa1c2b13c56f16282944d0fa632acabf22d22cd48bc1cb18"
+    },
+    {
+      "artifact_id": "synthetic-old",
+      "filename": "synthetic-old.json",
+      "source_id": "fixture-reference",
+      "adapter": "reference-fixture",
+      "trust": "synthetic_fixture",
+      "sha256": "b706db2e7d386d3576aac5faf2b923f1f834a43b134cbf9dbc3e80a8a321b849"
+    },
+    {
+      "artifact_id": "synthetic-current",
+      "filename": "synthetic-current.json",
+      "source_id": "fixture-reference",
+      "adapter": "reference-fixture",
+      "trust": "synthetic_fixture",
+      "sha256": "e442517ff9252327f82f5665d06bc7b206f1141be7a56fc69b96361f1d41354a"
+    }
+  ]
+}

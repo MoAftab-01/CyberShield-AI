@@ -23,6 +23,7 @@ interface SidebarProps {
 }
 
 const menuItems = [
+  { name: "CVE Investigation", path: "/investigate", icon: ShieldAlert },
   {
     name: "Dashboard",
     path: "/dashboard",

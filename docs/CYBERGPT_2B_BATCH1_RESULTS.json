@@ -1,0 +1,500 @@
+{
+  "dataset": {
+    "current_public_passages": 50,
+    "current_records": 49,
+    "dev": 24,
+    "expected_abstentions": 15,
+    "families": 24,
+    "heldout": 24,
+    "labels": 65,
+    "multi_passage_questions": 17,
+    "questions": 48
+  },
+  "reviewed_labels": 65,
+  "review_dispositions": {
+    "add_supporting_context": 9,
+    "clarification_required": 2,
+    "exclude_completion_scoring": 2,
+    "retain": 35
+  },
+  "protocol": {
+    "completion": "oracle required-evidence coverage only; pipeline completeness remains unverified",
+    "generation": "deterministic source-only stubs, not an LLM-quality test",
+    "retrieval": "fixed existing hash hybrid: RRF 60, MMR lambda 1; no tuning",
+    "review_manifest_sha256": "91425763009be015e054f41682839703ef12081936c9854c915831d88ea904b4",
+    "verification": "complete section quotation attribution; no general semantic entailment"
+  },
+  "controlled_verifier": {
+    "accuracy": 1.0,
+    "cases": [
+      {
+        "accepted": true,
+        "expected_accepted": true,
+        "id": "supported_cve",
+        "reason": "complete_section_quotations_only",
+        "status": "supported_quotes",
+        "verdict_reasons": [
+          "verified_complete_section_quote"
+        ]
+      },
+      {
+        "accepted": true,
+        "expected_accepted": true,
+        "id": "supported_negated_section",
+        "reason": "complete_section_quotations_only",
+        "status": "supported_quotes",
+        "verdict_reasons": [
+          "verified_complete_section_quote"
+        ]
+      },
+      {
+        "accepted": true,
+        "expected_accepted": true,
+        "id": "supported_sql_qualifiers",
+        "reason": "complete_section_quotations_only",
+        "status": "supported_quotes",
+        "verdict_reasons": [
+          "verified_complete_section_quote"
+        ]
+      },
+      {
+        "accepted": true,
+        "expected_accepted": true,
+        "id": "supported_private",
+        "reason": "complete_section_quotations_only",
+        "status": "supported_quotes",
+        "verdict_reasons": [
+          "verified_complete_section_quote"
+        ]
+      },
+      {
+        "accepted": true,
+        "expected_accepted": true,
+        "id": "supported_historical",
+        "reason": "complete_section_quotations_only",
+        "status": "supported_quotes",
+        "verdict_reasons": [
+          "verified_complete_section_quote"
+        ]
+      },
+      {
+        "accepted": true,
+        "expected_accepted": true,
+        "id": "supported_official",
+        "reason": "complete_section_quotations_only",
+        "status": "supported_quotes",
+        "verdict_reasons": [
+          "verified_complete_section_quote"
+        ]
+      },
+      {
+        "accepted": true,
+        "expected_accepted": true,
+        "id": "unrelated_injection_quarantined",
+        "reason": "complete_section_quotations_only",
+        "status": "supported_quotes",
+        "verdict_reasons": [
+          "verified_complete_section_quote"
+        ]
+      },
+      {
+        "accepted": false,
+        "expected_accepted": false,
+        "id": "fabricated_citation",
+        "reason": "one_or_more_claims_failed",
+        "status": "unsupported_claims",
+        "verdict_reasons": [
+          "citation_not_in_authorized_retrieval"
+        ]
+      },
+      {
+        "accepted": false,
+        "expected_accepted": false,
+        "id": "partial_quote",
+        "reason": "one_or_more_claims_failed",
+        "status": "unsupported_claims",
+        "verdict_reasons": [
+          "not_a_complete_cited_section"
+        ]
+      },
+      {
+        "accepted": false,
+        "expected_accepted": false,
+        "id": "changed_score",
+        "reason": "one_or_more_claims_failed",
+        "status": "unsupported_claims",
+        "verdict_reasons": [
+          "not_a_complete_cited_section"
+        ]
+      },
+      {
+        "accepted": false,
+        "expected_accepted": false,
+        "id": "extra_authority",
+        "reason": "one_or_more_claims_failed",
+        "status": "unsupported_claims",
+        "verdict_reasons": [
+          "not_a_complete_cited_section"
+        ]
+      },
+      {
+        "accepted": false,
+        "expected_accepted": false,
+        "id": "duplicate_reference",
+        "reason": "one_or_more_claims_failed",
+        "status": "unsupported_claims",
+        "verdict_reasons": [
+          "duplicate_citation"
+        ]
+      },
+      {
+        "accepted": false,
+        "expected_accepted": false,
+        "id": "duplicate_claim",
+        "reason": "one_or_more_claims_failed",
+        "status": "unsupported_claims",
+        "verdict_reasons": [
+          "verified_complete_section_quote",
+          "duplicate_claim"
+        ]
+      },
+      {
+        "accepted": false,
+        "expected_accepted": false,
+        "id": "invented_url",
+        "reason": "invalid_evidence_or_draft_contract",
+        "status": "unsupported_claims",
+        "verdict_reasons": []
+      },
+      {
+        "accepted": false,
+        "expected_accepted": false,
+        "id": "tool_output",
+        "reason": "invalid_evidence_or_draft_contract",
+        "status": "unsupported_claims",
+        "verdict_reasons": []
+      },
+      {
+        "accepted": false,
+        "expected_accepted": false,
+        "id": "dropped_negation",
+        "reason": "one_or_more_claims_failed",
+        "status": "unsupported_claims",
+        "verdict_reasons": [
+          "not_a_complete_cited_section"
+        ]
+      },
+      {
+        "accepted": false,
+        "expected_accepted": false,
+        "id": "wrong_attribution",
+        "reason": "one_or_more_claims_failed",
+        "status": "unsupported_claims",
+        "verdict_reasons": [
+          "citation_not_in_authorized_retrieval"
+        ]
+      },
+      {
+        "accepted": false,
+        "expected_accepted": false,
+        "id": "wrong_identifier",
+        "reason": "no_safe_relevant_complete_sections",
+        "status": "insufficient_evidence",
+        "verdict_reasons": []
+      },
+      {
+        "accepted": false,
+        "expected_accepted": false,
+        "id": "foreign_private",
+        "reason": "authorization_or_integrity_failure",
+        "status": "unverified_evidence",
+        "verdict_reasons": []
+      },
+      {
+        "accepted": false,
+        "expected_accepted": false,
+        "id": "stale_private",
+        "reason": "evidence_changed",
+        "status": "unverified_evidence",
+        "verdict_reasons": []
+      },
+      {
+        "accepted": false,
+        "expected_accepted": false,
+        "id": "malicious_source",
+        "reason": "no_safe_relevant_complete_sections",
+        "status": "unsafe_evidence",
+        "verdict_reasons": []
+      },
+      {
+        "accepted": false,
+        "expected_accepted": false,
+        "id": "retention_conflict",
+        "reason": "conflicting_retention_values_same_scope",
+        "status": "conflicting_evidence",
+        "verdict_reasons": []
+      },
+      {
+        "accepted": false,
+        "expected_accepted": false,
+        "id": "different_scopes",
+        "reason": "different_environment_scopes_require_context",
+        "status": "insufficient_evidence",
+        "verdict_reasons": []
+      },
+      {
+        "accepted": false,
+        "expected_accepted": false,
+        "id": "retrieval_failed",
+        "reason": "error",
+        "status": "retrieval_failure",
+        "verdict_reasons": []
+      },
+      {
+        "accepted": false,
+        "expected_accepted": false,
+        "id": "missing_evidence",
+        "reason": "no_retrieved_evidence",
+        "status": "insufficient_evidence",
+        "verdict_reasons": []
+      }
+    ],
+    "false_accept_rate": 0.0,
+    "false_accepts": 0,
+    "false_reject_rate": 0.0,
+    "false_rejects": 0,
+    "quote_support_precision": 1.0,
+    "supported_cases": 7,
+    "true_accepts": 7,
+    "unsupported_or_unsafe_cases": 18
+  },
+  "isolation": {
+    "forbidden_file_operations_blocked": 0,
+    "network_attempts_blocked": 0
+  },
+  "costs": {
+    "cpu_seconds": 1.046875,
+    "faiss_threads": "installed library default; no OpenMP override",
+    "model_downloads": 0,
+    "provider_calls": 0,
+    "torch_cpu_threads": null,
+    "wall_seconds": 1.2740851000417024
+  },
+  "modes": {
+    "legacy_first": {
+      "dev": {
+        "citation_validity": 1.0,
+        "false_abstention_rate": 0.4375,
+        "required_evidence_coverage": 0.4090909090909091,
+        "semantic_entailment_accuracy": null,
+        "statuses": {
+          "abstained": 15,
+          "returned_excerpts": 9
+        },
+        "totals": {
+          "answerable_required_covered": 9,
+          "answerable_required_passages": 22,
+          "answerable_scored": 16,
+          "citation_references": 9,
+          "claims": 9,
+          "correct_abstentions": 8,
+          "covered_passages": 9,
+          "expected_abstentions": 8,
+          "false_abstentions": 7,
+          "incorrect_attributions": 0,
+          "no_relevant_evidence_returned": 7,
+          "relevant_passages": 31,
+          "required_evidence_complete": 6,
+          "unjudged_claims": 0,
+          "unsupported_excerpts": 0,
+          "valid_references": 9
+        }
+      },
+      "heldout": {
+        "citation_validity": 1.0,
+        "false_abstention_rate": 0.5333333333333333,
+        "required_evidence_coverage": 0.3333333333333333,
+        "semantic_entailment_accuracy": null,
+        "statuses": {
+          "abstained": 16,
+          "returned_excerpts": 8
+        },
+        "totals": {
+          "answerable_required_covered": 7,
+          "answerable_required_passages": 21,
+          "answerable_scored": 15,
+          "citation_references": 8,
+          "claims": 8,
+          "correct_abstentions": 7,
+          "covered_passages": 8,
+          "expected_abstentions": 7,
+          "false_abstentions": 8,
+          "incorrect_attributions": 0,
+          "no_relevant_evidence_returned": 8,
+          "relevant_passages": 34,
+          "required_evidence_complete": 5,
+          "unjudged_claims": 0,
+          "unsupported_excerpts": 0,
+          "valid_references": 8
+        }
+      }
+    },
+    "legacy_same_generator": {
+      "dev": {
+        "citation_validity": 1.0,
+        "false_abstention_rate": 0.4375,
+        "required_evidence_coverage": 0.5,
+        "semantic_entailment_accuracy": null,
+        "statuses": {
+          "abstained": 15,
+          "returned_excerpts": 9
+        },
+        "totals": {
+          "answerable_required_covered": 11,
+          "answerable_required_passages": 22,
+          "answerable_scored": 16,
+          "citation_references": 24,
+          "claims": 24,
+          "correct_abstentions": 8,
+          "covered_passages": 12,
+          "expected_abstentions": 8,
+          "false_abstentions": 7,
+          "incorrect_attributions": 0,
+          "no_relevant_evidence_returned": 7,
+          "relevant_passages": 31,
+          "required_evidence_complete": 8,
+          "unjudged_claims": 12,
+          "unsupported_excerpts": 0,
+          "valid_references": 24
+        }
+      },
+      "heldout": {
+        "citation_validity": 1.0,
+        "false_abstention_rate": 0.5333333333333333,
+        "required_evidence_coverage": 0.42857142857142855,
+        "semantic_entailment_accuracy": null,
+        "statuses": {
+          "abstained": 16,
+          "returned_excerpts": 8
+        },
+        "totals": {
+          "answerable_required_covered": 9,
+          "answerable_required_passages": 21,
+          "answerable_scored": 15,
+          "citation_references": 25,
+          "claims": 25,
+          "correct_abstentions": 7,
+          "covered_passages": 11,
+          "expected_abstentions": 7,
+          "false_abstentions": 8,
+          "incorrect_attributions": 0,
+          "no_relevant_evidence_returned": 8,
+          "relevant_passages": 34,
+          "required_evidence_complete": 7,
+          "unjudged_claims": 14,
+          "unsupported_excerpts": 0,
+          "valid_references": 25
+        }
+      }
+    },
+    "verified_quotes": {
+      "dev": {
+        "citation_validity": 1.0,
+        "false_abstention_rate": 0.0,
+        "required_evidence_coverage": 0.7727272727272727,
+        "semantic_entailment_accuracy": null,
+        "statuses": {
+          "conflicting_evidence": 1,
+          "insufficient_evidence": 6,
+          "supported_quotes": 16,
+          "unsafe_evidence": 1
+        },
+        "totals": {
+          "answerable_required_covered": 17,
+          "answerable_required_passages": 22,
+          "answerable_scored": 16,
+          "citation_references": 19,
+          "claims": 19,
+          "correct_abstentions": 8,
+          "covered_passages": 17,
+          "expected_abstentions": 8,
+          "false_abstentions": 0,
+          "incorrect_attributions": 0,
+          "no_relevant_evidence_returned": 0,
+          "relevant_passages": 31,
+          "required_evidence_complete": 11,
+          "unjudged_claims": 2,
+          "unsupported_excerpts": 0,
+          "valid_references": 19
+        }
+      },
+      "heldout": {
+        "citation_validity": 1.0,
+        "false_abstention_rate": 0.4,
+        "required_evidence_coverage": 0.5714285714285714,
+        "semantic_entailment_accuracy": null,
+        "statuses": {
+          "insufficient_evidence": 13,
+          "supported_quotes": 9,
+          "unsafe_evidence": 2
+        },
+        "totals": {
+          "answerable_required_covered": 12,
+          "answerable_required_passages": 21,
+          "answerable_scored": 15,
+          "citation_references": 14,
+          "claims": 14,
+          "correct_abstentions": 7,
+          "covered_passages": 13,
+          "expected_abstentions": 7,
+          "false_abstentions": 6,
+          "incorrect_attributions": 0,
+          "no_relevant_evidence_returned": 6,
+          "relevant_passages": 34,
+          "required_evidence_complete": 8,
+          "unjudged_claims": 1,
+          "unsupported_excerpts": 0,
+          "valid_references": 14
+        }
+      }
+    }
+  },
+  "tests": {
+    "focused": {
+      "tests": 299,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 19.381,
+      "failed_nodes": []
+    },
+    "full": {
+      "tests": 510,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 179.868,
+      "failed_nodes": [
+        "backend.tests.test_agent_upgrades.TestPasswordSecurityAndPrivacy::test_conversation_title_masks_raw_password_in_new_conversation",
+        "backend.tests.test_evaluation_cases::test_index_stamp_tracks_pdf_content_not_timestamp",
+        "backend.tests.test_orchestrator.TestDispatch::test_a_tool_request_takes_the_tool_path"
+      ]
+    }
+  },
+  "security_investigation": {
+    "synthetic_generated_value_in_immediate_response": true,
+    "synthetic_generated_value_persisted": true,
+    "synthetic_generated_value_in_later_model_prompt": true,
+    "capitalized_generation_verb_misidentified_as_password": true,
+    "capitalized_generation_extra_classifier_calls": 1,
+    "no_password_keyword_secret_extraction_missed": true,
+    "no_password_keyword_secret_left_unmasked": true,
+    "database_is_temporary_sqlite": true,
+    "real_database_connections": 0
+  },
+  "python": "3.10.0",
+  "preexisting_files_verified_unchanged": 348,
+  "retrieval_tuning": false,
+  "live_integration": false,
+  "validation_scope": "Complete-section quotation attribution only; semantic paraphrase/truth/completeness not measured"
+}

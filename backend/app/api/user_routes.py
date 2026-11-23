@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 
 from app.core.security import create_access_token
@@ -13,6 +13,19 @@ from app.schemas.user_schema import (
 )
 from app.services.user_service import UserService
 
+from app.core.rate_limit import RateLimiter
+
+LOGIN_LIMITER = RateLimiter(30, 60)
+REGISTER_LIMITER = RateLimiter(10, 60)
+
+def throttle(request, limiter):
+    # Use the connected peer. Forwarded headers do not establish identity.
+    limiter.prune()
+    allowed, retry = limiter.check(request.client.host if request.client else "unknown")
+    if not allowed:
+        raise HTTPException(429, "Authentication rate limit exceeded.",
+            headers={"Retry-After": str(max(1, int(retry) + 1))})
+
 router = APIRouter(
     prefix="/users",
     tags=["Users"],
@@ -26,9 +39,11 @@ router = APIRouter(
 )
 def register_user(
     user: UserCreate,
+    request: Request,
     db: Session = Depends(get_db),
 ):
 
+    throttle(request, REGISTER_LIMITER)
     try:
         return UserService.create_user(db, user)
 
@@ -45,9 +60,11 @@ def register_user(
 )
 def login(
     user: UserLogin,
+    request: Request,
     db: Session = Depends(get_db),
 ):
 
+    throttle(request, LOGIN_LIMITER)
     authenticated_user = UserService.authenticate_user(
         db,
         user.email,

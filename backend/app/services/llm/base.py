@@ -41,6 +41,18 @@ class BaseLLMProvider(ABC):
         raise NotImplementedError
 
 
+    def chat_bounded(
+        self, prompt: str, *, timeout: float, system_prompt: str | None = None,
+        max_tokens: int | None = None, temperature: float | None = None,
+        max_attempts: int = 1,
+    ) -> str:
+        """Explicit opt-in: legacy chat signatures/defaults remain unchanged."""
+        if type(max_attempts) is not int or max_attempts != 1:
+            raise ValueError("Bounded generation requires one attempt.")
+        return self.chat(prompt, timeout=timeout, system_prompt=system_prompt,
+                         max_tokens=max_tokens, temperature=temperature, max_attempts=1)
+
+
 class LLMError(RuntimeError):
     """Raised when an LLM call fails after retries.
 

@@ -1,0 +1,339 @@
+{
+  "license": "CC0-1.0",
+  "method": "Hand-authored verifier scenarios; expected labels used only by scoring.",
+  "cases": [
+    {
+      "id": "supported_cve",
+      "question": "CVE-2099-51001 severity",
+      "retrieved": [
+        [
+          "D-CVE-A",
+          "Assessment"
+        ]
+      ],
+      "actor": 202,
+      "mutation": "none",
+      "expected_accepted": true
+    },
+    {
+      "id": "supported_negated_section",
+      "question": "What do Secure and HttpOnly cookie flags protect?",
+      "retrieved": [
+        [
+          "H-COOKIE",
+          "Flags"
+        ]
+      ],
+      "actor": 202,
+      "mutation": "none",
+      "expected_accepted": true
+    },
+    {
+      "id": "supported_sql_qualifiers",
+      "question": "How are SQL table identifiers protected?",
+      "retrieved": [
+        [
+          "D-SQL-ID",
+          "Names"
+        ]
+      ],
+      "actor": 202,
+      "mutation": "none",
+      "expected_accepted": true
+    },
+    {
+      "id": "supported_private",
+      "question": "Who authorizes Saffron HSM recovery?",
+      "retrieved": [
+        [
+          "D-PRIVATE",
+          "Private content"
+        ]
+      ],
+      "actor": 101,
+      "mutation": "none",
+      "expected_accepted": true
+    },
+    {
+      "id": "supported_historical",
+      "question": "What was the 2024 Cedar rotation interval?",
+      "retrieved": [
+        [
+          "D-ROTATE",
+          "Interval"
+        ]
+      ],
+      "actor": 202,
+      "mutation": "none",
+      "expected_accepted": true,
+      "source_as_of": "2025-01-01T00:00:00Z"
+    },
+    {
+      "id": "supported_official",
+      "question": "What is the NVD CVE-2021-44228 score?",
+      "retrieved": [
+        [
+          "CVE-2021-44228",
+          "CVSS v3.1 assessment"
+        ]
+      ],
+      "actor": 202,
+      "mutation": "none",
+      "expected_accepted": true
+    },
+    {
+      "id": "unrelated_injection_quarantined",
+      "question": "CVE-2099-51001 severity",
+      "retrieved": [
+        [
+          "D-CVE-A",
+          "Assessment"
+        ],
+        [
+          "D-INJECT",
+          "Attack"
+        ]
+      ],
+      "actor": 202,
+      "mutation": "none",
+      "expected_accepted": true
+    },
+    {
+      "id": "fabricated_citation",
+      "question": "CVE-2099-51001 severity",
+      "retrieved": [
+        [
+          "D-CVE-A",
+          "Assessment"
+        ]
+      ],
+      "actor": 202,
+      "mutation": "fabricated",
+      "expected_accepted": false
+    },
+    {
+      "id": "partial_quote",
+      "question": "CVE-2099-51001 severity",
+      "retrieved": [
+        [
+          "D-CVE-A",
+          "Assessment"
+        ]
+      ],
+      "actor": 202,
+      "mutation": "substring",
+      "expected_accepted": false
+    },
+    {
+      "id": "changed_score",
+      "question": "CVE-2099-51001 severity",
+      "retrieved": [
+        [
+          "D-CVE-A",
+          "Assessment"
+        ]
+      ],
+      "actor": 202,
+      "mutation": "number",
+      "expected_accepted": false
+    },
+    {
+      "id": "extra_authority",
+      "question": "CVE-2099-51001 severity",
+      "retrieved": [
+        [
+          "D-CVE-A",
+          "Assessment"
+        ]
+      ],
+      "actor": 202,
+      "mutation": "prefix",
+      "expected_accepted": false
+    },
+    {
+      "id": "duplicate_reference",
+      "question": "CVE-2099-51001 severity",
+      "retrieved": [
+        [
+          "D-CVE-A",
+          "Assessment"
+        ]
+      ],
+      "actor": 202,
+      "mutation": "duplicate_reference",
+      "expected_accepted": false
+    },
+    {
+      "id": "duplicate_claim",
+      "question": "CVE-2099-51001 severity",
+      "retrieved": [
+        [
+          "D-CVE-A",
+          "Assessment"
+        ]
+      ],
+      "actor": 202,
+      "mutation": "duplicate_claim",
+      "expected_accepted": false
+    },
+    {
+      "id": "invented_url",
+      "question": "CVE-2099-51001 severity",
+      "retrieved": [
+        [
+          "D-CVE-A",
+          "Assessment"
+        ]
+      ],
+      "actor": 202,
+      "mutation": "url",
+      "expected_accepted": false
+    },
+    {
+      "id": "tool_output",
+      "question": "CVE-2099-51001 severity",
+      "retrieved": [
+        [
+          "D-CVE-A",
+          "Assessment"
+        ]
+      ],
+      "actor": 202,
+      "mutation": "tool",
+      "expected_accepted": false
+    },
+    {
+      "id": "dropped_negation",
+      "question": "What do Secure and HttpOnly cookie flags protect?",
+      "retrieved": [
+        [
+          "H-COOKIE",
+          "Flags"
+        ]
+      ],
+      "actor": 202,
+      "mutation": "negation",
+      "expected_accepted": false
+    },
+    {
+      "id": "wrong_attribution",
+      "question": "CVE-2099-51001 severity",
+      "retrieved": [
+        [
+          "D-CVE-A",
+          "Assessment"
+        ],
+        [
+          "D-SQL",
+          "Values"
+        ]
+      ],
+      "actor": 202,
+      "mutation": "wrong_attribution",
+      "expected_accepted": false
+    },
+    {
+      "id": "wrong_identifier",
+      "question": "CVE-2099-51001 severity",
+      "retrieved": [
+        [
+          "D-CVE-B",
+          "Assessment"
+        ]
+      ],
+      "actor": 202,
+      "mutation": "none",
+      "expected_accepted": false
+    },
+    {
+      "id": "foreign_private",
+      "question": "Who authorizes Saffron HSM recovery?",
+      "retrieved": [
+        [
+          "D-PRIVATE",
+          "Private content"
+        ]
+      ],
+      "actor": 202,
+      "mutation": "none",
+      "expected_accepted": false
+    },
+    {
+      "id": "stale_private",
+      "question": "Who authorizes Saffron HSM recovery?",
+      "retrieved": [
+        [
+          "D-PRIVATE",
+          "Private content"
+        ]
+      ],
+      "actor": 101,
+      "mutation": "stale",
+      "expected_accepted": false
+    },
+    {
+      "id": "malicious_source",
+      "question": "CVE-2099-53333 remediation",
+      "retrieved": [
+        [
+          "D-INJECT",
+          "Attack"
+        ]
+      ],
+      "actor": 202,
+      "mutation": "none",
+      "expected_accepted": false
+    },
+    {
+      "id": "retention_conflict",
+      "question": "What is the Cedar application audit log retention?",
+      "retrieved": [
+        [
+          "D-LOG-A",
+          "Retention"
+        ],
+        [
+          "D-LOG-B",
+          "Retention"
+        ]
+      ],
+      "actor": 202,
+      "mutation": "none",
+      "expected_accepted": false
+    },
+    {
+      "id": "different_scopes",
+      "question": "Explain conflicting Orion scanner reachability reports.",
+      "retrieved": [
+        [
+          "H-CONFLICT-A",
+          "Finding"
+        ],
+        [
+          "H-CONFLICT-B",
+          "Finding"
+        ]
+      ],
+      "actor": 202,
+      "mutation": "none",
+      "expected_accepted": false
+    },
+    {
+      "id": "retrieval_failed",
+      "question": "CVE-2099-51001 severity",
+      "retrieved": [],
+      "actor": 202,
+      "mutation": "none",
+      "expected_accepted": false,
+      "retrieval_status": "error"
+    },
+    {
+      "id": "missing_evidence",
+      "question": "CVE-2099-59999 severity",
+      "retrieved": [],
+      "actor": 202,
+      "mutation": "none",
+      "expected_accepted": false
+    }
+  ]
+}

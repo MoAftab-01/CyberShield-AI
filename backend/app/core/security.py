@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from typing import Optional
+import math
+import time
 
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -17,6 +19,8 @@ def hash_password(password: str) -> str:
     """
     Hash a plain text password.
     """
+    if not isinstance(password, str) or "\x00" in password:
+        raise ValueError("Password contains an unsupported character.")
     return pwd_context.hash(password)
 
 
@@ -24,7 +28,12 @@ def verify_password(password: str, hashed_password: str) -> bool:
     """
     Verify a password against its hash.
     """
-    return pwd_context.verify(password, hashed_password)
+    if not isinstance(password, str) or "\x00" in password:
+        return False
+    try:
+        return pwd_context.verify(password, hashed_password)
+    except (ValueError, TypeError):
+        return False
 
 
 def create_access_token(data: dict) -> str:
@@ -60,9 +69,16 @@ def decode_access_token(token: str) -> Optional[dict]:
             token,
             settings.JWT_SECRET,
             algorithms=[settings.JWT_ALGORITHM],
+            options={"require_exp": True, "require_sub": True},
         )
 
+        subject, expires = payload.get("sub"), payload.get("exp")
+        if (not isinstance(subject, str) or not subject or len(subject) > 255
+                or subject != subject.strip() or any(ord(c) < 32 for c in subject)
+                or type(expires) not in (int, float) or not math.isfinite(expires)
+                or expires <= time.time()):
+            return None
         return payload
 
-    except JWTError:
+    except (JWTError, ValueError, TypeError, OverflowError):
         return None

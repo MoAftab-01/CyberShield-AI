@@ -1,0 +1,387 @@
+{
+  "artifact_dir": "C:\\Users\\moham\\AppData\\Local\\Temp\\cybershield-2c-batch2-b7eo7kgp",
+  "baseline_files": 371,
+  "branch": "feature/cybergpt-2-source-foundation",
+  "date": "2026-11-10",
+  "dependency_installation": {
+    "audit": false,
+    "fund": false,
+    "lifecycle_scripts": false,
+    "packages": 251,
+    "source_lockfile_unchanged": true,
+    "temporary_only": true,
+    "user_approved": true
+  },
+  "diff_summary": {
+    "existing_files_modified": 10,
+    "new_files": 14,
+    "unchanged_baseline_files": 361
+  },
+  "docker_modified": false,
+  "frontend_api_url": "/api",
+  "head": "2c6bf6879aee47cb6e432c88a1dab8c57fe1de73",
+  "limitations": [
+    "No real-provider semantic/latency/privacy validation",
+    "No manual screen-reader or full WCAG certification",
+    "Structured citation metadata is immediate-only; existing history is plain display text",
+    "Source catalog/operator review and separately approved ownership migration required before live activation",
+    "Existing AuthContext Fast Refresh warning and large bundle warning remain",
+    "Client metadata validation is not independent source authorization or truth verification"
+  ],
+  "modified_files": [
+    {
+      "added_lines": 2,
+      "after_sha256": "c7fa7f5595e169ce31226425b62d069321c29004d986cb3edc3c1933c4ede6c9",
+      "before_sha256": "311667fe4da5cd305de1c251ca039a66ad9107e75727f2f1c28b88456e3fd45f",
+      "path": "frontend/package.json",
+      "removed_lines": 1
+    },
+    {
+      "added_lines": 2,
+      "after_sha256": "1508fb6f8dbfcb757d0dd0e5cfb97374eb1b4c5d2c5e4c0c26b2526d1336acfe",
+      "before_sha256": "b6b7893d54f9eb30ee4f3e700aa8649162544fdc7c18a8fb1e01685d98f329ae",
+      "path": "frontend/src/components/copilot/ChatFooter.tsx",
+      "removed_lines": 2
+    },
+    {
+      "added_lines": 4,
+      "after_sha256": "5e17be852b44fa8fee9d572ffd55cf44dab6c715ec093fa72192eeef5d26565d",
+      "before_sha256": "5736589fdbf415ce72973cf9d91039607631249d4afe37a2b968207690ff6cc2",
+      "path": "frontend/src/components/copilot/ChatInput.tsx",
+      "removed_lines": 1
+    },
+    {
+      "added_lines": 20,
+      "after_sha256": "aa06054809a34a2f3b9507c74ede0b71588ad93207ab714a7f75c2b53e7d78b9",
+      "before_sha256": "ba2e5491dc64b2f12c01cdcf273d40a675477e53875de0d10e4bc7e8a5707d63",
+      "path": "frontend/src/components/copilot/ChatMessage.tsx",
+      "removed_lines": 5
+    },
+    {
+      "added_lines": 14,
+      "after_sha256": "2399809fc8683d830b907cc55e853304f7a8130802372373aaf9ac114d9e46de",
+      "before_sha256": "11e5d741360d511561de500f00c3917b86dcfe37b536f79de9c5779aaa515fb2",
+      "path": "frontend/src/components/copilot/ConversationItem.tsx",
+      "removed_lines": 4
+    },
+    {
+      "added_lines": 2,
+      "after_sha256": "2417a5b80d8781cb0e97b7c8724bf4b6b1a08bffe2f7aac5e15a37019e1b539a",
+      "before_sha256": "b97d485717e9d7d33007d3a02d2482e7a1733b5140fdd5d76ac65be1b896ee2e",
+      "path": "frontend/src/components/copilot/MessageList.tsx",
+      "removed_lines": 0
+    },
+    {
+      "added_lines": 9,
+      "after_sha256": "b689d85256c75bef40ed216d48070dcddad30f67deef7532da0840cce1f0ac01",
+      "before_sha256": "8f82c36b7d825bbdbab8da41176707525f63918eb35fcc1bd4360e32026c06e2",
+      "path": "frontend/src/components/layout/CopilotLayout.tsx",
+      "removed_lines": 2
+    },
+    {
+      "added_lines": 149,
+      "after_sha256": "3a26067f37a8c674f7dc5ca63f419f84ed7ea860adaee872b2914e5f48ec882c",
+      "before_sha256": "f983913189e1e078a371d32b8b05386fe5891a56e25d00109a69cf26c41c343c",
+      "path": "frontend/src/pages/Copilot.tsx",
+      "removed_lines": 207
+    },
+    {
+      "added_lines": 9,
+      "after_sha256": "e14595856ce7121a7c165a90c00c6c8b340e2369ef1758668daa25591a6aa925",
+      "before_sha256": "a63992252a7588218d0731372271c184abc5e7dea187fd7231a395dbfb12964b",
+      "path": "frontend/src/services/copilotService.ts",
+      "removed_lines": 19
+    },
+    {
+      "added_lines": 20,
+      "after_sha256": "c26fd96e1022d485ec940a53f05226ec02910c6d25cbeead21b10e8676935272",
+      "before_sha256": "db615014eee22802a759d863439d67923ed4b39d120fd9d3bb55aa34d7c065fe",
+      "path": "frontend/src/types/copilot.ts",
+      "removed_lines": 1
+    }
+  ],
+  "new_documentation": [
+    "docs/CYBERGPT_2C_BATCH2.md",
+    "docs/CYBERGPT_2C_BATCH2_RESULTS.json"
+  ],
+  "new_files": [
+    {
+      "bytes": 306722,
+      "path": "docs/validation/cybergpt-2c-batch2/desktop.png",
+      "sha256": "2d952e551159841c1beb8600e49927256961dcb598dc90ea95e4162bbdb17c41"
+    },
+    {
+      "bytes": 117732,
+      "path": "docs/validation/cybergpt-2c-batch2/mobile.png",
+      "sha256": "c2ed3e8a672c234cf1795dfbbd8907705a17df43ae95c9e289fbbb36f884c9b6"
+    },
+    {
+      "bytes": 4449,
+      "path": "frontend/src/components/copilot/GroundedAnswer.tsx",
+      "sha256": "d896d85b1710bf6ac5d7d0556082f60c6c20ebf264b67de12b6df34395a72b57"
+    },
+    {
+      "bytes": 4427,
+      "path": "frontend/src/components/copilot/grounding.css",
+      "sha256": "322b62192b75545f7a8b3da3f8a46b45e93a8cbfb4145b3dfc8a8f9362959d24"
+    },
+    {
+      "bytes": 7043,
+      "path": "frontend/src/lib/grounding.ts",
+      "sha256": "d4b5a25a1f2196db27542acfcfa951a49405c58b6dca155473a79b1ec39ec24f"
+    },
+    {
+      "bytes": 9402,
+      "path": "frontend/tests/e2e/components.mjs",
+      "sha256": "a19ba6cbad28b3d1e6ac89a86623c2dfe5f38c5405f2b45b9f5601a024a1a676"
+    },
+    {
+      "bytes": 1822,
+      "path": "frontend/tests/e2e/entry.tsx",
+      "sha256": "3ed79d961509c3084c12cef9d7b4e6eec8ec47a8cb332de23e298e573b519bbd"
+    },
+    {
+      "bytes": 17884,
+      "path": "frontend/tests/e2e/page.mjs",
+      "sha256": "cbeac793af9f83c5937e8630617e2f33b730a1361ec368d332fe95ba7366a3a4"
+    },
+    {
+      "bytes": 213,
+      "path": "frontend/tests/e2e/page.tsx",
+      "sha256": "28bb02c379ba877fcace75c9a10641559442db558d67d1a18d49d1a6ae174253"
+    },
+    {
+      "bytes": 6494,
+      "path": "frontend/tests/e2e/server.py",
+      "sha256": "83ba8470dabfcbfdaf9f4ae24d6b340e3ed27c46bc48de71c123de3fdc90cf59"
+    },
+    {
+      "bytes": 1189,
+      "path": "frontend/tests/fixtures.ts",
+      "sha256": "c7a6447d2e88d163cbf85703147cfe879e65dff4b28e5a9e72aee9c7e9686fc1"
+    },
+    {
+      "bytes": 6076,
+      "path": "frontend/tests/grounding.test.ts",
+      "sha256": "55528de9f364333e41abe763f4b6c5b44d4e1c7bc3a6c8301a999293026cfa7c"
+    }
+  ],
+  "phase": "2C Batch 2",
+  "real_database_migrations": 0,
+  "runtime_backend_modified": false,
+  "screenshots": [
+    "docs/validation/cybergpt-2c-batch2/desktop.png",
+    "docs/validation/cybergpt-2c-batch2/mobile.png"
+  ],
+  "server_flag_default": false,
+  "test_server_isolation": [
+    {
+      "blocked": []
+    },
+    {
+      "blocked": []
+    }
+  ],
+  "tests": {
+    "backend-integration": {
+      "errors": "0",
+      "failures": "0",
+      "pytest_seconds": 23.63,
+      "skipped": "0",
+      "tests": "142",
+      "time": "24.437"
+    },
+    "component-browser": {
+      "browser": "155.0.8059.80",
+      "checks": [
+        {
+          "name": "Legacy Markdown and PDF references remain available",
+          "passed": true
+        },
+        {
+          "name": "Supported response is explicitly quotation attribution only",
+          "passed": true
+        },
+        {
+          "name": "Keyboard source control opens and focuses native disclosure",
+          "passed": true
+        },
+        {
+          "name": "Canonical HTTPS link, dates and source provenance are displayed",
+          "passed": true
+        },
+        {
+          "name": "Multiple citations have independent disclosures",
+          "passed": true
+        },
+        {
+          "name": "Fail closed for invalid metadata",
+          "passed": true
+        },
+        {
+          "name": "Fail closed for missing metadata",
+          "passed": true
+        },
+        {
+          "name": "Controlled status: insufficient_evidence",
+          "passed": true
+        },
+        {
+          "name": "Controlled status: conflicting_evidence",
+          "passed": true
+        },
+        {
+          "name": "Controlled status: generation_failure",
+          "passed": true
+        },
+        {
+          "name": "Controlled status: retrieval_failure",
+          "passed": true
+        },
+        {
+          "name": "Source HTML and instructions remain inert literal text",
+          "passed": true
+        },
+        {
+          "name": "Unsafe canonical scheme is never clickable",
+          "passed": true
+        },
+        {
+          "name": "Immediate synthetic password text is not stored or logged",
+          "passed": true
+        },
+        {
+          "name": "Mobile evidence fits and controls remain keyboard accessible",
+          "passed": true
+        }
+      ],
+      "externalAttempts": 0,
+      "failures": 0,
+      "kind": "component browser checks, not full application E2E",
+      "passed": 15,
+      "playwright": "1.62.1",
+      "productionViteBuildValidated": false,
+      "react": "19.2.8",
+      "secretLogged": false
+    },
+    "frontend-build": {
+      "log_sha256": "09e9ea2e2bdc3a202027dfdd68e20e5238311c89f9a62373e862ab6361dfb5d2",
+      "passed": true,
+      "warning": "Large chunk; main ~1585.75 kB, gzip ~471.84 kB"
+    },
+    "frontend-lint": {
+      "log_sha256": "34ae86fdff59f45478b59a211ce82722bace62b6696d147588b8528f61be3477",
+      "passed": true,
+      "warnings": 1
+    },
+    "frontend-typescript": {
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "passed": true
+    },
+    "frontend-unit": {
+      "failures": 0,
+      "log_sha256": "b60d90da96f3872cd1fce0c819d9d75bd8930cbdc696cf7ee075b03018f9f4d7",
+      "passed": true,
+      "skipped": 0,
+      "tests": 50
+    },
+    "full-offline": {
+      "errors": "0",
+      "failures": "0",
+      "pytest_seconds": 56.02,
+      "skipped": "0",
+      "tests": "615",
+      "time": "56.303"
+    },
+    "production-browser": {
+      "browser": "155.0.8059.80",
+      "checks": [
+        {
+          "name": "Authenticated real API returns multiple attributed quotations in the actual chat page",
+          "passed": true
+        },
+        {
+          "name": "Production desktop citation controls and screenshot",
+          "passed": true
+        },
+        {
+          "name": "Production response presentation: missing",
+          "passed": true
+        },
+        {
+          "name": "Production response presentation: conflict",
+          "passed": true
+        },
+        {
+          "name": "Production response presentation: injection",
+          "passed": true
+        },
+        {
+          "name": "Rename failure never logs a pasted synthetic generated password",
+          "passed": true
+        },
+        {
+          "name": "Existing history loads without fabricating structured verification",
+          "passed": true
+        },
+        {
+          "name": "Provider timeout becomes a controlled evidence status",
+          "passed": true
+        },
+        {
+          "name": "Network failure has safe manual retry without diagnostic bodies",
+          "passed": true
+        },
+        {
+          "name": "Cancel/new chat prevents a delayed response from entering another view",
+          "passed": true
+        },
+        {
+          "name": "Generated password stays immediate, absent from storage and diagnostics",
+          "passed": true
+        },
+        {
+          "name": "Owner-scoped private evidence is usable by its authenticated owner",
+          "passed": true
+        },
+        {
+          "name": "Different account cannot retrieve private evidence or read another conversation",
+          "passed": true
+        },
+        {
+          "name": "Invalid authentication removes the local token and redirects to login",
+          "passed": true
+        },
+        {
+          "name": "Protected frontend route redirects an unauthenticated browser",
+          "passed": true
+        },
+        {
+          "name": "Production mobile layout, history and navigation keyboard controls",
+          "passed": true
+        },
+        {
+          "name": "Disabled server flag retains the legacy frontend/API path",
+          "passed": true
+        }
+      ],
+      "externalAttempts": 0,
+      "failures": 0,
+      "kind": "production Vite UI plus isolated real FastAPI auth/retrieval/verifier",
+      "passed": 17,
+      "secretLogged": false
+    }
+  },
+  "timezone": "Asia/Calcutta",
+  "toolchain": {
+    "chrome": "155.0.8059.80",
+    "node": "24.14.0",
+    "oxlint": "1.76.0",
+    "playwright": "1.62.1",
+    "python": "3.10.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "typescript": "6.0.3",
+    "vite": "8.1.5"
+  }
+}
