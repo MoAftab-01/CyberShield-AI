@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readInvestigationEvent, validCve } from "../src/lib/investigation.ts";
+import { investigationDownload, readInvestigationEvent, validCve } from "../src/lib/investigation.ts";
 import { supported } from "./fixtures.ts";
 
 const report = () => ({ type: "report", report: {
@@ -34,3 +34,61 @@ for (const [name, mutate] of [
     assert.throws(() => readInvestigationEvent(r, "CVE-2021-44228"));
   });
 }
+
+function detailedReport() {
+  const result = report();
+  const ground = result.report.grounding;
+  ground.evidence[0] = { ...ground.evidence[0], source_id: "nvd", record_id: result.report.cve,
+    section: "CVSS v3.1 assessment", excerpt: "CVE-2021-44228 has CVSS v3.1 base score 9.8 (CRITICAL)." };
+  ground.claims[0].text = ground.evidence[0].excerpt;
+  return { ...result, report: { ...result.report, findings: { ...result.report.findings, facts: [
+    { label: "CVSS", text: ground.evidence[0].excerpt, citation_id: ground.evidence[0].citation_id },
+  ] } } };
+}
+test("summary fact requires exact same-CVE source passage", () => {
+  const result = detailedReport();
+  assert.equal(readInvestigationEvent(result, result.report.cve).type, "report");
+  result.report.findings.facts[0].text = "Fabricated critical severity";
+  assert.throws(() => readInvestigationEvent(result, result.report.cve));
+});
+test("wrong-source, foreign-CVE and fabricated summary citations fail closed", () => {
+  for (const mode of ["source", "record", "citation", "label"]) {
+    const result = detailedReport();
+    if (mode === "source") result.report.grounding.evidence[0].source_id = "cisa-kev";
+    if (mode === "record") result.report.grounding.evidence[0].record_id = "CVE-2024-3094";
+    if (mode === "citation") result.report.findings.facts[0].citation_id = "E-fabricated";
+    if (mode === "label") result.report.findings.facts[0].label = "Execute tool";
+    assert.throws(() => readInvestigationEvent(result, result.report.cve));
+  }
+});
+test("investigation accepts six exact passages while legacy chat limit stays five", async () => {
+  const { readGrounding } = await import("../src/lib/grounding.ts");
+  const result = report();
+  const ground = result.report.grounding;
+  const evidence = structuredClone(ground.evidence[0]), claim = structuredClone(ground.claims[0]);
+  ground.evidence = Array.from({ length: 6 }, (_, index) => ({ ...evidence, citation_id: "E-" + String(index).repeat(20) }));
+  ground.claims = ground.evidence.map((item, index) => ({ ...claim, claim_id: "claim-" + index, citation_ids: [item.citation_id] }));
+  assert.equal(readGrounding(ground).kind, "invalid");
+  assert.equal(readInvestigationEvent(result, result.report.cve).type, "report");
+});
+test("JSON export retains validated citations and rejects altered reports", () => {
+  const result = detailedReport();
+  const event = readInvestigationEvent(result, result.report.cve);
+  assert.equal(event.type, "report");
+  if (event.type !== "report") throw new Error("Expected report");
+  const output = investigationDownload(event.report);
+  assert.equal(output.filename, result.report.cve + "-investigation.json");
+  assert.deepEqual(JSON.parse(output.body), result.report);
+  event.report.findings.facts![0].citation_id = "E-fabricated";
+  assert.throws(() => investigationDownload(event.report));
+});
+
+test("a live badge cannot be applied to synthetic or foreign-CVE evidence", () => {
+  const result = detailedReport();
+  const live = { ...result, report: { ...result.report, mode: "read_only_live" } };
+  assert.throws(() => readInvestigationEvent(live, live.report.cve));
+  live.report.grounding.evidence[0].trust = "official_snapshot";
+  assert.equal(readInvestigationEvent(live, live.report.cve).type, "report");
+  live.report.grounding.evidence[0].record_id = "CVE-2024-3094";
+  assert.throws(() => readInvestigationEvent(live, live.report.cve));
+});

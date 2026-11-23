@@ -59,7 +59,7 @@ function evidence(value: unknown): value is GroundingEvidence {
     (value.scope === "public" && value.source_id !== "private-upload" && ["official_snapshot", "synthetic_fixture"].includes(String(value.trust)));
 }
 /** Display validation only: the server remains the authorization/verifier boundary. */
-export function readGrounding(raw: unknown): GroundingView {
+export function readGrounding(raw: unknown, maximumQuotes: 5 | 20 = 5): GroundingView {
   if (raw === undefined || raw === null) return { kind: "legacy" };
   const invalid: GroundingView = { kind: "invalid" };
   if (!object(raw) || typeof raw.status !== "string" || !Object.hasOwn(groundingStatuses, raw.status) ||
@@ -69,8 +69,8 @@ export function readGrounding(raw: unknown): GroundingView {
     return raw.abstained === true && raw.claims.length === 0 && raw.evidence.length === 0
       ? { kind: "valid", value: raw as unknown as Grounding } : invalid;
   }
-  if (raw.abstained !== false || raw.claims.length < 1 || raw.claims.length > 5 ||
-      raw.evidence.length < 1 || raw.evidence.length > 5 || !raw.evidence.every(evidence)) return invalid;
+  if (raw.abstained !== false || raw.claims.length < 1 || raw.claims.length > maximumQuotes ||
+      raw.evidence.length < 1 || raw.evidence.length > maximumQuotes || !raw.evidence.every(evidence)) return invalid;
   const known = new Map(raw.evidence.map(item => [item.citation_id, item]));
   if (known.size !== raw.evidence.length) return invalid;
   const used = new Set<string>();

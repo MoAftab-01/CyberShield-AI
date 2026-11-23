@@ -41,6 +41,79 @@ class InvestigationState(TypedDict, total=False):
     report: dict
 
 
+# Only these verified sections become the compact investigation summary.
+SUMMARY_SECTIONS = {
+    "Description (en)": "Description", "CVSS v3.1 assessment": "CVSS",
+    "CVSS source assessment": "CVSS", "NVD vulnerable-product criterion": "Affected product",
+    "KEV vulnerability name": "Title", "KEV product": "CISA product",
+    "CISA required action": "CISA required action",
+}
+
+
+def nvd_display_sections(cve):
+    """Deterministic source projections, not inferred versions or remediation."""
+    sections = []
+    metrics = cve.get("metrics", {})
+    if not isinstance(metrics, dict):
+        raise ValueError("Invalid NVD metrics.")
+    if not metrics.get("cvssMetricV31"):
+        for key, version in (("cvssMetricV40", "4.0"), ("cvssMetricV30", "3.0"), ("cvssMetricV2", "2.0")):
+            entries = metrics.get(key, [])
+            if not isinstance(entries, list) or any(not isinstance(e, dict) for e in entries):
+                raise ValueError("Invalid CVSS assessment.")
+            entries = sorted(entries, key=lambda e: (e.get("source") != "nvd@nist.gov", e.get("type") != "Primary"))
+            if not entries:
+                continue
+            entry = entries[0]
+            data = entry.get("cvssData", {})
+            score = data.get("baseScore")
+            severity = data.get("baseSeverity", entry.get("baseSeverity"))
+            if type(score) not in (int, float) or not 0 <= score <= 10 or (severity is not None and severity not in {"NONE", "LOW", "MEDIUM", "HIGH", "CRITICAL"}):
+                raise ValueError("Invalid CVSS assessment.")
+            sections.append(Section(heading="CVSS source assessment", text=
+                f"{cve['id']} has CVSS v{version} base score {score:g}" +
+                (f" ({severity})." if severity else ". Severity: Not available.")))
+            break
+    configs = cve.get("configurations", [])
+    if not isinstance(configs, list):
+        raise ValueError("Invalid NVD applicability.")
+    pending = [(node, 0) for node in configs]
+    seen = set()
+    visited = 0
+    while pending and len(seen) < 8:
+        node, depth = pending.pop(0)
+        visited += 1
+        if not isinstance(node, dict) or depth > 8 or visited > 2000:
+            raise ValueError("Invalid NVD applicability tree.")
+        if node.get("negate") is True:
+            continue
+        children, matches = node.get("nodes", []), node.get("cpeMatch", [])
+        if not isinstance(children, list) or not isinstance(matches, list):
+            raise ValueError("Invalid NVD applicability entries.")
+        pending.extend((child, depth + 1) for child in children)
+        for match in matches:
+            if not isinstance(match, dict):
+                raise ValueError("Invalid CPE match.")
+            if match.get("vulnerable") is not True:
+                continue
+            criteria = normalize(match.get("criteria", ""))
+            if not criteria.startswith("cpe:2.3:") or not 12 <= len(criteria) <= 250:
+                raise ValueError("Invalid CPE criterion.")
+            text = "CPE: " + criteria
+            for field in ("versionStartIncluding", "versionStartExcluding", "versionEndIncluding", "versionEndExcluding"):
+                if field in match:
+                    value = normalize(match[field])
+                    if not value or len(value) > 80:
+                        raise ValueError("Invalid CPE version boundary.")
+                    text += "; " + field + ": " + value
+            if text not in seen:
+                seen.add(text)
+                sections.append(Section(heading="NVD vulnerable-product criterion", text=text))
+            if len(seen) == 8:
+                break
+    return tuple(sections)
+
+
 def empty_catalog():
     # No default evaluation manifest, persistent files, or shared index access.
     catalog = Catalog.__new__(Catalog)
@@ -54,14 +127,18 @@ def empty_catalog():
 
 def _admit(catalog, source_id, record, payload, retrieved_at, fixture):
     definition = catalog.registry.get(source_id)
-    return catalog._admit(catalog._record(
+    source_record = catalog._record(
         source_id=source_id, trust="synthetic_fixture" if fixture else "official_snapshot",
         scope="public", owner_id=None,
         canonical_url=None if fixture else (
             "https://nvd.nist.gov/vuln/detail/" + record["record_id"]
             if source_id == "nvd" else definition.canonical_url),
         artifact_hash=sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest(),
-        retrieved_at=retrieved_at, licensing_notes=definition.licensing_notes, **record))
+        retrieved_at=retrieved_at, licensing_notes=definition.licensing_notes, **record)
+    # Request-local investigation passages fit the existing 2000-character
+    # quotation contract. Shared RAG/catalog chunking retains its 600 default.
+    return catalog._admit(source_record, catalog._chunk(source_record, chunk_size=2000)
+                          if source_record.state == "active" else ())
 
 
 class CVEInvestigator:
@@ -111,7 +188,7 @@ class CVEInvestigator:
             if not isinstance(payload, dict):
                 raise ValueError("Invalid source payload.")
             result = {"status": "ok", "payload": payload,
-                      "retrieved_at": datetime.now(timezone.utc)}
+                      "retrieved_at": getattr(self.intelligence, "retrieved_at", None) or datetime.now(timezone.utc)}
         except (TimeoutError, ConnectionError):
             result = {"status": "unavailable"}
         except Exception:
@@ -147,6 +224,7 @@ class CVEInvestigator:
                     if len(records) != 1 or records[0]["record_id"] != cve:
                         raise ValueError("Mismatched CVE.")
                     record = records[0]
+                    record["sections"] += nvd_display_sections(payload["vulnerabilities"][0]["cve"])
                     findings["nvd_status"] = record["state"]
                     if record["state"] != "active":
                         warnings.append("nvd_record_withdrawn")
@@ -163,8 +241,10 @@ class CVEInvestigator:
                         raise ValueError("Invalid catalog date.")
                     if (at - released).total_seconds() > 7 * 86400:
                         warnings.append("kev_snapshot_outdated")
+                    if any(not isinstance(e, dict) for e in entries):
+                        raise ValueError("Invalid catalog entry.")
                     matches = [entry for entry in entries if entry.get("cveID") == cve]
-                    if len(matches) > 1 or any(not isinstance(e, dict) for e in entries):
+                    if len(matches) > 1:
                         raise ValueError("Ambiguous catalog.")
                     findings["kev_status"] = "listed" if matches else "not_listed_in_snapshot"
                     findings["known_exploited"] = bool(matches)
@@ -176,6 +256,13 @@ class CVEInvestigator:
                     if matches and matches[0].get("requiredAction"):
                         sections.append(Section(heading="CISA required action",
                             text=normalize(matches[0]["requiredAction"])))
+                    if matches:
+                        for field, heading in (("vulnerabilityName", "KEV vulnerability name"), ("product", "KEV product")):
+                            if matches[0].get(field):
+                                value = normalize(matches[0][field])
+                                if len(value) > 500:
+                                    raise ValueError("KEV field exceeds bounds.")
+                                sections.append(Section(heading=heading, text=("Product: " + value) if field == "product" else value))
                     _admit(catalog, source, dict(record_id=cve, title=cve + " KEV catalog observation",
                         document_type="KEV snapshot", published_at=None, modified_at=released,
                         identifiers=(("cve", cve),), state="active", sections=tuple(sections)),
@@ -185,6 +272,7 @@ class CVEInvestigator:
                 if source == "cisa-kev":
                     findings["known_exploited"] = None
                 warnings.append(source + "_invalid_evidence")
+                result["status"] = "invalid"
         documents = tuple(catalog.documents(state["actor"]))
         # Canonical identity and visibility revalidation before any ranking/output.
         collect_evidence(catalog, documents, state["actor"])
@@ -246,6 +334,12 @@ class CVEInvestigator:
             accepted.append(item)
             quote = verified.claims[0].model_copy(update={"claim_id": "claim-" + str(len(claims) + 1)})
             claims.append(quote)
+        # Summary fields only survive when this exact retrieved passage passed
+        # the existing authorization and quotation-attribution verifier.
+        findings = dict(state["findings"])
+        findings["facts"] = [{"label": SUMMARY_SECTIONS[item.section], "text": item.excerpt,
+                              "citation_id": item.citation_id} for item in accepted
+                             if item.section in SUMMARY_SECTIONS]
         grounding = {
             "status": "supported_quotes" if claims else "insufficient_evidence",
             "answer": "Complete source quotations; factual truth and completeness are not verified.",
@@ -254,7 +348,7 @@ class CVEInvestigator:
             "evidence": [e.model_dump(mode="json") for e in accepted],
             "verdicts": [], "quarantined_count": len(evidence) - len(accepted),
             "answer_completeness": "not_verified", "verification_scope": "quotation_attribution_only"}
-        return {"grounding": grounding, "warnings": warnings,
+        return {"grounding": grounding, "findings": findings, "warnings": warnings,
                 "progress": state["progress"] + ["verify"]}
 
     def report(self, state):
