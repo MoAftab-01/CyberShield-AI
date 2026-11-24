@@ -53,7 +53,7 @@ Cached results are source snapshots, not a guarantee of current completeness or 
 flowchart LR
     Browser[React + TypeScript] -->|HTTPS / REST| API[FastAPI]
     API --> DB[(PostgreSQL / Neon)]
-    API --> LLM[Groq-hosted Llama]
+    API --> LLM[Groq GPT-OSS 20B]
     API --> RAG[Document RAG]
     RAG --> BM25[BM25 lexical search]
     RAG --> FAISS[FAISS hashed-vector search]
@@ -68,19 +68,46 @@ The frontend is a React, TypeScript, and Vite single-page application. FastAPI e
 
 ### AI and Retrieval
 
-The default hosted model is **Llama 3.1 8B Instant through Groq's OpenAI-compatible API**. The backend does not download model weights.
+The configured generation model is **`openai/gpt-oss-20b` through Groq's OpenAI-compatible API**, verified in controlled live validation. Groq hosts generation. Optional local semantic embedding weights are a separate concern; the Dockerfile retains its existing MiniLM warm-up.
 
-For document retrieval, the application extracts text, chunks it at 800 characters with 150-character overlap, and preserves source/page metadata. It combines:
+For document retrieval, the application extracts text, chunks it at a configurable 600 characters with 100-character overlap by default, and preserves source/page metadata. It combines:
 
 - BM25 keyword retrieval with domain-aware acronym/phrase expansion (e.g., ZTA, PDP/PEP, MFA, RBAC).
 - A deterministic, normalized 384-dimensional feature-hashing representation searched with FAISS L2 (or optional dense semantic embeddings).
 - Reciprocal Rank Fusion, query-term coverage adjustment, MMR diversity re-ranking, and context-aware follow-up augmentation.
 
-The six bundled public references are OWASP Top 10, OWASP ASVS 5.0, NIST CSF 2.0, NIST SP 800-53 Rev. 5, NIST SP 800-61r3, and NIST SP 800-207. The evaluation index contains 3,662 chunks from those references.
+The repository bundles 11 PDFs. CyberGPT v2 admits ten hash-pinned primary references (nine NIST publications and OWASP ASVS 5.0), listed in `backend/knowledge_sources.json`. The file named `owasp-top-10.pdf` is an HHS briefing and is excluded from v2 to avoid false OWASP attribution. The older six-reference evaluation snapshot contained 3,662 chunks; current Render startup logs show an 8,406-chunk shared index using **hash embeddings**. This release does not change the embedding configuration.
+
+### CyberGPT 2.0 activation
+
+`CYBERGPT_V2_ENABLED` remains false until release approval. When enabled, tools
+remain deterministic-first; greetings do not invoke retrieval or Groq. Knowledge
+questions use the existing hybrid index. Retrieved passages must match the bytes
+of an approved bundled PDF or the authenticated caller's own upload. Complete
+PDF text blocks/paragraphs become request-local canonical evidence; no new stored
+index or vector database is introduced.
+
+Groq selects evidence IDs, and the server copies their complete text before the
+existing exact-quotation verifier checks identity, ownership and attribution.
+Model prose is never silently corrected into a verified claim. Source cards show
+original links and physical page numbers. Quotation attribution does not verify
+factual truth, currency or answer completeness. Missing evidence stays explicit.
+
+Ask **"From general knowledge ..."** for a separately labelled, uncited model
+answer. Follow-ups use fixed topic labels from the caller's redacted user turns;
+raw conversation transcripts and generated passwords do not enter model prompts.
+Password generation/analysis, URL tools and CVE routing retain their existing paths.
+The chat UI preserves Markdown, safe links, cancellation, retry and history.
+
+After an approved release, `/ready?details=true` reports the enabled flag, provider,
+model, approved-source availability and shared-index availability without secrets.
+Default `/ready` behavior is unchanged. Live CVE flags remain enabled as configured;
+only `CYBERGPT_V2_ENABLED=true` is needed for this activation, with no catalog path
+or migration required. Explicit operator catalog manifests remain supported.
 
 ## Evaluation
 
-A 29-question, manually page-labeled benchmark compares the retrieval methods over the public references. Metrics are macro averages; a hit means the exact labeled source page was returned in the top five.
+The historical 29-question, manually page-labeled benchmark compares the retrieval methods over the public references. Metrics are macro averages; a hit means the exact labeled source page was returned in the top five.
 
 | Method | Recall@5 | MRR | nDCG@5 |
 | --- | ---: | ---: | ---: |
@@ -93,6 +120,22 @@ These are **internal retrieval-benchmark results**, not answer accuracy or a gen
 
 See [the evaluation guide](backend/evaluation/README.md) for the methodology, per-question rankings, datasets, and rerun command. Results are saved in [backend/evaluation/results.json](backend/evaluation/results.json).
 
+### Current focused validation
+
+The existing 48-question synthetic benchmark was rerun with 24 development and
+24 held-out questions. The reviewed grounded-answer evaluation produced 19/19
+valid citation links on development and 14/14 held-out, with required-evidence
+coverage 17/22 and 12/21 respectively. Held-out false abstentions remain **6/15**
+answerable questions; this is a retrieval/coverage limitation, not a solved answer
+accuracy benchmark. These deterministic offline results do not measure Groq quality.
+
+Controlled live Groq checks separately covered a public zero-trust question, its
+follow-up, an unanswerable request and labelled general knowledge. The two grounded
+answers returned three exact source-linked quotations; the unanswerable case made
+no provider call. Four examples are a smoke test, not a general accuracy claim.
+See [architecture and limitations](docs/ARCHITECTURE.md) and the measured
+[readiness results](docs/CYBERGPT_PRODUCTION_READINESS.json).
+
 ## Technology
 
 | Area | Technologies |
@@ -101,7 +144,8 @@ See [the evaluation guide](backend/evaluation/README.md) for the methodology, pe
 | API and services | Python, FastAPI, Pydantic, SQLAlchemy |
 | Persistence | PostgreSQL; Neon in the hosted deployment |
 | Retrieval | FAISS, BM25, feature hashing, Reciprocal Rank Fusion |
-| Hosted inference | Groq API, Llama 3.1 8B Instant |
+| Hosted inference | Groq API, openai/gpt-oss-20b |
+| Investigation workflow | LangGraph StateGraph with seven bounded CVE nodes |
 | Security data | NVD, CISA KEV, EPSS, GitHub advisories, VirusTotal |
 | Deployment | Vercel, Render, Neon, Docker, Docker Compose, Nginx |
 
@@ -133,7 +177,7 @@ Open the frontend at `http://localhost` and the API documentation at `http://loc
 - **Frontend:** [Vercel](https://cybershieldai-security.vercel.app/login)
 - **Backend:** [Render API](https://cybershield-backend-oz7p.onrender.com/), with [health check](https://cybershield-backend-oz7p.onrender.com/health) and [interactive API docs](https://cybershield-backend-oz7p.onrender.com/docs)
 - **Database:** Neon PostgreSQL
-- **LLM:** Groq-hosted Llama
+- **LLM:** Groq GPT-OSS 20B
 
 The Render free service may sleep when idle, so the first request can be delayed. Its local filesystem is ephemeral: do not rely on it to preserve user uploads or generated indexes across restarts. Use persistent/object storage for durable files. See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for build settings and environment-variable setup.
 

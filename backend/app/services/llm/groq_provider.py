@@ -77,6 +77,10 @@ class GroqProvider(BaseLLMProvider):
 
         if max_attempts is not None and (type(max_attempts) is not int or not 1 <= max_attempts <= MAX_ATTEMPTS):
             raise ValueError("Invalid provider attempt bound.")
+        if max_attempts == 1 and settings.GROQ_MODEL in {"openai/gpt-oss-20b", "openai/gpt-oss-120b"}:
+            # Bounded quotation selection must leave room for answer tokens.
+            # Legacy generation defaults and other models are unchanged.
+            request["reasoning_effort"] = "low"
         attempts = MAX_ATTEMPTS if max_attempts is None else max_attempts
         client = self.client if max_attempts is None else self.client.with_options(max_retries=0)
         last_error: Exception | None = None

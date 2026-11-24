@@ -11,6 +11,7 @@ interface Message {
     sources?: Source[];
     relatedSources?: Source[];
     grounding?: unknown;
+    answerBasis?: "document" | "general_knowledge" | "tool" | "conversation";
 
 }
 
@@ -54,6 +55,7 @@ export default function MessageList({
 
                             relatedSources={message.relatedSources}
                             grounding={message.grounding}
+                            answerBasis={message.answerBasis}
 
                         />
 

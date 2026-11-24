@@ -24,6 +24,7 @@
 
         related_sources?: Source[];
         grounding?: Grounding | null;
+        answer_basis?: AnswerBasis;
     }
 export type GroundingStatus = "supported_quotes" | "insufficient_evidence" | "retrieval_failure"
   | "conflicting_evidence" | "unsupported_claims" | "unverified_evidence" | "unsafe_evidence" | "generation_failure";
@@ -43,3 +44,5 @@ export interface Grounding {
   claims: GroundingClaim[]; evidence: GroundingEvidence[];
   answer_completeness: "not_verified"; verification_scope: "quotation_attribution_only";
 }
+
+export type AnswerBasis = "document" | "general_knowledge" | "tool" | "conversation";

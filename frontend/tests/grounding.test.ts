@@ -99,3 +99,14 @@ test("a private-upload source cannot be presented as public authority", () => {
   const data = supported(); data.evidence[0].source_id = "private-upload";
   assert.equal(readGrounding(data).kind, "invalid");
 });
+
+test("answer-basis metadata distinguishes general, document, tool and conversation responses", async () => {
+  const { answerBasisLabels, readCopilotResponse } = await import("../src/lib/grounding.ts");
+  for (const basis of ["general_knowledge", "document", "tool", "conversation"] as const) {
+    const response = readCopilotResponse({ answer: "Synthetic answer", answer_basis: basis });
+    assert.equal(response.answer_basis, basis);
+    assert(answerBasisLabels[basis]);
+  }
+  assert.equal(readCopilotResponse({ answer: "Synthetic answer", answer_basis: "factually_verified" }).answer_basis, undefined);
+  assert(answerBasisLabels.general_knowledge.includes("not document verified"));
+});

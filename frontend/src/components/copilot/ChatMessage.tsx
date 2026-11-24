@@ -13,9 +13,9 @@ import { useState } from "react";
 
 import SourceCard from "./SourceCard";
 import GroundedAnswer from "./GroundedAnswer";
-import { readGrounding, groundingStatuses } from "../../lib/grounding";
+import { readGrounding, groundingStatuses, answerBasisLabels, safeCitationUrl } from "../../lib/grounding";
 
-import { Source } from "@/types/copilot";
+import type { AnswerBasis, Source } from "@/types/copilot";
 
 interface Props {
   role: "user" | "assistant";
@@ -23,6 +23,7 @@ interface Props {
   sources?: Source[];
   relatedSources?: Source[];
   grounding?: unknown;
+  answerBasis?: AnswerBasis;
 }
 
 export default function ChatMessage({
@@ -31,6 +32,7 @@ export default function ChatMessage({
   sources = [],
   relatedSources = [],
   grounding,
+  answerBasis,
 }: Props) {
 
   const isUser = role === "user";
@@ -315,7 +317,7 @@ export default function ChatMessage({
                     "
                   >
 
-                    Enterprise AI Security Assistant
+                    {answerBasis ? answerBasisLabels[answerBasis] : "Cybersecurity assistant"}
 
                   </p>
 
@@ -406,6 +408,11 @@ text-slate-200
 
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
+                    skipHtml
+                    components={{ a: ({ href, children }) => {
+                      const url = safeCitationUrl(href);
+                      return url ? <a href={url} target="_blank" rel="noopener noreferrer">{children}</a> : <span>{children}</span>;
+                    } }}
                   >
 
                     {content}

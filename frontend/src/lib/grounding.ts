@@ -1,4 +1,4 @@
-import type { Grounding, GroundingEvidence, Source, CopilotResponse } from "../types/copilot.ts";
+import type { AnswerBasis, Grounding, GroundingEvidence, Source, CopilotResponse } from "../types/copilot.ts";
 
 export const groundingStatuses = {
   supported_quotes: ["Quotation attribution checked", "The backend linked these quotations to retrieved passages. Factual truth and answer completeness are not verified."],
@@ -100,9 +100,17 @@ export function readCopilotResponse(raw: unknown): CopilotResponse {
   if (!object(raw) || !text(raw.answer, 100000)) throw new Error("Invalid chat response.");
   return {
     answer: raw.answer,
+    answer_basis: typeof raw.answer_basis === "string" && Object.hasOwn(answerBasisLabels, raw.answer_basis) ? raw.answer_basis as AnswerBasis : undefined,
     conversation_id: typeof raw.conversation_id === "number" && Number.isInteger(raw.conversation_id) && raw.conversation_id > 0 ? raw.conversation_id : null,
     sources: sourceList(raw.sources), related_sources: sourceList(raw.related_sources),
     // Preserve malformed metadata so display fails closed instead of becoming legacy.
     grounding: raw.grounding as Grounding | null | undefined,
   };
 }
+
+export const answerBasisLabels: Record<AnswerBasis, string> = {
+  document: "Source-grounded quotations",
+  general_knowledge: "General knowledge - not document verified",
+  tool: "Security tool result",
+  conversation: "Conversation",
+};
