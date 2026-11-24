@@ -1,0 +1,991 @@
+{
+  "date": "2026-11-24",
+  "timezone": "Asia/Calcutta",
+  "status": "RELEASE_PREPARED_AWAITING_MERGE_AND_ACTIVATION",
+  "base_commit": "4edc02a",
+  "prior_releases_preserved": [
+    "PR #1",
+    "PR #2"
+  ],
+  "production_settings_changed": false,
+  "migrations_executed": false,
+  "production_observation": {
+    "method": "authorized read-only filtered Render startup logs",
+    "public_index_chunks": 8406,
+    "embedding_backend": "hash",
+    "scope": "index available at observed startup; deployed per-file hash diagnostics require approved code release"
+  },
+  "bundled_sources": {
+    "pdfs": 11,
+    "approved_primary_references": 10,
+    "nist": 9,
+    "owasp_asvs": 1,
+    "excluded_hhs_briefing": "General/owasp-top-10.pdf",
+    "artifact_integrity": "SHA256 pinned; exact bytes rechecked during admission",
+    "publication_dates": "not inferred from PDF creation metadata"
+  },
+  "implementation": {
+    "shared_hybrid_index_preserved": true,
+    "new_persistent_index": false,
+    "candidate_retrieval": "existing BM25/FAISS/RRF/MMR with user visibility",
+    "canonical_evidence": "complete normalized PDF text blocks/upload paragraphs",
+    "evidence_selection": "bounded Groq selection of at most two allowed IDs; canonical text copied by server",
+    "verification": "existing exact-section quotation, canonical identity and ownership checks",
+    "free_form_document_paraphrasing": false,
+    "general_knowledge": "explicitly requested, separately labelled and uncited",
+    "context": "fixed labels from owned redacted user turns only",
+    "legacy_dispatch_when_disabled": "unchanged"
+  },
+  "tests": {
+    "backend": {
+      "passed": 420,
+      "failed": 0,
+      "warnings": 11,
+      "seconds": 39.75,
+      "full_suite": false,
+      "network_attempts": 0,
+      "postgres_attempts": 0,
+      "passed_unique_across_runs": 422,
+      "primary_regression_run": {
+        "passed": 420,
+        "seconds": 39.75
+      },
+      "additional_source_readiness_run": {
+        "passed": 22,
+        "seconds": 3.2,
+        "new_cases_beyond_primary_run": 2
+      },
+      "scope": "Focused runs overlap; counts are not added as independent cases."
+    },
+    "frontend": {
+      "unit_passed": 66,
+      "failed": 0,
+      "react_ssr_checks_passed": 8,
+      "lint": "passed with existing AuthContext Fast Refresh warning",
+      "typescript": "passed",
+      "production_build": "passed with existing large-chunk warning",
+      "build_api_url": "https://cybershield-backend-oz7p.onrender.com",
+      "typescript_version": "6.0.3",
+      "vite_version": "8.1.5",
+      "packages_installed": false,
+      "new_environment_created": false
+    }
+  },
+  "live_acceptance": {
+    "model": "openai/gpt-oss-20b",
+    "embedding_backend": "hash",
+    "cases": [
+      {
+        "case": "zero_trust",
+        "status": "supported_quotes",
+        "reason": "complete_section_quotations_only",
+        "provider_calls": 1,
+        "citation_links": 2,
+        "exact_links": 2,
+        "latency_ms": 1421,
+        "source_ids": [
+          "nist-csrc"
+        ]
+      },
+      {
+        "case": "followup",
+        "status": "supported_quotes",
+        "reason": "complete_section_quotations_only",
+        "provider_calls": 1,
+        "citation_links": 1,
+        "exact_links": 1,
+        "latency_ms": 840,
+        "source_ids": [
+          "nist-csrc"
+        ]
+      },
+      {
+        "case": "unanswerable",
+        "status": "insufficient_evidence",
+        "reason": "no_safe_relevant_complete_sections",
+        "provider_calls": 0,
+        "citation_links": 0,
+        "exact_links": 0,
+        "latency_ms": 552,
+        "source_ids": []
+      },
+      {
+        "case": "general",
+        "status": "general_knowledge",
+        "reason": null,
+        "provider_calls": 1,
+        "citation_links": 0,
+        "exact_links": 0,
+        "latency_ms": 554,
+        "source_ids": []
+      }
+    ],
+    "provider_calls": 3,
+    "provider_metadata": [
+      {
+        "status": 200,
+        "finish_reason": "stop",
+        "usage": {
+          "queue_time": 0.154171442,
+          "prompt_tokens": 2803,
+          "prompt_time": 0.177288607,
+          "completion_tokens": 87,
+          "completion_time": 0.091614578,
+          "total_tokens": 2890,
+          "total_time": 0.268903185,
+          "completion_tokens_details": {
+            "reasoning_tokens": 45
+          }
+        }
+      },
+      {
+        "status": 200,
+        "finish_reason": "stop",
+        "usage": {
+          "queue_time": 0.2839425,
+          "prompt_tokens": 2427,
+          "prompt_time": 0.121084117,
+          "completion_tokens": 155,
+          "completion_time": 0.159218591,
+          "total_tokens": 2582,
+          "total_time": 0.280302708,
+          "completion_tokens_details": {
+            "reasoning_tokens": 125
+          }
+        }
+      },
+      {
+        "status": 200,
+        "finish_reason": "stop",
+        "usage": {
+          "queue_time": 0.365446373,
+          "prompt_tokens": 151,
+          "prompt_time": 0.009299916,
+          "completion_tokens": 101,
+          "completion_time": 0.102385212,
+          "total_tokens": 252,
+          "total_time": 0.111685128,
+          "completion_tokens_details": {
+            "reasoning_tokens": 5
+          }
+        }
+      }
+    ]
+  },
+  "offline_retrieval": {
+    "dataset": {
+      "questions": 48,
+      "dev": 24,
+      "heldout": 24,
+      "labels": 56,
+      "multi_passage_questions": 16,
+      "expected_abstentions": 15,
+      "families": 24,
+      "current_records": 49,
+      "current_public_passages": 50
+    },
+    "seed": 1729,
+    "protocol": {
+      "unit": "authorized source + record + section at explicit source snapshot",
+      "nDCG": "graded 2**relevance-1; binary Recall/Precision/MRR",
+      "k": 5,
+      "precision_denominator": 5,
+      "empty_gold": "excluded from ranking mean; scored in abstention",
+      "generator": "unchanged Batch 1 first-excerpt stub; labels never supplied",
+      "authority": "no trust/recency boost; explicit historical views only",
+      "candidate_pool_cross_encoder": 20,
+      "runtime_settings_changed": false
+    },
+    "production_defaults_changed": false,
+    "models": {
+      "status": "disabled; pass --local-models for cached weights"
+    },
+    "results": {
+      "hash_bm25": {
+        "dev": {
+          "retrieval": {
+            "recall_at_5": 0.9473684210526315,
+            "precision_at_5": 0.2631578947368422,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9550534302462687,
+            "all_required_at_5": 0.8947368421052632
+          },
+          "abstention": {
+            "expected": 8,
+            "correct": 8,
+            "answerable": 16,
+            "false_abstentions": 6,
+            "accepted": 10,
+            "precision": 0.5714285714285714,
+            "recall": 1.0,
+            "false_abstention_rate": 0.375
+          },
+          "evidence": {
+            "citation_references": 10,
+            "valid_references": 10,
+            "claims": 10,
+            "unsupported_excerpts": 0,
+            "incorrect_attributions": 0,
+            "unjudged_claims": 0,
+            "covered_passages": 10,
+            "relevant_passages": 27,
+            "citation_validity": 1.0,
+            "evidence_coverage": 0.37037037037037035,
+            "unsupported_excerpt_rate": 0.0,
+            "answerable_covered_passages": 10,
+            "answerable_relevant_passages": 22,
+            "answerable_evidence_coverage": 0.45454545454545453,
+            "semantic_unsupported_claim_rate": null
+          },
+          "timing": {
+            "mean_warm_ranking_ms": 0.17573333267743388,
+            "p95_warm_ranking_ms": 0.22832500108052045
+          }
+        },
+        "heldout": {
+          "retrieval": {
+            "recall_at_5": 0.9523809523809523,
+            "precision_at_5": 0.25714285714285723,
+            "mrr": 0.9206349206349207,
+            "ndcg_at_5": 0.9143605463107989,
+            "all_required_at_5": 0.9047619047619048
+          },
+          "abstention": {
+            "expected": 7,
+            "correct": 7,
+            "answerable": 17,
+            "false_abstentions": 6,
+            "accepted": 11,
+            "precision": 0.5384615384615384,
+            "recall": 1.0,
+            "false_abstention_rate": 0.35294117647058826
+          },
+          "evidence": {
+            "citation_references": 11,
+            "valid_references": 11,
+            "claims": 11,
+            "unsupported_excerpts": 0,
+            "incorrect_attributions": 0,
+            "unjudged_claims": 2,
+            "covered_passages": 9,
+            "relevant_passages": 29,
+            "citation_validity": 1.0,
+            "evidence_coverage": 0.3103448275862069,
+            "unsupported_excerpt_rate": 0.0,
+            "answerable_covered_passages": 9,
+            "answerable_relevant_passages": 23,
+            "answerable_evidence_coverage": 0.391304347826087,
+            "semantic_unsupported_claim_rate": null
+          },
+          "timing": {
+            "mean_warm_ranking_ms": 0.21198749891482294,
+            "p95_warm_ranking_ms": 0.2944099804153666
+          }
+        }
+      },
+      "hash_faiss": {
+        "dev": {
+          "retrieval": {
+            "recall_at_5": 0.868421052631579,
+            "precision_at_5": 0.23157894736842108,
+            "mrr": 0.8789473684210526,
+            "ndcg_at_5": 0.8349730287660323,
+            "all_required_at_5": 0.7894736842105263
+          },
+          "abstention": {
+            "expected": 8,
+            "correct": 8,
+            "answerable": 16,
+            "false_abstentions": 7,
+            "accepted": 9,
+            "precision": 0.5333333333333333,
+            "recall": 1.0,
+            "false_abstention_rate": 0.4375
+          },
+          "evidence": {
+            "citation_references": 9,
+            "valid_references": 9,
+            "claims": 9,
+            "unsupported_excerpts": 0,
+            "incorrect_attributions": 0,
+            "unjudged_claims": 0,
+            "covered_passages": 9,
+            "relevant_passages": 27,
+            "citation_validity": 1.0,
+            "evidence_coverage": 0.3333333333333333,
+            "unsupported_excerpt_rate": 0.0,
+            "answerable_covered_passages": 9,
+            "answerable_relevant_passages": 22,
+            "answerable_evidence_coverage": 0.4090909090909091,
+            "semantic_unsupported_claim_rate": null
+          },
+          "timing": {
+            "mean_warm_ranking_ms": 0.03288749576313421,
+            "p95_warm_ranking_ms": 0.045735007734037936
+          }
+        },
+        "heldout": {
+          "retrieval": {
+            "recall_at_5": 0.9047619047619048,
+            "precision_at_5": 0.2380952380952382,
+            "mrr": 0.8452380952380952,
+            "ndcg_at_5": 0.8328320080810736,
+            "all_required_at_5": 0.8571428571428571
+          },
+          "abstention": {
+            "expected": 7,
+            "correct": 7,
+            "answerable": 17,
+            "false_abstentions": 10,
+            "accepted": 7,
+            "precision": 0.4117647058823529,
+            "recall": 1.0,
+            "false_abstention_rate": 0.5882352941176471
+          },
+          "evidence": {
+            "citation_references": 7,
+            "valid_references": 7,
+            "claims": 7,
+            "unsupported_excerpts": 0,
+            "incorrect_attributions": 0,
+            "unjudged_claims": 0,
+            "covered_passages": 7,
+            "relevant_passages": 29,
+            "citation_validity": 1.0,
+            "evidence_coverage": 0.2413793103448276,
+            "unsupported_excerpt_rate": 0.0,
+            "answerable_covered_passages": 7,
+            "answerable_relevant_passages": 23,
+            "answerable_evidence_coverage": 0.30434782608695654,
+            "semantic_unsupported_claim_rate": null
+          },
+          "timing": {
+            "mean_warm_ranking_ms": 0.03250000251379485,
+            "p95_warm_ranking_ms": 0.04321997985243797
+          }
+        }
+      },
+      "hash_hybrid": {
+        "dev": {
+          "retrieval": {
+            "recall_at_5": 0.8947368421052632,
+            "precision_at_5": 0.24210526315789482,
+            "mrr": 0.9473684210526315,
+            "ndcg_at_5": 0.8829971014868716,
+            "all_required_at_5": 0.7894736842105263
+          },
+          "abstention": {
+            "expected": 8,
+            "correct": 8,
+            "answerable": 16,
+            "false_abstentions": 7,
+            "accepted": 9,
+            "precision": 0.5333333333333333,
+            "recall": 1.0,
+            "false_abstention_rate": 0.4375
+          },
+          "evidence": {
+            "citation_references": 9,
+            "valid_references": 9,
+            "claims": 9,
+            "unsupported_excerpts": 0,
+            "incorrect_attributions": 0,
+            "unjudged_claims": 0,
+            "covered_passages": 9,
+            "relevant_passages": 27,
+            "citation_validity": 1.0,
+            "evidence_coverage": 0.3333333333333333,
+            "unsupported_excerpt_rate": 0.0,
+            "answerable_covered_passages": 9,
+            "answerable_relevant_passages": 22,
+            "answerable_evidence_coverage": 0.4090909090909091,
+            "semantic_unsupported_claim_rate": null
+          },
+          "timing": {
+            "mean_warm_ranking_ms": 1.8440833300701343,
+            "p95_warm_ranking_ms": 2.2062400355935097
+          }
+        },
+        "heldout": {
+          "retrieval": {
+            "recall_at_5": 0.9523809523809523,
+            "precision_at_5": 0.25714285714285723,
+            "mrr": 0.9444444444444444,
+            "ndcg_at_5": 0.9176221759372829,
+            "all_required_at_5": 0.9047619047619048
+          },
+          "abstention": {
+            "expected": 7,
+            "correct": 7,
+            "answerable": 17,
+            "false_abstentions": 9,
+            "accepted": 8,
+            "precision": 0.4375,
+            "recall": 1.0,
+            "false_abstention_rate": 0.5294117647058824
+          },
+          "evidence": {
+            "citation_references": 8,
+            "valid_references": 8,
+            "claims": 8,
+            "unsupported_excerpts": 0,
+            "incorrect_attributions": 0,
+            "unjudged_claims": 0,
+            "covered_passages": 8,
+            "relevant_passages": 29,
+            "citation_validity": 1.0,
+            "evidence_coverage": 0.27586206896551724,
+            "unsupported_excerpt_rate": 0.0,
+            "answerable_covered_passages": 8,
+            "answerable_relevant_passages": 23,
+            "answerable_evidence_coverage": 0.34782608695652173,
+            "semantic_unsupported_claim_rate": null
+          },
+          "timing": {
+            "mean_warm_ranking_ms": 1.707258333529656,
+            "p95_warm_ranking_ms": 2.199950022622943
+          }
+        }
+      },
+      "hash_hybrid_mmr": {
+        "dev": {
+          "retrieval": {
+            "recall_at_5": 0.8421052631578947,
+            "precision_at_5": 0.22105263157894742,
+            "mrr": 0.9473684210526315,
+            "ndcg_at_5": 0.8422757533569198,
+            "all_required_at_5": 0.6842105263157895
+          },
+          "abstention": {
+            "expected": 8,
+            "correct": 8,
+            "answerable": 16,
+            "false_abstentions": 7,
+            "accepted": 9,
+            "precision": 0.5333333333333333,
+            "recall": 1.0,
+            "false_abstention_rate": 0.4375
+          },
+          "evidence": {
+            "citation_references": 9,
+            "valid_references": 9,
+            "claims": 9,
+            "unsupported_excerpts": 0,
+            "incorrect_attributions": 0,
+            "unjudged_claims": 0,
+            "covered_passages": 9,
+            "relevant_passages": 27,
+            "citation_validity": 1.0,
+            "evidence_coverage": 0.3333333333333333,
+            "unsupported_excerpt_rate": 0.0,
+            "answerable_covered_passages": 9,
+            "answerable_relevant_passages": 22,
+            "answerable_evidence_coverage": 0.4090909090909091,
+            "semantic_unsupported_claim_rate": null
+          },
+          "timing": {
+            "mean_warm_ranking_ms": 1.6853083410145093,
+            "p95_warm_ranking_ms": 1.9632000155979767
+          }
+        },
+        "heldout": {
+          "retrieval": {
+            "recall_at_5": 0.9523809523809523,
+            "precision_at_5": 0.25714285714285723,
+            "mrr": 0.9444444444444444,
+            "ndcg_at_5": 0.9176221759372829,
+            "all_required_at_5": 0.9047619047619048
+          },
+          "abstention": {
+            "expected": 7,
+            "correct": 7,
+            "answerable": 17,
+            "false_abstentions": 9,
+            "accepted": 8,
+            "precision": 0.4375,
+            "recall": 1.0,
+            "false_abstention_rate": 0.5294117647058824
+          },
+          "evidence": {
+            "citation_references": 8,
+            "valid_references": 8,
+            "claims": 8,
+            "unsupported_excerpts": 0,
+            "incorrect_attributions": 0,
+            "unjudged_claims": 0,
+            "covered_passages": 8,
+            "relevant_passages": 29,
+            "citation_validity": 1.0,
+            "evidence_coverage": 0.27586206896551724,
+            "unsupported_excerpt_rate": 0.0,
+            "answerable_covered_passages": 8,
+            "answerable_relevant_passages": 23,
+            "answerable_evidence_coverage": 0.34782608695652173,
+            "semantic_unsupported_claim_rate": null
+          },
+          "timing": {
+            "mean_warm_ranking_ms": 1.9686958306313802,
+            "p95_warm_ranking_ms": 2.559330008807592
+          }
+        }
+      },
+      "hash_tuned_hybrid": {
+        "dev": {
+          "retrieval": {
+            "recall_at_5": 0.8947368421052632,
+            "precision_at_5": 0.24210526315789482,
+            "mrr": 0.9736842105263158,
+            "ndcg_at_5": 0.8949073323042883,
+            "all_required_at_5": 0.7894736842105263
+          },
+          "abstention": {
+            "expected": 8,
+            "correct": 8,
+            "answerable": 16,
+            "false_abstentions": 7,
+            "accepted": 9,
+            "precision": 0.5333333333333333,
+            "recall": 1.0,
+            "false_abstention_rate": 0.4375
+          },
+          "evidence": {
+            "citation_references": 9,
+            "valid_references": 9,
+            "claims": 9,
+            "unsupported_excerpts": 0,
+            "incorrect_attributions": 0,
+            "unjudged_claims": 0,
+            "covered_passages": 9,
+            "relevant_passages": 27,
+            "citation_validity": 1.0,
+            "evidence_coverage": 0.3333333333333333,
+            "unsupported_excerpt_rate": 0.0,
+            "answerable_covered_passages": 9,
+            "answerable_relevant_passages": 22,
+            "answerable_evidence_coverage": 0.4090909090909091,
+            "semantic_unsupported_claim_rate": null
+          },
+          "timing": {
+            "mean_warm_ranking_ms": 2.161520836428584,
+            "p95_warm_ranking_ms": 2.608604999841191
+          }
+        },
+        "heldout": {
+          "retrieval": {
+            "recall_at_5": 0.9523809523809523,
+            "precision_at_5": 0.25714285714285723,
+            "mrr": 0.9444444444444444,
+            "ndcg_at_5": 0.9176221759372829,
+            "all_required_at_5": 0.9047619047619048
+          },
+          "abstention": {
+            "expected": 7,
+            "correct": 7,
+            "answerable": 17,
+            "false_abstentions": 9,
+            "accepted": 8,
+            "precision": 0.4375,
+            "recall": 1.0,
+            "false_abstention_rate": 0.5294117647058824
+          },
+          "evidence": {
+            "citation_references": 8,
+            "valid_references": 8,
+            "claims": 8,
+            "unsupported_excerpts": 0,
+            "incorrect_attributions": 0,
+            "unjudged_claims": 0,
+            "covered_passages": 8,
+            "relevant_passages": 29,
+            "citation_validity": 1.0,
+            "evidence_coverage": 0.27586206896551724,
+            "unsupported_excerpt_rate": 0.0,
+            "answerable_covered_passages": 8,
+            "answerable_relevant_passages": 23,
+            "answerable_evidence_coverage": 0.34782608695652173,
+            "semantic_unsupported_claim_rate": null
+          },
+          "timing": {
+            "mean_warm_ranking_ms": 2.1252375008771196,
+            "p95_warm_ranking_ms": 2.533179984311573
+          }
+        }
+      },
+      "hash_tuned_hybrid_mmr": {
+        "dev": {
+          "retrieval": {
+            "recall_at_5": 0.8947368421052632,
+            "precision_at_5": 0.24210526315789482,
+            "mrr": 0.9736842105263158,
+            "ndcg_at_5": 0.8949073323042883,
+            "all_required_at_5": 0.7894736842105263
+          },
+          "abstention": {
+            "expected": 8,
+            "correct": 8,
+            "answerable": 16,
+            "false_abstentions": 7,
+            "accepted": 9,
+            "precision": 0.5333333333333333,
+            "recall": 1.0,
+            "false_abstention_rate": 0.4375
+          },
+          "evidence": {
+            "citation_references": 9,
+            "valid_references": 9,
+            "claims": 9,
+            "unsupported_excerpts": 0,
+            "incorrect_attributions": 0,
+            "unjudged_claims": 0,
+            "covered_passages": 9,
+            "relevant_passages": 27,
+            "citation_validity": 1.0,
+            "evidence_coverage": 0.3333333333333333,
+            "unsupported_excerpt_rate": 0.0,
+            "answerable_covered_passages": 9,
+            "answerable_relevant_passages": 22,
+            "answerable_evidence_coverage": 0.4090909090909091,
+            "semantic_unsupported_claim_rate": null
+          },
+          "timing": {
+            "mean_warm_ranking_ms": 2.126270832377486,
+            "p95_warm_ranking_ms": 3.424929996253922
+          }
+        },
+        "heldout": {
+          "retrieval": {
+            "recall_at_5": 0.9523809523809523,
+            "precision_at_5": 0.25714285714285723,
+            "mrr": 0.9444444444444444,
+            "ndcg_at_5": 0.9176221759372829,
+            "all_required_at_5": 0.9047619047619048
+          },
+          "abstention": {
+            "expected": 7,
+            "correct": 7,
+            "answerable": 17,
+            "false_abstentions": 9,
+            "accepted": 8,
+            "precision": 0.4375,
+            "recall": 1.0,
+            "false_abstention_rate": 0.5294117647058824
+          },
+          "evidence": {
+            "citation_references": 8,
+            "valid_references": 8,
+            "claims": 8,
+            "unsupported_excerpts": 0,
+            "incorrect_attributions": 0,
+            "unjudged_claims": 0,
+            "covered_passages": 8,
+            "relevant_passages": 29,
+            "citation_validity": 1.0,
+            "evidence_coverage": 0.27586206896551724,
+            "unsupported_excerpt_rate": 0.0,
+            "answerable_covered_passages": 8,
+            "answerable_relevant_passages": 23,
+            "answerable_evidence_coverage": 0.34782608695652173,
+            "semantic_unsupported_claim_rate": null
+          },
+          "timing": {
+            "mean_warm_ranking_ms": 2.1297583371051587,
+            "p95_warm_ranking_ms": 2.744460009853355
+          }
+        }
+      },
+      "hash_source_aware": {
+        "dev": {
+          "retrieval": {
+            "recall_at_5": 0.8947368421052632,
+            "precision_at_5": 0.24210526315789482,
+            "mrr": 0.9736842105263158,
+            "ndcg_at_5": 0.8949073323042883,
+            "all_required_at_5": 0.7894736842105263
+          },
+          "abstention": {
+            "expected": 8,
+            "correct": 8,
+            "answerable": 16,
+            "false_abstentions": 7,
+            "accepted": 9,
+            "precision": 0.5333333333333333,
+            "recall": 1.0,
+            "false_abstention_rate": 0.4375
+          },
+          "evidence": {
+            "citation_references": 9,
+            "valid_references": 9,
+            "claims": 9,
+            "unsupported_excerpts": 0,
+            "incorrect_attributions": 0,
+            "unjudged_claims": 0,
+            "covered_passages": 9,
+            "relevant_passages": 27,
+            "citation_validity": 1.0,
+            "evidence_coverage": 0.3333333333333333,
+            "unsupported_excerpt_rate": 0.0,
+            "answerable_covered_passages": 9,
+            "answerable_relevant_passages": 22,
+            "answerable_evidence_coverage": 0.4090909090909091,
+            "semantic_unsupported_claim_rate": null
+          },
+          "timing": {
+            "mean_warm_ranking_ms": 2.7017249910083287,
+            "p95_warm_ranking_ms": 4.038494985434227
+          }
+        },
+        "heldout": {
+          "retrieval": {
+            "recall_at_5": 0.9523809523809523,
+            "precision_at_5": 0.25714285714285723,
+            "mrr": 0.9444444444444444,
+            "ndcg_at_5": 0.9176221759372829,
+            "all_required_at_5": 0.9047619047619048
+          },
+          "abstention": {
+            "expected": 7,
+            "correct": 7,
+            "answerable": 17,
+            "false_abstentions": 9,
+            "accepted": 8,
+            "precision": 0.4375,
+            "recall": 1.0,
+            "false_abstention_rate": 0.5294117647058824
+          },
+          "evidence": {
+            "citation_references": 8,
+            "valid_references": 8,
+            "claims": 8,
+            "unsupported_excerpts": 0,
+            "incorrect_attributions": 0,
+            "unjudged_claims": 0,
+            "covered_passages": 8,
+            "relevant_passages": 29,
+            "citation_validity": 1.0,
+            "evidence_coverage": 0.27586206896551724,
+            "unsupported_excerpt_rate": 0.0,
+            "answerable_covered_passages": 8,
+            "answerable_relevant_passages": 23,
+            "answerable_evidence_coverage": 0.34782608695652173,
+            "semantic_unsupported_claim_rate": null
+          },
+          "timing": {
+            "mean_warm_ranking_ms": 2.03492082800949,
+            "p95_warm_ranking_ms": 2.781595010310411
+          }
+        }
+      }
+    },
+    "costs": {
+      "hash": {
+        "unique_encoded_texts": 122,
+        "encoding_seconds": 0.008226400124840438,
+        "index_build_seconds": 0.028976799978408962,
+        "contexts": 6,
+        "cross_encoder_pairs": 0
+      },
+      "temporary_index_bytes": 164175,
+      "process_peak_rss_bytes": 84307968,
+      "wall_seconds": 2.4780850000097416,
+      "cpu_seconds": 2.203125,
+      "torch_cpu_threads": null,
+      "faiss_threads": "installed library default; no OpenMP override"
+    },
+    "isolation": {
+      "network_attempts_blocked": 0,
+      "forbidden_file_operations_blocked": 0
+    }
+  },
+  "offline_grounding": {
+    "dataset": {
+      "questions": 48,
+      "dev": 24,
+      "heldout": 24,
+      "labels": 65,
+      "multi_passage_questions": 17,
+      "expected_abstentions": 15,
+      "families": 24,
+      "current_records": 49,
+      "current_public_passages": 50
+    },
+    "reviewed_labels": 65,
+    "protocol": {
+      "retrieval": "fixed existing hash hybrid: RRF 60, MMR lambda 1; no tuning",
+      "generation": "deterministic source-only stubs, not an LLM-quality test",
+      "verification": "complete section quotation attribution; no general semantic entailment",
+      "review_manifest_sha256": "91425763009be015e054f41682839703ef12081936c9854c915831d88ea904b4",
+      "completion": "oracle required-evidence coverage only; pipeline completeness remains unverified"
+    },
+    "verified_quotes": {
+      "dev": {
+        "totals": {
+          "citation_references": 19,
+          "valid_references": 19,
+          "claims": 19,
+          "unsupported_excerpts": 0,
+          "incorrect_attributions": 0,
+          "unjudged_claims": 2,
+          "covered_passages": 17,
+          "relevant_passages": 31,
+          "expected_abstentions": 8,
+          "correct_abstentions": 8,
+          "answerable_scored": 16,
+          "false_abstentions": 0,
+          "required_evidence_complete": 11,
+          "no_relevant_evidence_returned": 0,
+          "answerable_required_passages": 22,
+          "answerable_required_covered": 17
+        },
+        "statuses": {
+          "supported_quotes": 16,
+          "conflicting_evidence": 1,
+          "insufficient_evidence": 6,
+          "unsafe_evidence": 1
+        },
+        "citation_validity": 1.0,
+        "false_abstention_rate": 0.0,
+        "required_evidence_coverage": 0.7727272727272727,
+        "semantic_entailment_accuracy": null
+      },
+      "heldout": {
+        "totals": {
+          "citation_references": 14,
+          "valid_references": 14,
+          "claims": 14,
+          "unsupported_excerpts": 0,
+          "incorrect_attributions": 0,
+          "unjudged_claims": 1,
+          "covered_passages": 13,
+          "relevant_passages": 34,
+          "expected_abstentions": 7,
+          "correct_abstentions": 7,
+          "answerable_scored": 15,
+          "false_abstentions": 6,
+          "required_evidence_complete": 8,
+          "no_relevant_evidence_returned": 6,
+          "answerable_required_passages": 21,
+          "answerable_required_covered": 12
+        },
+        "statuses": {
+          "supported_quotes": 9,
+          "insufficient_evidence": 13,
+          "unsafe_evidence": 2
+        },
+        "citation_validity": 1.0,
+        "false_abstention_rate": 0.4,
+        "required_evidence_coverage": 0.5714285714285714,
+        "semantic_entailment_accuracy": null
+      }
+    },
+    "controlled_verifier": {
+      "supported_cases": 7,
+      "unsupported_or_unsafe_cases": 18,
+      "true_accepts": 7,
+      "false_accepts": 0,
+      "false_rejects": 0,
+      "accuracy": 1.0,
+      "quote_support_precision": 1.0,
+      "false_accept_rate": 0.0,
+      "false_reject_rate": 0.0
+    },
+    "costs": {
+      "model_downloads": 0,
+      "provider_calls": 0,
+      "wall_seconds": 1.733424299978651,
+      "cpu_seconds": 1.375,
+      "torch_cpu_threads": null,
+      "faiss_threads": "installed library default; no OpenMP override"
+    },
+    "isolation": {
+      "network_attempts_blocked": 0,
+      "forbidden_file_operations_blocked": 0
+    }
+  },
+  "limitations": [
+    "Four live smoke cases are not general LLM accuracy evidence.",
+    "Exact quotation attribution does not establish truth, currency or completeness.",
+    "Held-out reviewed false abstentions remain 6/15 answerable questions.",
+    "Original retrieval judgments have 56 labels; reviewed grounding judgments have 65. Denominators differ.",
+    "Long/unsafe/credential-bearing source blocks can be withheld; follow-up memory uses fixed topic labels.",
+    "Source headers and applicability conditions may need human review.",
+    "No interactive browser or live production user-data test performed."
+  ],
+  "release": {
+    "approval_required_before": [
+      "merge",
+      "existing service production deployment",
+      "production activation"
+    ],
+    "migration_001": "already applied per operator; do not repeat",
+    "before_activation": "After approved release, /ready?details=true must report ten approved sources and shared_index_available=true.",
+    "flags": {
+      "CVE_INVESTIGATION_ENABLED": true,
+      "CVE_INVESTIGATION_LIVE_APPROVED": true,
+      "CYBERGPT_V2_ENABLED": true
+    },
+    "preserve_other_variables": true,
+    "preserve_frontend_api_url": true,
+    "rollback": "CYBERGPT_V2_ENABLED=false; retain live CVE flags and all data/indexes",
+    "publishing_approved": true
+  },
+  "changed_files": [
+    "README.md",
+    "backend/app/agents/orchestrator.py",
+    "backend/app/api/routes.py",
+    "backend/app/knowledge/production_catalog.py",
+    "backend/app/services/grounded_chat_service.py",
+    "backend/app/services/llm/groq_provider.py",
+    "backend/knowledge_sources.json",
+    "backend/tests/test_cybergpt_production.py",
+    "docs/ARCHITECTURE.md",
+    "docs/CYBERGPT_PRODUCTION_READINESS.json",
+    "frontend/src/components/copilot/ChatMessage.tsx",
+    "frontend/src/components/copilot/MessageList.tsx",
+    "frontend/src/lib/grounding.ts",
+    "frontend/src/pages/Copilot.tsx",
+    "frontend/src/types/copilot.ts",
+    "frontend/tests/grounding.test.ts"
+  ],
+  "resolved_validation_blockers": [
+    "Missing default approved production catalog despite an existing shared index.",
+    "Default conversational intent incorrectly swallowing short knowledge questions.",
+    "Canonical chunk ordinal must stay unchanged; physical source page is derived separately.",
+    "GPT-OSS spent the 900-token cap on reasoning and returned empty content.",
+    "Model quote copying changed whitespace/text; production now selects IDs and copies canonical text server-side."
+  ],
+  "secret_scan": {
+    "files": 447,
+    "findings": 0,
+    "scope": "tracked and non-ignored untracked source; pattern scan with values suppressed"
+  },
+  "source_hashes": {
+    "README.md": "bbfa41213b99fca99f66c08ecf736e62a1c6c93eae7baefeacee3b4ccb91f050",
+    "backend/app/agents/orchestrator.py": "2cc6f6d069801146b5aab503b048a1baa9b78c77d255381642c3f8f26596f43e",
+    "backend/app/api/routes.py": "d797edf1acc5bf1b39648b5065bf12efbe070a917b9343754e823883852a809e",
+    "backend/app/knowledge/production_catalog.py": "7534abf97a76ab49dfbb5c99fb763c090e9c285a0826e7d5a8ea35ed7adfc489",
+    "backend/app/services/grounded_chat_service.py": "3bca7a6161754f26394f9b0ed0d9873a19cc428f2cf43c202aabf212709f3512",
+    "backend/app/services/llm/groq_provider.py": "0722ce4003a798eae029bcdb1c0182a1a041a67d2a65d497a2582dc04510a7e2",
+    "backend/knowledge_sources.json": "2a4f32bc724a6aab7f56cbc01c85f5fe6d6a825fc1761531e122641abb752ca8",
+    "backend/tests/test_cybergpt_production.py": "ba8892dc71143717c5aca44203e660a55fe5bd958c1660c477d31f133b5ecac5",
+    "docs/ARCHITECTURE.md": "b26f670b73a9fd3e431ec1bff2d83cf39f731559aedc6c82872abec3e5c7de48",
+    "frontend/src/components/copilot/ChatMessage.tsx": "63e004eec89e30c46572c6ff82cf01fea1966a1c638022695089e8f9272ab203",
+    "frontend/src/components/copilot/MessageList.tsx": "a05e4df15537bf3c01c79036a59eda090a82f15b3f314204803ebabd61bd6143",
+    "frontend/src/lib/grounding.ts": "4277015aebfba172374caa2dcbbc6144f63ef7c4048a45970e5dc6622990662d",
+    "frontend/src/pages/Copilot.tsx": "f0ec1b8fe2f52935f392f5791a534af7d769554e6a5ff4fda106a1183bc3b54f",
+    "frontend/src/types/copilot.ts": "638a5dc997b612a80ced315e54a98e735ebd6c8f930a2d38b0195ce311d5d70e",
+    "frontend/tests/grounding.test.ts": "cc1fb9dc1fc6e865adf281ecf8497fd385ae7e67fb710d42bfaecd12cb2c5578"
+  },
+  "build_inclusion_verified": {
+    "existing_render_service": "srv-darar37lot8c73dvgtkg",
+    "branch": "main",
+    "root_directory": "backend/",
+    "runtime": "docker",
+    "docker_context": ".",
+    "dockerfile": "Dockerfile",
+    "copy_rule": "COPY . .",
+    "dockerfile_specific_ignore": false,
+    "references_tracked_and_hash_matching": 10,
+    "manifest_and_reference_paths_excluded": false,
+    "new_build_or_deployment_started": false
+  }
+}

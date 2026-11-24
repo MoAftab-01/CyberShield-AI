@@ -32,6 +32,8 @@ document answer and a general answer all land in the conversation history the
 same way, and the user's own secrets are redacted before they are stored.
 """
 
+import re
+
 from sqlalchemy.orm import Session
 
 from app.agents.intents import (
@@ -118,8 +120,23 @@ class CyberGPTOrchestrator:
                 conversation_id=conversation_id,
             )
         elif enabled:
-            from app.services.grounded_chat_service import GroundedChatService
-            result = await GroundedChatService.answer(sanitized_question, user_id)
+            from app.services.grounded_chat_service import GroundedChatService, sensitive_text
+            # Only static, redacted topic names leave historical storage. Raw
+            # messages, generated passwords and private excerpts never do.
+            from app.core.credential_privacy import history_topics
+            history = ConversationService.load_history(db, conversation_id, user_id)
+            topics = history_topics([message for message in history if message.role == "user"])
+            context = "context topic: " + ", ".join(topics) if topics else ""
+            followup = bool(re.search(r"\b(it|its|that|those|they|them|more|also)\b", sanitized_question, re.I))
+            query = sanitized_question + ("\n" + context if followup and context else "")
+            if decision.intent in CONVERSATION_INTENTS and re.fullmatch(r"(?:hi|hello|hey|thanks|thank you|good morning|good evening|who are you|what can you do)[!.? ]*", sanitized_question, re.I) and not sensitive_text(sanitized_question):
+                result = {"answer": "Hello! I can help with source-grounded cybersecurity questions, your uploaded documents, password tools, URL analysis and CVE investigations.",
+                          "history_answer": "CyberGPT capability greeting.", "sources": [], "grounding": None,
+                          "answer_basis": "conversation", "retrieval_metrics": {"status": "skipped", "retrieved_count": 0}}
+            elif re.search(r"\b(?:general knowledge|without (?:documents|sources)|in general)\b", sanitized_question, re.I):
+                result = await GroundedChatService.general(sanitized_question, context if followup else "")
+            else:
+                result = await GroundedChatService.answer(query, user_id)
             # Never persist from a background worker or a timed-out generation.
             ConversationService.add_ai_message(db, conversation_id, result.pop("history_answer"))
         elif decision.intent in CONVERSATION_INTENTS:

@@ -37,7 +37,7 @@ document describes how that works and why it is built this way.
         │                  │                  │
         │        ┌─────────┴─────────┐        │
         │        ▼                   ▼        │
-        │   FAISS (dense)      BM25 (lexical) │
+        │   FAISS (vectors)      BM25 (lexical) │
         │        │                   │        │
         │        └─────────┬─────────┘        │
         │                  ▼                  │
@@ -75,10 +75,10 @@ app/
 ├── services/               Business logic (password, URL, threat, RAG, documents)
 │   └── llm/                Provider abstraction (Groq, OpenAI) and factory
 ├── rag/
-│   ├── loader.py           Parse PDF / DOCX / TXT into documents
+│   ├── loader.py           Parse public PDF / TXT / MD; uploads use DocumentExtractor
 │   ├── chunker.py          Split into overlapping passages
 │   ├── embeddings.py       ONNX sentence encoder, with a hashed fallback
-│   ├── vector_store.py     FAISS index
+│   ├── faiss_store.py      FAISS index
 │   ├── bm25_store.py       BM25 index
 │   ├── retriever.py        Hybrid search, fusion, reranking, MMR
 │   └── index_meta.py       Index provenance stamp
@@ -288,3 +288,83 @@ is never rendered as the first.
   not to matter.
 - **The free tier is a design constraint, not an afterthought.** CPU-only
   inference, no Redis, no GPU, no background workers.
+
+
+## CyberGPT 2.0 production path (24 November 2026)
+
+The existing Vercel frontend (`https://cybershieldai-security.vercel.app`) calls
+`POST /copilot/ask` on the existing Render backend
+(`https://cybershield-backend-oz7p.onrender.com`). PostgreSQL/Neon continues to own
+users and conversations. PR #1/#2 and the live LangGraph investigation are preserved.
+No database migration accompanies v2 activation.
+
+With `CYBERGPT_V2_ENABLED=false`, legacy dispatch is unchanged. With it enabled:
+
+1. Bearer authentication and conversation ownership are checked before dispatch.
+   Deterministic rules route password, URL and CVE tools; only explicit greetings
+   get the local capability reply. Unknown short questions still try evidence.
+2. Existing BM25/FAISS retrieval, RRF and MMR locate visible candidate pages. Actual
+   Render startup logs reported 8,406 chunks and hash embeddings; optional semantic
+   MiniLM remains supported, and no production embedding defaults are changed here.
+3. `knowledge_sources.json` pins ten bundled primary PDF artifacts to SHA256 and
+   canonical URLs. The HHS Top 10 briefing is not treated as an OWASP publication.
+   Private uploads require matching integer ownership and a path inside that user's
+   storage. File bytes and indexed content must agree before evidence admission.
+4. Complete PDF text blocks or upload paragraphs (up to 1,900 characters) form a
+   bounded request-local catalog. A local evidence context selects relevant blocks.
+   The shared index is not rebuilt or replaced by this adapter. Changed, unknown,
+   foreign, instruction-like and credential-bearing evidence is withheld.
+5. Configured Groq `openai/gpt-oss-20b` selects at most two authorized evidence IDs.
+   The server copies canonical text and runs the existing exact-quotation verifier.
+   Invalid IDs, altered text and wrong attribution fail closed. GPT-OSS uses low
+   reasoning effort only on bounded calls: this avoids consuming all 900 output
+   tokens on reasoning. Legacy call defaults and other models are unchanged.
+6. The existing response schema carries grounding and answer-basis metadata. Explicit
+   general-knowledge requests use a bounded uncited response and a distinct label.
+   Provider errors remain controlled. Storage keeps redacted display history; no
+   raw historical messages or generated passwords are sent to the model. Follow-up
+   context consists only of fixed labels extracted from owned user turns.
+
+The frontend reuses GroundedAnswer for literal quotations/source cards, safe Markdown
+for general/tool answers and existing loading/cancellation/retry flows. Historical
+responses do not acquire invented verification metadata. Verification covers source
+identity and exact attribution, not semantic entailment, truth or completeness.
+Publication/modification dates are unknown unless supplied by reviewed provenance;
+PDF creation times are not substituted for publication dates.
+
+The seven-node CVE StateGraph remains separate: validate, NVD, KEV, correlate,
+assess, verify, report. Live read-only NVD/CISA adapters, streamed progress, explicit
+source failures, authentication and report download are unchanged by v2 activation.
+
+### Measured scope and limitations
+
+The 48-question offline benchmark uses synthetic fixtures, seed 1729 and separate
+24-question development/held-out splits. Existing tuning is development-only and
+is not applied to production defaults. The reviewed quotation evaluation has 65
+labels, while the original retrieval harness has 56; their coverage denominators
+are not interchangeable. Deterministic offline generators are not live LLM tests.
+
+Reviewed development citation validity was 19/19, required-evidence coverage 17/22,
+and false abstentions 0/16 answerable questions. Held-out validity was 14/14,
+coverage 12/21 and false abstentions 6/15. No claims of general semantic accuracy
+or comprehensive source coverage follow from those results.
+
+Live Groq smoke tests used public questions and an isolated local hash index built
+from the bundled PDFs. Two grounded requests returned three exact citations; one
+unanswerable request abstained without Groq, and one general answer was clearly
+labelled. The adapter does not provide free-form document paraphrasing. Source
+snapshots can be incomplete or stale, keyword relevance is not full semantic
+verification, long PDF blocks can be withheld, and fixed topic memory is deliberately
+limited. Current-source/asset-impact claims require the appropriate live tools and
+human review. These limitations are visible rather than converted into confidence scores.
+
+### Approval-gated release
+
+After focused tests and build pass, request approval to publish the source-only
+changes. Preserve all existing Render variables and Vercel's current API URL.
+Migration 001 is already applied; do not rerun it. Deploy the approved code to the
+existing services, check `/ready?details=true` for ten approved sources and an
+available index, then set `CYBERGPT_V2_ENABLED=true` manually after approval. Keep
+`CVE_INVESTIGATION_ENABLED=true` and `CVE_INVESTIGATION_LIVE_APPROVED=true`.
+Rollback the chat activation with `CYBERGPT_V2_ENABLED=false`; no data rollback,
+index deletion, new service or replacement database is needed.

@@ -1,0 +1,76 @@
+{
+  "format_version": 1,
+  "notes": "Reviewed bundled primary references. The HHS Top 10 briefing is excluded because filename alone does not establish OWASP authorship. Publication/modification dates are left unknown rather than inferred from PDF creation metadata.",
+  "sources": [
+    {
+      "path": "Cloud_and_Architecture/NIST-SP-800-190.pdf",
+      "sha256": "0ebad52c4a3aba971b3a707b056e57238d1c4ad8f212dffd461ff9f5fed1bdb6",
+      "source_id": "nist-csrc",
+      "title": "NIST SP 800 190",
+      "canonical_url": "https://doi.org/10.6028/NIST.SP.800-190"
+    },
+    {
+      "path": "Cloud_and_Architecture/NIST-SP-800-207-Zero-Trust.pdf",
+      "sha256": "0290d6ece24874287316f4bf430fef770aa4ec08a2227c8f2c1e5b2ff975e03d",
+      "source_id": "nist-csrc",
+      "title": "NIST SP 800 207 Zero Trust",
+      "canonical_url": "https://doi.org/10.6028/NIST.SP.800-207"
+    },
+    {
+      "path": "Governance/NIST-CSF-2.0.pdf",
+      "sha256": "3c31f46fee98cac0c4323453e5109291a213b4de7fef8c058af9bf67f717433c",
+      "source_id": "nist-csrc",
+      "title": "NIST CSF 2.0",
+      "canonical_url": "https://doi.org/10.6028/NIST.CSWP.29"
+    },
+    {
+      "path": "Governance/NIST-SP-800-161r1-upd1.pdf",
+      "sha256": "d2bacbf4053adbbe11628f74f071077d8fd59ba99754a3aab34d7813c1cb3d40",
+      "source_id": "nist-csrc",
+      "title": "NIST SP 800 161r1 upd1",
+      "canonical_url": "https://doi.org/10.6028/NIST.SP.800-161r1-upd1"
+    },
+    {
+      "path": "Governance/NIST-SP-800-171r3.pdf",
+      "sha256": "3e4631df8b5d61f40a6e542b52779ef30ddbbfff31e09214fa94ad6e6f5e6d08",
+      "source_id": "nist-csrc",
+      "title": "NIST SP 800 171r3",
+      "canonical_url": "https://doi.org/10.6028/NIST.SP.800-171r3"
+    },
+    {
+      "path": "Governance/NIST-SP-800-53r5.pdf",
+      "sha256": "fc63bcd61715d0181dd8e85998b1e6201ae3515fc6626102101cab1841e11ec6",
+      "source_id": "nist-csrc",
+      "title": "NIST SP 800 53r5",
+      "canonical_url": "https://doi.org/10.6028/NIST.SP.800-53r5"
+    },
+    {
+      "path": "Governance/NIST-SP-800-63B-4.pdf",
+      "sha256": "d9ab89576b5ae2cfb3ba37781110788dea27a85a5079496dbfc1a79834670afd",
+      "source_id": "nist-csrc",
+      "title": "NIST SP 800 63B 4",
+      "canonical_url": "https://doi.org/10.6028/NIST.SP.800-63B-4"
+    },
+    {
+      "path": "Incident_Response/NIST-SP-800-61r3.pdf",
+      "sha256": "e5593d6bb85daecec7e8d9549400c7b3473bcc3f06e469c82218073afa7fba2d",
+      "source_id": "nist-csrc",
+      "title": "NIST SP 800 61r3",
+      "canonical_url": "https://doi.org/10.6028/NIST.SP.800-61r3"
+    },
+    {
+      "path": "Secure_Development/NIST-SP-800-218.pdf",
+      "sha256": "617746e553a9e2da49bfbd4eef0dfc3094758a39b869314e4173ac36605cde22",
+      "source_id": "nist-csrc",
+      "title": "NIST SP 800 218",
+      "canonical_url": "https://doi.org/10.6028/NIST.SP.800-218"
+    },
+    {
+      "path": "Web_Application_Security/OWASP-ASVS-5.0.0.pdf",
+      "sha256": "2f0db177b199e63cb905241130554d2f3a6a38cdf2d9a0b4173324f1e5fa7db5",
+      "source_id": "owasp",
+      "title": "OWASP ASVS 5.0.0",
+      "canonical_url": "https://owasp.org/www-project-application-security-verification-standard/"
+    }
+  ]
+}

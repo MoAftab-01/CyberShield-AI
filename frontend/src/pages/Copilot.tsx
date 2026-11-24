@@ -19,6 +19,7 @@ interface ChatMessage {
   sources?: Source[];
   relatedSources?: Source[];
   grounding?: unknown;
+  answerBasis?: "document" | "general_knowledge" | "tool" | "conversation";
 }
 
 export default function Copilot() {
@@ -123,7 +124,7 @@ export default function Copilot() {
       }
       setMessages(prev => [...prev, {
         role: "assistant", content: response.grounding == null ? response.answer : "", sources: response.sources,
-        relatedSources: response.related_sources, grounding: response.grounding,
+        relatedSources: response.related_sources, grounding: response.grounding, answerBasis: response.answer_basis,
       }]);
     } catch {
       if (!controller.signal.aborted && lifecycle.current.request === controller && version === lifecycle.current.version) {
