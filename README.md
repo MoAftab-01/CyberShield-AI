@@ -20,10 +20,32 @@ CyberShield AI brings common security research workflows into one web applicatio
 
 - **CyberGPT:** Answers cybersecurity questions using retrieved document passages, keeps conversation history, and returns source references.
 - **Document intelligence:** Accepts PDF, DOCX, and TXT documents; supports question answering, summaries, and comparisons.
+- **CVE Investigation:** An authenticated seven-node LangGraph workflow at `/investigate`, with streaming progress, citation-bound NVD/CISA details, explicit source failures and uncertainty, cancellation, and JSON export.
 - **Threat intelligence:** Enriches CVE lookups with data from NVD, CISA KEV, EPSS, and GitHub advisories, then generates summaries and recommendations.
 - **URL scanner:** Combines local URL-risk heuristics with VirusTotal reputation results when configured.
 - **Password analyzer:** Scores passwords using length, entropy, dictionary-word, and pattern checks; generates recommendations.
 - **Dashboard and reports:** Presents account activity and security scan results.
+
+### CVE investigation mode
+
+The sidebar places **CVE Investigation** after CyberGPT; the existing threat APIs
+and `/threat-intel` route remain available. Missing source fields show **Not available**.
+NVD product criteria are not confirmation of installed-asset exposure. CISA actions
+are attributed quotations, not generated remediation.
+
+The server controls activation through `CVE_INVESTIGATION_ENABLED=true`.
+`CVE_INVESTIGATION_LIVE_APPROVED=false` keeps clearly labeled synthetic fixtures;
+setting it to `true` enables only fixed-origin, read-only NVD and CISA KEV requests.
+Both flags default to false. Live activation requires operator approval after validation.
+Keep `CYBERGPT_V2_ENABLED=false` unless separately approved; existing chat is unchanged.
+No model API key or LLM calls are used by the investigation graph.
+
+Live responses are bounded, checked for matching CVE/catalog identity, cached in
+memory (NVD 60 seconds, KEV five minutes), and retain their original retrieval time.
+Unauthenticated NVD requests are spaced at least 6.1 seconds per process; 429/5xx
+responses apply a bounded cooldown. Multiple backend workers/replicas require a shared
+rate gate before scaling. Redirects and inherited proxy credentials are disabled.
+Cached results are source snapshots, not a guarantee of current completeness or truth.
 
 ## Architecture
 

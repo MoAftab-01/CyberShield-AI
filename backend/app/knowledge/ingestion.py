@@ -32,6 +32,12 @@ def normalize(value: str) -> str:
 def timestamp(value):
     if value is None:
         return None
+    if not isinstance(value, str):
+        raise ValueError("Invalid source timestamp.")
+    # Python 3.10 accepts only three/six fraction digits, while CISA can emit
+    # four (RFC3339 permits variable precision). Normalize to microseconds.
+    value = re.sub(r"(?<=\d{2}:\d{2}:\d{2})\.(\d{1,9})(?=Z|[+-]\d{2}:\d{2}|$)",
+                   lambda match: "." + match.group(1)[:6].ljust(6, "0"), value)
     try:
         parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     except (TypeError, ValueError):
@@ -191,13 +197,13 @@ class Catalog:
         return record
 
     @staticmethod
-    def _chunk(record):
+    def _chunk(record, *, chunk_size=600):
         from langchain_core.documents import Document
         from app.rag.chunker import DocumentChunker
         chunks = []
         for section_number, section in enumerate(record.sections):
             pieces = DocumentChunker.chunk_documents([Document(page_content=section.text,
-                metadata={"filename":record.document_id,"page":section_number})], chunk_size=600, chunk_overlap=100)
+                metadata={"filename":record.document_id,"page":section_number})], chunk_size=chunk_size, chunk_overlap=100)
             for ordinal, piece in enumerate(pieces):
                 text_hash = digest(piece.page_content)
                 chunks.append(EvidenceChunk(chunk_id="chunk-"+digest([record.document_id, record.version, section_number, ordinal, text_hash]),

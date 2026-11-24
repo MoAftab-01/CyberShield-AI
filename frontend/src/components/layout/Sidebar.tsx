@@ -23,7 +23,6 @@ interface SidebarProps {
 }
 
 const menuItems = [
-  { name: "CVE Investigation", path: "/investigate", icon: ShieldAlert },
   {
     name: "Dashboard",
     path: "/dashboard",
@@ -34,6 +33,7 @@ const menuItems = [
     path: "/copilot",
     icon: Bot,
   },
+  { name: "CVE Investigation", path: "/investigate", icon: ShieldAlert },
   {
     name: "Password Analyzer",
     path: "/password",
@@ -43,11 +43,6 @@ const menuItems = [
     name: "URL Scanner",
     path: "/url-scanner",
     icon: Globe,
-  },
-  {
-    name: "Threat Intelligence",
-    path: "/threat-intel",
-    icon: ShieldAlert,
   },
   {
     name: "Reports",
@@ -317,7 +312,7 @@ z-40
 
             return (
 
-              <NavLink key={item.path} to={item.path}>
+              <NavLink key={item.path} to={item.path} aria-label={item.name} title={collapsed ? item.name : undefined}>
 
                 {
 
